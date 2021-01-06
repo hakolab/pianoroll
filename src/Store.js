@@ -33,7 +33,7 @@ export function change(newValue){
     }
 }
 
-export let store = createStore(reducer)
+//export let store = createStore(reducer)
 
 // config for Redux persist
 const persistConfig = {
@@ -42,12 +42,12 @@ const persistConfig = {
 }
 
 // persist reducer
-//const persistedReducer = persistReducer(persistConfig, reducer)
+const persistedReducer = persistReducer(persistConfig, reducer)
 
 // store
-//export let store = createStore(persistedReducer)
-//export let persistor = persistStore(store)
-/* 
+export let store = createStore(persistedReducer)
+export let persistor = persistStore(store)
+
 export function purge(){
     persistor.purge()
 }
@@ -58,4 +58,4 @@ export function pause(){
 
 export function flush(){
     persistor.flush()
-} */
+}
