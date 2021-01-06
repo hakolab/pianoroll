@@ -1,23 +1,20 @@
 import React from 'react'
 import { Slider } from '@material-ui/core'
+import { connect } from 'react-redux'
+import { change } from './Store'
 
 class App extends React.Component {
 
     constructor(props){
         super(props)
-        this.state = {
-            value: 50
-        }
     }
 
     handleChange = (event, newValue) => {
-        this.setState({
-            value: newValue
-        })
+        this.props.dispatch(change(newValue))
     }
 
     render(){
-        const value = this.state.value
+        const value = this.props.value
         return(
             <div>
                 <Slider 
@@ -30,4 +27,5 @@ class App extends React.Component {
     }
 }
 
+App = connect((state) => state)(App)
 export default App
