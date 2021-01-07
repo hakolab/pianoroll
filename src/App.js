@@ -20,6 +20,9 @@ class App extends React.Component {
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <CustomSlider
+                            id={this.props.conf.width.id}
+                            step={this.props.conf.width.step}
+                            max={this.props.conf.width.max}
                             onChange={(event, newValue) => this.handleChange(event, newValue)}
                             value={this.props.conf.width.value} />
                     </Grid>
