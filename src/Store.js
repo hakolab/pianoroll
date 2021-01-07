@@ -7,6 +7,9 @@ import { createStore } from 'redux'
 let state_value = {
     conf: {
         width: {
+            id: "width",
+            step: 1,
+            max: 50,
             value: 50,
         }
     },
@@ -24,12 +27,10 @@ function reducer(state = state_value, action){
 
 // reduce action
 function changeReduce(state, action){
+    let newConf = {...state.conf}
+    newConf.width.value = action.value
     return {
-        conf: {
-            width: {
-                value: action.value,
-            }
-        }
+        conf: newConf,
     }
 }
 
