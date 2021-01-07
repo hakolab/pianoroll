@@ -53,11 +53,11 @@ class App extends React.Component {
                             value={this.props.conf.height.value} />
                         <div style={this.s}></div>
                         <Slider 
-                            id={this.props.conf.width.id}
-                            step={this.props.conf.width.step}
-                            max={this.props.conf.width.max}
+                            id={this.props.conf.opacity.id}
+                            step={this.props.conf.opacity.step}
+                            max={this.props.conf.opacity.max}
                             onChange={(event, newValue) => this.handleChange_another(event, newValue)}
-                            value={this.props.conf.width.value} />
+                            value={this.props.conf.opacity.value} />
                     </Grid>
                     <Grid item xs={6}>
                         <div>test</div>

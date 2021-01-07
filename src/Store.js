@@ -18,6 +18,12 @@ let state_value = {
             max: 50,
             value: 50,
         },
+        opacity: {
+            id: "opacity",
+            step: 0.1,
+            max: 1,
+            value: 0.1,
+        },
     },
 }
 
@@ -40,6 +46,9 @@ function changeReduce(state, action){
             break
         case "height":
             newConf.height.value = action.value
+            break
+        case "opacity":
+            newConf.opacity.value = action.value
             break
         default:
     }
