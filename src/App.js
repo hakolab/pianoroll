@@ -14,6 +14,10 @@ class App extends React.Component {
         this.props.dispatch(change(event, newValue))
     }
 
+    handleChange_another = (event, newValue) => {
+        this.props.dispatch(change(event, newValue))
+    }
+
     s = {
         height: "50px"
     }
@@ -52,7 +56,7 @@ class App extends React.Component {
                             id={this.props.conf.width.id}
                             step={this.props.conf.width.step}
                             max={this.props.conf.width.max}
-                            onChange={(event, newValue) => this.handleChange(event, newValue)}
+                            onChange={(event, newValue) => this.handleChange_another(event, newValue)}
                             value={this.props.conf.width.value} />
                     </Grid>
                     <Grid item xs={6}>
