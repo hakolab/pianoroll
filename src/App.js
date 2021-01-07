@@ -15,12 +15,11 @@ class App extends React.Component {
     }
 
     render(){
-        const value = this.props.value
         return(
             <div>
                 <CustomSlider
                     onChange={(event, newValue) => this.handleChange(event, newValue)}
-                    value={this.props.value} />
+                    value={this.props.conf.width.value} />
             </div>
         )
     }

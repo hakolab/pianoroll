@@ -5,7 +5,11 @@ import { createStore } from 'redux'
 
 // state
 let state_value = {
-    value: 50,
+    conf: {
+        width: {
+            value: 50,
+        }
+    },
 }
 
 // reducer
@@ -21,7 +25,11 @@ function reducer(state = state_value, action){
 // reduce action
 function changeReduce(state, action){
     return {
-        value: action.value,
+        conf: {
+            width: {
+                value: action.value,
+            }
+        }
     }
 }
 
