@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, Slider } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { change } from './Store'
+import { change, changeOpacity } from './Store'
 import CustomSlider from './CustomSlider'
 
 class App extends React.Component {
@@ -15,7 +15,7 @@ class App extends React.Component {
     }
 
     handleChange_another = (event, newValue) => {
-        this.props.dispatch(change(event, newValue))
+        this.props.dispatch(changeOpacity(event, newValue))
     }
 
     s = {

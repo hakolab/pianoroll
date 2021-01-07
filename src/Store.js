@@ -32,6 +32,8 @@ function reducer(state = state_value, action){
     switch(action.type){
         case "CHANGE":
             return changeReduce(state, action)
+        case "CHANGE_OPACITY":
+            return changeOpacityReduce(state, action)
         default:
             return state
     }
@@ -58,10 +60,26 @@ function changeReduce(state, action){
     }
 }
 
+function changeOpacityReduce(state, action){
+    let newConf = {...state.conf}
+    newConf.opacity.value = action.value
+    return {
+        conf: newConf,
+    }
+}
+
 // action creator
 export function change(event, newValue){
     return {
         type: "CHANGE",
+        event: event,
+        value: newValue,
+    }
+}
+
+export function changeOpacity(event, newValue){
+    return {
+        type: "CHANGE_OPACITY",
         event: event,
         value: newValue,
     }
