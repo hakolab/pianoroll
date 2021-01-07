@@ -28,16 +28,14 @@ class App extends React.Component {
                             step={this.props.conf.width.step}
                             max={this.props.conf.width.max}
                             onChange={(event, newValue) => this.handleChange(event, newValue)}
-                            //value={this.props.conf.width.value} 
-                            />
+                            value={this.props.conf.width.value} />
                             <div style={this.s}></div>
                         <CustomSlider
                             id={this.props.conf.height.id}
                             step={this.props.conf.height.step}
                             max={this.props.conf.height.max}
                             onChange={(event, newValue) => this.handleChange(event, newValue)}
-                            //value={this.props.conf.height.value} 
-                            />
+                            value={this.props.conf.height.value} />
                     </Grid>
                     <Grid item xs={6}>
                         <div>test</div>

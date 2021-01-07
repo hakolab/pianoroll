@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 
 class CustomSlider extends React.Component {
     render(){
+        const value = this.props.value
         return(
             <Slider
             id={this.props.id}
             step={this.props.step}
             max={this.props.max}
             onChange={this.props.onChange}
-            value={this.props.value}/>
+            value={value}/>
         )
     }
 }
