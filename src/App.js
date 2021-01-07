@@ -2,6 +2,7 @@ import React from 'react'
 import { Slider } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { change } from './Store'
+import CustomSlider from './CustomSlider'
 
 class App extends React.Component {
 
@@ -17,11 +18,9 @@ class App extends React.Component {
         const value = this.props.value
         return(
             <div>
-                <Slider 
-                    step={1}
-                    max={50}
+                <CustomSlider
                     onChange={(event, newValue) => this.handleChange(event, newValue)}
-                    value={value}/>
+                    value={this.props.value} />
             </div>
         )
     }
