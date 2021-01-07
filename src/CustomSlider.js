@@ -2,15 +2,17 @@ import React from 'react'
 import { Slider } from '@material-ui/core'
 import { connect } from 'react-redux'
 
-function CustomSlider(props){
-    return(
-        <Slider
-        id={props.id}
-        step={props.step}
-        max={props.max}
-        onChange={props.onChange}
-        value={props.value}/>
-    )
+class CustomSlider extends React.Component {
+    render(){
+        return(
+            <Slider
+            id={this.props.id}
+            step={this.props.step}
+            max={this.props.max}
+            onChange={this.props.onChange}
+            value={this.props.value}/>
+        )
+    }
 }
 
 CustomSlider = connect((state) => state)(CustomSlider)
