@@ -18,6 +18,17 @@ class App extends React.Component {
         height: "50px"
     }
 
+    renderSlider(obj){
+        return (
+            <CustomSlider
+                id={obj.id}
+                step={obj.step}
+                max={obj.max}
+                onChange={(event, newValue) => this.handleChange(event, newValue)}
+                value={obj.value} />
+        )
+    }
+
     render(){
         return(
             <div>
@@ -36,6 +47,8 @@ class App extends React.Component {
                             max={this.props.conf.height.max}
                             onChange={(event, newValue) => this.handleChange(event, newValue)}
                             value={this.props.conf.height.value} />
+                            <div style={this.s}></div>
+                            {this.renderSlider(this.props.conf.width)}
                     </Grid>
                     <Grid item xs={6}>
                         <div>test</div>
