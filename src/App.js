@@ -14,6 +14,10 @@ class App extends React.Component {
         this.props.dispatch(change(event, newValue))
     }
 
+    s = {
+        height: "50px"
+    }
+
     render(){
         return(
             <div>
@@ -25,6 +29,7 @@ class App extends React.Component {
                             max={this.props.conf.width.max}
                             onChange={(event, newValue) => this.handleChange(event, newValue)}
                             value={this.props.conf.width.value} />
+                            <div style={this.s}></div>
                         <CustomSlider
                             id={this.props.conf.height.id}
                             step={this.props.conf.height.step}
