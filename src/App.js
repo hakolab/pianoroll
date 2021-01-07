@@ -1,5 +1,5 @@
 import React from 'react'
-import { Slider } from '@material-ui/core'
+import { Grid, Slider } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { change } from './Store'
 import CustomSlider from './CustomSlider'
@@ -17,9 +17,16 @@ class App extends React.Component {
     render(){
         return(
             <div>
-                <CustomSlider
-                    onChange={(event, newValue) => this.handleChange(event, newValue)}
-                    value={this.props.conf.width.value} />
+                <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                        <CustomSlider
+                            onChange={(event, newValue) => this.handleChange(event, newValue)}
+                            value={this.props.conf.width.value} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <div>test</div>
+                    </Grid>
+                </Grid>
             </div>
         )
     }
