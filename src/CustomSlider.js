@@ -4,9 +4,10 @@ import { connect } from 'react-redux'
 
 function CustomSlider(props){
     return(
-        <Slider 
-        step={1}
-        max={50}
+        <Slider
+        id={props.id}
+        step={props.step}
+        max={props.max}
         onChange={props.onChange}
         value={props.value}/>
     )

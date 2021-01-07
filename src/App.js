@@ -11,7 +11,7 @@ class App extends React.Component {
     }
 
     handleChange = (event, newValue) => {
-        this.props.dispatch(change(newValue))
+        this.props.dispatch(change(event, newValue))
     }
 
     render(){
@@ -25,6 +25,12 @@ class App extends React.Component {
                             max={this.props.conf.width.max}
                             onChange={(event, newValue) => this.handleChange(event, newValue)}
                             value={this.props.conf.width.value} />
+                        <CustomSlider
+                            id={this.props.conf.height.id}
+                            step={this.props.conf.height.step}
+                            max={this.props.conf.height.max}
+                            onChange={(event, newValue) => this.handleChange(event, newValue)}
+                            value={this.props.conf.height.value} />
                     </Grid>
                     <Grid item xs={6}>
                         <div>test</div>

@@ -11,7 +11,13 @@ let state_value = {
             step: 1,
             max: 50,
             value: 50,
-        }
+        },
+        height: {
+            id: "height",
+            step: 1,
+            max: 50,
+            value: 50,
+        },
     },
 }
 
@@ -28,16 +34,26 @@ function reducer(state = state_value, action){
 // reduce action
 function changeReduce(state, action){
     let newConf = {...state.conf}
-    newConf.width.value = action.value
+    switch(action.event.target.id){
+        case "width":
+            newConf.width.value = action.value
+            break
+        case "height":
+            newConf.height.value = action.value
+            break
+        default:
+    }
+    
     return {
         conf: newConf,
     }
 }
 
 // action creator
-export function change(newValue){
+export function change(event, newValue){
     return {
         type: "CHANGE",
+        event: event,
         value: newValue,
     }
 }
