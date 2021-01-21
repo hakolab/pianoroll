@@ -2,12 +2,12 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialConf = {
   width: {
-    value: 150,
+    value: 50,
     step: 1,
     max: 150,
   },
   height: {
-    value: 150,
+    value: 50,
     step: 1,
     max: 150,
   },
