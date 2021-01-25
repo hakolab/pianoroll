@@ -1,23 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-/*
-duck/
-    ├── *actions.js //createSlice() によって自動生成
-    ├── index.js
-    ├── *operations.js
-    ├── *reducers.js　//createSlice()内で定義
-    ├── *selectors.js
-    ├── tests.js
-    ├── *types.js　//createSlice() によって自動生成
-    ├── utils.js
-
-duck/
-    ├── index.js
-    ├── *operations.js
-    ├── *slice.js
-    ├── *selectors.js
-*/
-
 export const stampListSlice = createSlice({
     name: 'stampList',
     initialState: {
@@ -28,6 +10,7 @@ export const stampListSlice = createSlice({
             let data = {
                 x: action.payload.x,
                 y:action.payload.y,
+                width: action.payload.width.value,
             }
             state.list.push(data)
         },
