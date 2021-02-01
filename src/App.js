@@ -26,58 +26,13 @@ const TouchableHue = (props) => {
         console.log(event)
     }
 
-    useEffect(() => {
-        const hueClick = (e) => {
-            console.log('ontouchstart')
-            let event = document.createEvent('MouseEvents')
-            event.initEvent('click', false, true)
-            dummyRef.current.dispatchEvent(event)
-            
-            //dummyRef.current.dispatchEvent(new MouseEvent('mousedown', {clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY}))
-            //console.log(dummyRef.current)    
-        }
-
-        //touchableHueRef.current.addEventListener('touchstart', (e) => hueClick(e))
-
-        //dummyRef.current.addEventListener('mousedown', (e) => handleClick(e))
-
-/*         const hueClick = (e) => {
-            console.log(e)
-            //dummyRef.current.dispatchEvent(new MouseEvent('mousedown', {clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY}))
-            e.target.dispatchEvent(new MouseEvent('mousedown', {clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY}))
-            touchableHueRef.current.children[0].dispatchEvent(new MouseEvent('mouseup', {clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY}))
-        }
-
-        touchableHueRef.current.addEventListener('touchstart', (e) => hueClick(e),{passive: true})
-
-        dummyRef.current.addEventListener('mousedown', (e) => handleClick(e))
-         */
-    },[])
-
-    const touchStartToMouseDown = (e) => {
-        e.clientX = e.changedTouches[0].clientX
-        e.clientY = e.changedTouches[0].clientY
-        touchableHueRef.current.children[0].dispatchEvent(new MouseEvent('mousedown', e))
-    }
-
-    const touchMoveToMouseMove = (e) => {
-        e.clientX = e.changedTouches[0].clientX
-        e.clientY = e.changedTouches[0].clientY
-        touchableHueRef.current.children[0].dispatchEvent(new MouseEvent('mousemove', e))
-    }
-
-    const touchEndToMouseUp = () => {
-        console.log('test')
-        touchableHueRef.current.children[0].dispatchEvent(new MouseEvent('mousemove'))
-    }
-
     return (
         <Fragment>
             <Box
                 ref={touchableHueRef}
                 onTouchStart={(e) => touchStartToMouseDown(e)}
                 onTouchMove={(e) => touchMoveToMouseMove(e)}
-                //onTouchEnd={() => touchEndToMouseUp}
+                onTouchEnd={(e) => touchEndToMouseUp(e)}
                 >
                 <Hue
                     width={props.width}
@@ -86,7 +41,18 @@ const TouchableHue = (props) => {
                     />
             </Box>
             <Box height={50}></Box>
-            <Box id="dummyBox" ref={dummyRef} onClick={handleClick}>test</Box>
+            <Box
+                id="dummyBox"
+                ref={dummyRef}
+                onTouchStart={(e) => console.log('touch start')}
+                onTouchMove={(e) => console.log('touch move')}
+                onTouchEnd={() => console.log('touch end')}
+                onMouseDown={(e) => console.log('mouse down')}
+                onMouseMove={(e) => console.log('mouse move')}
+                onMouseUp={(e) => console.log('mouse up')}
+                >
+                test
+            </Box>
         </Fragment>
     )
 }
