@@ -18,30 +18,35 @@ const ButtonLikeTab = withStyles({
 })(Button)
 
 export default function App(){
+
+    const url_demo = process.env.NODE_ENV === 'development' ? "/" : "/Demo"
+    const url_gallery = process.env.NODE_ENV === 'development' ? "/gallery" : "/Demo/gallery"
+    const url_about = process.env.NODE_ENV === 'development' ? "/about" : "/Demo/about"
+
     return (
         <Router>
             <Box display="flex" flexDirection="row">
                 <Box flexGrow={1}>
-                    <Link to="/Demo">
+                    <Link to={url_demo}>
                         <Brightness7Icon />
                     </Link>
                 </Box>
                 <Box>
-                    <Link to="/Demo" style={{textDecoration: "none"}}>
+                    <Link to={url_demo} style={{textDecoration: "none"}}>
                         <ButtonLikeTab size="large">
                             Stamp
                         </ButtonLikeTab>
                     </Link>
                 </Box>
                 <Box>
-                    <Link to="/Demo/gallery" style={{textDecoration: "none"}}>
+                    <Link to={url_gallery} style={{textDecoration: "none"}}>
                         <ButtonLikeTab size="large">
                             Gallery
                         </ButtonLikeTab>
                     </Link>
                 </Box>
                 <Box>
-                    <Link to="/Demo/about" style={{textDecoration: "none"}}>
+                    <Link to={url_about} style={{textDecoration: "none"}}>
                         <ButtonLikeTab size="large">
                             About
                         </ButtonLikeTab>
@@ -49,13 +54,13 @@ export default function App(){
                 </Box>
             </Box>
 
-                <Route exact path="/Demo">
+                <Route exact path={url_demo}>
                     <Stamp />
                 </Route>
-                <Route path="/Demo/gallery">
+                <Route path={url_gallery}>
                     Stamps written by various people.
                 </Route>
-                <Route path="/Demo/about">
+                <Route path={url_about}>
                     About Stamp
                 </Route>
 
