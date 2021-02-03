@@ -1,58 +1,64 @@
-import React, { Fragment, useEffect, useRef } from 'react'
-import { Box } from '@material-ui/core'
-import { Hue } from 'react-color-palette/lib/components/Hue'
-import { useColor } from 'react-color-palette'
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
+import { Box, Button} from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
+import Brightness7Icon from '@material-ui/icons/Brightness7'
+import Stamp from './Stamp';
+
+const ButtonLikeTab = withStyles({
+    root: {
+        width: "150px",
+        borderRadius: "0",
+    }
+})(Button)
 
 export default function App(){
-
-    const [color, setColor] = useColor("hex", "#121212");
-
     return (
-        <Box width="456px" height="50px">
-            <p>test</p>
-            <TouchableHue width={456} color={color} onChange={setColor} />
-        </Box>
-    )
-}
-
-const TouchableHue = (props) => {
-
-    const touchableHueRef = useRef(null)
-
-    const dummyRef = useRef(null)
-
-    const handleClick = (event) => {
-        console.log('onClick!')
-        console.log(event)
-    }
-
-    return (
-        <Fragment>
-            <Box
-                ref={touchableHueRef}
-                onTouchStart={(e) => touchStartToMouseDown(e)}
-                onTouchMove={(e) => touchMoveToMouseMove(e)}
-                onTouchEnd={(e) => touchEndToMouseUp(e)}
-                >
-                <Hue
-                    width={props.width}
-                    color={props.color}
-                    onChange={props.onChange}
-                    />
+        <Router>
+            <Box display="flex" flexDirection="row">
+                <Box flexGrow={1}>
+                    <Link to="/">
+                        <Brightness7Icon />
+                    </Link>
+                </Box>
+                <Box>
+                    <Link to="/" style={{textDecoration: "none"}}>
+                        <ButtonLikeTab size="large">
+                            Stamp
+                        </ButtonLikeTab>
+                    </Link>
+                </Box>
+                <Box>
+                    <Link to="/gallery" style={{textDecoration: "none"}}>
+                        <ButtonLikeTab size="large">
+                            Gallery
+                        </ButtonLikeTab>
+                    </Link>
+                </Box>
+                <Box>
+                    <Link to="/about" style={{textDecoration: "none"}}>
+                        <ButtonLikeTab size="large">
+                            About
+                        </ButtonLikeTab>
+                    </Link>
+                </Box>
             </Box>
-            <Box height={50}></Box>
-            <Box
-                id="dummyBox"
-                ref={dummyRef}
-                onTouchStart={(e) => console.log('touch start')}
-                onTouchMove={(e) => console.log('touch move')}
-                onTouchEnd={() => console.log('touch end')}
-                onMouseDown={(e) => console.log('mouse down')}
-                onMouseMove={(e) => console.log('mouse move')}
-                onMouseUp={(e) => console.log('mouse up')}
-                >
-                test
-            </Box>
-        </Fragment>
+
+                <Route exact path="/">
+                    <Stamp />
+                </Route>
+                <Route path="/gallery">
+                    Stamps written by various people.
+                </Route>
+                <Route path="/about">
+                    About Stamp
+                </Route>
+
+        </Router>
     )
 }
