@@ -22,26 +22,26 @@ export default function App(){
         <Router>
             <Box display="flex" flexDirection="row">
                 <Box flexGrow={1}>
-                    <Link to="/Demo">
+                    <Link to="./">
                         <Brightness7Icon />
                     </Link>
                 </Box>
                 <Box>
-                    <Link to="/Demo" style={{textDecoration: "none"}}>
+                    <Link to="./" style={{textDecoration: "none"}}>
                         <ButtonLikeTab size="large">
                             Stamp
                         </ButtonLikeTab>
                     </Link>
                 </Box>
                 <Box>
-                    <Link to="/Demo/gallery" style={{textDecoration: "none"}}>
+                    <Link to="./gallery" style={{textDecoration: "none"}}>
                         <ButtonLikeTab size="large">
                             Gallery
                         </ButtonLikeTab>
                     </Link>
                 </Box>
                 <Box>
-                    <Link to="/Demo/about" style={{textDecoration: "none"}}>
+                    <Link to="./about" style={{textDecoration: "none"}}>
                         <ButtonLikeTab size="large">
                             About
                         </ButtonLikeTab>
@@ -49,13 +49,13 @@ export default function App(){
                 </Box>
             </Box>
 
-                <Route exact path="/Demo">
+                <Route exact path="./">
                     <Stamp />
                 </Route>
-                <Route path="/Demo/gallery">
+                <Route path="./gallery">
                     Stamps written by various people.
                 </Route>
-                <Route path="/Demo/about">
+                <Route path="./about">
                     About Stamp
                 </Route>
 
