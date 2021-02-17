@@ -4,6 +4,7 @@ export const useTouchToMouse = (children) => {
     const ref = useRef(null)
 
     useEffect(() => {
+        console.log(ref)
         const target = children
                             ? ref.current.children[0]
                             : ref.current

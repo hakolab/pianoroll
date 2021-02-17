@@ -1,69 +1,48 @@
-import React from 'react'
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
-import { Box, Button} from '@material-ui/core'
-import { withStyles } from '@material-ui/core/styles'
-import Brightness7Icon from '@material-ui/icons/Brightness7'
-import Stamp from './Stamp';
+import React, { Fragment, useState } from 'react';
+import { Box, Button } from '@material-ui/core'
+import Grid from './Grid'
+import Tiles from './Tiles'
+import * as Tone from 'tone'
+import Config from './data/Config'
 
-const ButtonLikeTab = withStyles({
-    root: {
-        width: "150px",
-        borderRadius: "0",
-    }
-})(Button)
+function App() {
+  const [currentStep, setCurrentStep] = useState(true)
 
-export default function App(){
+  function handleClick(){
+    const steps = new Array(Config.gridWidth).fill(null).map((_,i) => i)
 
-    const url_demo = process.env.NODE_ENV === 'development' ? "/" : "/Demo"
-    const url_gallery = process.env.NODE_ENV === 'development' ? "/gallery" : "/Demo/gallery"
-    const url_about = process.env.NODE_ENV === 'development' ? "/about" : "/Demo/about"
+    const synth = new Tone.Synth().toDestination();
+    const seq = new Tone.Sequence((time, step) => {
+      setCurrentStep(step)
+      //let notes = getNotes
 
-    return (
-        <Router>
-            <Box display="flex" flexDirection="row">
-                <Box flexGrow={1}>
-                    <Link to={url_demo}>
-                        <Brightness7Icon />
-                    </Link>
-                </Box>
-                <Box>
-                    <Link to={url_demo} style={{textDecoration: "none"}}>
-                        <ButtonLikeTab size="large">
-                            Stamp
-                        </ButtonLikeTab>
-                    </Link>
-                </Box>
-                <Box>
-                    <Link to={url_gallery} style={{textDecoration: "none"}}>
-                        <ButtonLikeTab size="large">
-                            Gallery
-                        </ButtonLikeTab>
-                    </Link>
-                </Box>
-                <Box>
-                    <Link to={url_about} style={{textDecoration: "none"}}>
-                        <ButtonLikeTab size="large">
-                            About
-                        </ButtonLikeTab>
-                    </Link>
-                </Box>
-            </Box>
+      //synth.triggerAttackRelease(note, 0.1, time);
+      // subdivisions are given as subarrays
+    }, steps).start(0);
+    Tone.Transport.start();
+  }
 
-                <Route exact path={url_demo}>
-                    <Stamp />
-                </Route>
-                <Route path={url_gallery}>
-                    Stamps written by various people.
-                </Route>
-                <Route path={url_about}>
-                    About Stamp
-                </Route>
+  const grids = new Array(Config.gridWidth).fill(null).map((_,i) => i)
 
-        </Router>
-    )
+  const [isActiveTile, setIsActiveTile] = useState("false")
+
+  return (
+    <Fragment>
+      <Box>
+        <Button onClick={handleClick}>start</Button>
+      </Box>
+      <Box display="flex" flexDirection="row">
+        {grids.map(grid => {
+          return (
+            <Grid selection={currentStep === grid} key={grid}>
+              <Tiles set={setIsActiveTile}></Tiles>
+              <p>{isActiveTile}</p>
+            </Grid>
+          )
+        })}
+      </Box>
+    </Fragment>
+  );
 }
+
+export default App

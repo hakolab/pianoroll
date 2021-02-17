@@ -8,9 +8,6 @@ module.exports = {
   devtool: 'inline-source-map',
  devServer: {
    contentBase: './docs',
-   proxy: {
-    '/Demo': 'http://localhost:8080'
-  }
  },
  module: {
      rules: [
@@ -26,6 +23,10 @@ module.exports = {
                 ] 
              }
          }
+        },
+        {
+          test: /\.scss$/,
+          use: "style!css!autoprefixer-loader!sass"
         },
         {
           test: /\.tsx?$/,
