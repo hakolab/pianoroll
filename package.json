@@ -43,6 +43,7 @@
     "react-swipe": "^6.0.4",
     "react-swipeable-routes": "^0.8.0",
     "react-swipeable-views": "^0.13.9",
+    "react-window": "^1.8.6",
     "reactronica": "^0.4.5",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
