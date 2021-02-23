@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { VariableSizeGrid as Grid, areEqual } from 'react-window';
+import { VariableSizeList as List, areEqual } from 'react-window';
 import { makeStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import { Box, Button } from '@material-ui/core'
@@ -96,6 +96,22 @@ const VirtualizedList = (props) => {
     //console.log(grids)
   }
 
+  const cellStyle = {
+    border: "1px solid #000000",
+  }
+
+  const columnWidths = new Array(1000)
+  .fill(true)
+  .map(() => 75 + Math.round(Math.random() * 50));
+ 
+const getItemSize = index => columnWidths[index];
+ 
+const Column = ({ index, style }) => (
+  <Box style={style} display="flex" flexDirection="column"><Box style={cellStyle}>Column {index}</Box></Box>
+);
+ 
+ 
+
   return (
     <Fragment>
       <Box>
@@ -105,19 +121,15 @@ const VirtualizedList = (props) => {
         <Button onClick={handleClickAdd}>add</Button>
       </Box>
 
-      <Grid
-        columnCount={grid[0].length}
-        columnWidth={() => 150} //TODO create a function after useContext
+      <List
         height={1000}
-        rowCount={grid.length}
-        rowHeight={() => 30} //TODO create a function after useContext
-        width={2000}
-        itemData={grid}
+        itemCount={1000}
+        itemSize={getItemSize}
+        layout="horizontal"
+        width={300}
       >
-        {(props) => (
-          <Cell data={props} currentStep={currentStep}></Cell>)
-        }
-      </Grid>
+        {Column}
+      </List>
     </Fragment>
   )
 };

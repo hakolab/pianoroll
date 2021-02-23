@@ -2,6 +2,8 @@ import React, { Fragment, useState, useContext } from 'react'
 import ReactDOM from 'react-dom'
 import { Box } from '@material-ui/core'
 import VirtualizedList from './VirtualizedList'
+import ScrollSync from './ScrollSync'
+import Keyboard from './Keyboard'
 
 const App = () => {
 
@@ -17,9 +19,7 @@ const App = () => {
 
     return (
         <Fragment>
-            <div>{count}</div>
-            <button onClick={handleClick}>increment</button>
-            <VirtualizedList />
+            <ScrollSync />
         </Fragment>
     )
 }
