@@ -1,11 +1,15 @@
-import React, { Fragment, useState } from 'react';
-import { Box, Button } from '@material-ui/core'
-import Grid from './Grid'
-import Tiles from './Tiles'
-import * as Tone from 'tone'
-import Config from './data/Config'
+import React, { Fragment } from 'react';
+import PianoRoll from './PianoRoll'
 
-function App() {
+const App = () => {
+  return (
+    <Fragment>
+      <PianoRoll />
+    </Fragment>    
+  )
+}
+
+/* function _App() {
   const [currentStep, setCurrentStep] = useState(true)
 
   function handleClick(){
@@ -43,6 +47,6 @@ function App() {
       </Box>
     </Fragment>
   );
-}
+} */
 
 export default App
