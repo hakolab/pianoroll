@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "hakoratory-ff609"
+  },
+  "targets": {
+    "hakoratory-ff609": {
+      "hosting": {
+        "pianoroll": [
+          "pianoroll-fb"
+        ]
+      }
+    }
+  }
+}
