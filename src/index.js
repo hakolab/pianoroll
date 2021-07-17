@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { Fragment, useState, useContext } from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 
 ReactDOM.render(
-  <App/>,
-  document.getElementById('root')
+    //<Provider store={store}>
+            <App />
+    ,//</Provider>,
+    document.getElementById('root')
 )

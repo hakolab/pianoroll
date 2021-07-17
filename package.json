@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack serve --open 'Google Chrome' --mode development"
+    "start": "webpack serve --open 'Google Chrome' --mode development",
+    "deploy": "firebase deploy --only hosting:pianoroll"
   },
   "author": "",
   "license": "",
@@ -25,11 +26,17 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
+    "react-device-detect": "^1.17.0",
     "react-router-dom": "^5.2.0",
     "react-swipeable-views": "^0.13.9",
     "react-virtualized": "^9.22.3",
+    "sass": "^1.35.2",
+    "sass-loader": "^12.1.0",
     "tone": "^14.7.77"
   }
 }
