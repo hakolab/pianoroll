@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode production",
-    "start": "webpack serve --open 'Google Chrome' --mode development",
-    "deploy": "firebase deploy --only hosting:pianoroll"
+    "deploy": "firebase deploy --only hosting:pianoroll",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "author": "",
   "license": "",
@@ -15,12 +16,14 @@
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
+    "@vitejs/plugin-react-refresh": "^1.3.5",
     "babel-loader": "^8.2.2",
     "classnames": "^2.2.6",
     "css-loader": "^5.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "style-loader": "^2.0.0",
+    "vite": "^2.4.2",
     "webpack": "^5.11.0",
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.0"
