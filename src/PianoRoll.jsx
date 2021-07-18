@@ -273,7 +273,7 @@ export default function PianoRoll() {
               </Button>
             </Box>
             <Box className="quarters">
-              <Button color="primary" variant="outlined" className={classes.common} onClick={() => toggleDrawer(true)} disabled={transportState === "started"}>
+              <Button color="primary" variant="outlined" className={classes.common} onClick={() => toggleDrawer(true)}>
                 <FontAwesomeIcon icon={faCog}/>
               </Button>
             </Box>
@@ -282,152 +282,6 @@ export default function PianoRoll() {
         
         
       </Grid>
-{/*       <Grid id="controller" container spacing={1}>
-        <Grid container item xs={12}>
-          <Box m={1}>
-            <SelectButton
-              data={AppData.getKeyboardsName()}
-              onClick={dispatch}
-              action="changeKeyboard"
-              disabled={transportState === "started"}
-              />
-          </Box>
-          <Box m={1}>
-            <SelectButton
-              data={AppData.getBeatsName()}
-              onClick={dispatch}
-              action="changeBeat"
-              disabled={transportState === "started"}
-              size="small"
-              />
-          </Box>
-          <Box m={1}>
-            <ControlButton
-              start={start}
-              stop={stop}
-              clear={clearNotes}
-              allClear={clearAll}
-              isPlaying={transportState === "started"}
-              />
-          </Box>
-        </Grid>
-        <Grid container spacing={2}item xs={12}>
-          <Grid item xs={12} sm={6}>
-            <ControlSlider
-              value={state.numberOfBars}
-              onChange={handleChangeBars}
-              min={2}
-              max={16}
-              onMouseDown={() => setIsChanging(true)}
-              onChangeCommitted={() => setIsChanging(false)}
-              disabled={transportState === "started"}
-              iconRotate={true}
-              IconLeft={DragHandleIcon}
-              IconRight={ReorderIcon}
-              />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <ControlSlider
-                value={bpm}
-                onChange={handleChange}
-                min={40}
-                max={200}
-                onMouseDown={() => setIsChanging(true)}
-                onChangeCommitted={() => setIsChanging(false)}
-                disabled={false}
-                valueLabelDisplay="auto"
-                iconRotate={false}
-                IconLeft={DirectionsWalkIcon}
-                IconRight={DirectionsRunIcon}
-                />
-          </Grid>
-        </Grid>
-      </Grid> */}
-      {/* <MobileView>
-        <AlertDialog
-          open={openDialog}
-          title={"WELCOME"}
-          text={"ピアノロールは横画面にのみ対応しています！"}
-          confirm={false}
-          onClickOk={handleClickOk}
-        />
-        <Box display="flex" flexWrap="wrap" id="controller">
-          <Box my={1} mx={3}>
-            <Button color="primary" variant="outlined" className={classes.common} onClick={() => toggleDrawer(true)} disabled={transportState === "started"}>
-              <FontAwesomeIcon icon={faCog}/>
-            </Button>
-            <SwipeableDrawer
-              anchor="top"
-              open={openDrawer}
-              onOpen={() => toggleDrawer(false)}
-              onClose={() => toggleDrawer(false)}
-              disableBackdropTransition={!isIOS}
-              disableDiscovery={isIOS}
-              >
-              <Box display="flex">
-                <Box m={1}>
-                  <SelectButton
-                    data={AppData.getKeyboardsName()}
-                    onClick={dispatch}
-                    action="changeKeyboard"
-                    disabled={transportState === "started"}
-                    />
-                </Box>
-                <Box m={1}>
-                  <SelectButton
-                    data={AppData.getBeatsName()}
-                    onClick={dispatch}
-                    action="changeBeat"
-                    disabled={transportState === "started"}
-                    size="small"
-                    />
-                </Box>
-              </Box>
-              <ControlSlider
-                value={state.numberOfBars}
-                onChange={handleChangeBars}
-                min={2}
-                max={16}
-                onMouseDown={() => setIsChanging(true)}
-                onChangeCommitted={() => setIsChanging(false)}
-                disabled={transportState === "started"}
-                iconRotate={true}
-                IconLeft={DragHandleIcon}
-                IconRight={ReorderIcon}
-                />
-              <Box m={1} textAlign="center">
-                <IconButton className={classes.common} onClick={() => toggleDrawer(false)}>
-                  <ExpandLessIcon />
-                </IconButton>
-              </Box>
-            </SwipeableDrawer>
-          </Box>
-          <Box m={1}>
-            <ControlButton
-              start={start}
-              stop={stop}
-              clear={clearNotes}
-              allClear={clearAll}
-              isPlaying={transportState === "started"}
-              />
-          </Box>
-          <Box m={1} flexGrow={1}>
-            <ControlSlider
-              value={bpm}
-              onChange={handleChange}
-              min={40}
-              max={200}
-              onMouseDown={() => setIsChanging(true)}
-              onChangeCommitted={() => setIsChanging(false)}
-              disabled={false}
-              valueLabelDisplay="auto"
-              iconRotate={false}
-              IconLeft={DirectionsWalkIcon}
-              IconRight={DirectionsRunIcon}
-              />
-          </Box>
-        </Box>
-      </MobileView> */}
       <div id="piano-roll">
       {
         state.keyboard.data.map((octaveObj, octaveIndex) => {
@@ -516,17 +370,31 @@ export default function PianoRoll() {
           <Grid item xs={12} sm={6}>
             <Box display="flex">
               <Box className="thirds">
-                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeKeyboard", payload: AppData.oneOctave.mode})} disabled={transportState === "started"}>
+                <Button
+                  variant="outlined"
+                  className={clsx(classes.common, state.keyboard.mode === AppData.oneOctave.mode ? classes.keyboardOn : classes.keyboardOff)}
+                  onClick={() => dispatch({type: "changeKeyboard", payload: AppData.oneOctave.mode})}
+                  disabled={transportState === "started"}
+                >
                   {AppData.oneOctave.viewName}
                 </Button>
               </Box>
               <Box className="thirds">
-                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeKeyboard", payload: AppData.toyPiano.mode})} disabled={transportState === "started"}>
+                <Button
+                  variant="outlined"
+                  className={clsx(classes.common, state.keyboard.mode === AppData.toyPiano.mode ? classes.keyboardOn : classes.keyboardOff)}
+                  onClick={() => dispatch({type: "changeKeyboard", payload: AppData.toyPiano.mode})}
+                  disabled={transportState === "started"}
+                >
                   {AppData.toyPiano.viewName}
                 </Button>
               </Box>
               <Box className="thirds">
-                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeKeyboard", payload: AppData.keyboard76.mode})} disabled={transportState === "started"}>
+                <Button variant="outlined"
+                  className={clsx(classes.common, state.keyboard.mode === AppData.keyboard76.mode ? classes.keyboardOn : classes.keyboardOff)}
+                  onClick={() => dispatch({type: "changeKeyboard", payload: AppData.keyboard76.mode})}
+                  disabled={transportState === "started"}
+                >
                   {AppData.keyboard76.viewName}
                 </Button>
               </Box>
@@ -535,22 +403,42 @@ export default function PianoRoll() {
           <Grid item xs={12} sm={6}>
             <Box display="flex">
               <Box className="quarters">
-                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeBeat", payload: AppData.twoFour.mode})} disabled={transportState === "started"}>
+                <Button
+                  variant="outlined"
+                  className={clsx(classes.common, state.beat.mode === AppData.twoFour.mode ? classes.beatOn : classes.beatOff)}
+                  onClick={() => dispatch({type: "changeBeat", payload: AppData.twoFour.mode})}
+                  disabled={transportState === "started"}
+                >
                   {AppData.twoFour.viewName}
                 </Button>
               </Box>
               <Box className="quarters">
-                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeBeat", payload: AppData.threeFour.mode})} disabled={transportState === "started"}>
+                <Button
+                  variant="outlined"
+                  className={clsx(classes.common, state.beat.mode === AppData.threeFour.mode ? classes.beatOn : classes.beatOff)}
+                  onClick={() => dispatch({type: "changeBeat", payload: AppData.threeFour.mode})}
+                  disabled={transportState === "started"}
+                >
                   {AppData.threeFour.viewName}
                 </Button>
               </Box>
               <Box className="quarters">
-                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeBeat", payload: AppData.fourFour.mode})} disabled={transportState === "started"}>
+                <Button
+                  variant="outlined"
+                  className={clsx(classes.common, state.beat.mode === AppData.fourFour.mode ? classes.beatOn : classes.beatOff)}
+                  onClick={() => dispatch({type: "changeBeat", payload: AppData.fourFour.mode})}
+                  disabled={transportState === "started"}
+                >
                   {AppData.fourFour.viewName}
                 </Button>
               </Box>
               <Box className="quarters">
-                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeBeat", payload: AppData.sixEight.mode})} disabled={transportState === "started"}>
+                <Button
+                  variant="outlined"
+                  className={clsx(classes.common, state.beat.mode === AppData.sixEight.mode ? classes.beatOn : classes.beatOff)}
+                  onClick={() => dispatch({type: "changeBeat", payload: AppData.sixEight.mode})}
+                  disabled={transportState === "started"}
+                >
                   {AppData.sixEight.viewName}
                 </Button>
               </Box>
