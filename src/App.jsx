@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import Pianoroll from './Pianoroll'
+import PianoRoll from './PianoRoll'
 
 function App() {
 
   return (
     <Fragment>
-      <Pianoroll />
+      <PianoRoll/>
     </Fragment>
   );
 }

@@ -1,14 +1,24 @@
 import React from 'react'
-import { Grid, makeStyles, Slider, withStyles } from '@material-ui/core'
+import { Box, Grid, makeStyles, Slider, withStyles } from '@material-ui/core'
 import { isIOS } from 'react-device-detect'
 
 const useSliderStyles = makeStyles(theme => ({
+  root: {
+    [theme.breakpoints.down('xs')]: {
+      height: "50px"
+    },
+    [theme.breakpoints.up('sm')]: {
+      height: "60px"
+    },
+  },
   icon: {
     color: theme.palette.text.primary,
+    height: "40px",
+    lineHeight: "40px"
   },
   disabled: {
     color: theme.palette.action.disabled,
-  }
+  },
 }))
 
 const iOSBoxShadow =
@@ -49,12 +59,12 @@ const IOSSlider = withStyles({
 export default function ControlSlider({value, onChange, onChangeCommitted, min, max, onMouseDown, disabled, iconRotate, IconLeft, IconRight}){
   const classes = useSliderStyles()
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} alignItems="center" className={classes.root}>
       <Grid item>
         <IconLeft
           className={classes.icon, disabled ? classes.disabled : ''}
           style={iconRotate ? {transform: "rotate(90deg)"} : {}}
-          />
+        />
       </Grid>
       <Grid item xs>
         {

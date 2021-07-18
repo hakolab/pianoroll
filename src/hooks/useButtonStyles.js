@@ -8,7 +8,13 @@ export const useButtonStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       fontSize: "14px",
     },
-    height: "30px",
+    width: "100%",
+    height: "40px",
+    color: theme.palette.primary.dark,
+    borderRadius: "0",
+    padding: "0",
+  },
+  dark: {
     color: theme.palette.primary.dark,
   },
   ok: {

@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: {
-    index: './src/index.js',
+    index: './src/index.jsx',
   },
   devtool: 'inline-source-map',
  devServer: {
@@ -12,7 +12,7 @@ module.exports = {
  module: {
      rules: [
        {
-         test: /\.m?js$/,
+         test: /\.m?(js|jsx)$/,
          exclude: /(node_modules|bower_components)/,
          use: {
              loader: 'babel-loader',
@@ -46,7 +46,7 @@ module.exports = {
     ],
  },
  resolve: {
-   extensions: [".ts", ".tsx", ".js", ".json"]
+   extensions: [".ts", ".tsx", ".js", ".jsx", ".json"]
  },
   output: {
     filename: 'bundle.js',

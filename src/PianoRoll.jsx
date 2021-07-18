@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useRef, useEffect } from "react";
 import * as Tone from "tone";
-import { Grid, Box, Button, Drawer, IconButton, SwipeableDrawer, useTheme, useMediaQuery } from "@material-ui/core";
+import { Grid, Box, Button, Drawer, IconButton, useTheme, useMediaQuery, Icon } from "@material-ui/core";
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
@@ -15,10 +15,11 @@ import ControlButton from "./components/ControlButton";
 import ControlSlider from "./components/ControlSlider";
 import { BrowserView, MobileView, isIOS, isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faPlay, faStop, faEraser, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { useButtonStyles } from "./hooks/useButtonStyles";
 import AlertDialog from "./components/AlertDialog";
 import { useMediaQueryDown } from './hooks/useMediaQuery';
+import clsx from 'clsx'
 
 const initialState = {
   numberOfBars: 4,
@@ -72,7 +73,7 @@ function reducer(state, action){
   }
 }
 
-export default function Pianoroll() {
+export default function PianoRoll() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   /** state トランスポートの状態 started/stopped */
@@ -110,6 +111,14 @@ export default function Pianoroll() {
 
     event.preventDefault();
     dispatch({type: "toggleActivationOfNote", payload: {octave, row, col}})
+  }
+
+  function toggle(){
+    if(transportState === "started"){
+      stop()
+    }else{
+      start()
+    }
   }
 
   function start() {
@@ -178,11 +187,6 @@ export default function Pianoroll() {
 
   const [targetNoteId, setTargetNoteId] = useState(null)
 
-  const [openDialog, setOpenDialog] = useState(false);
-
-  function handleClickOk(){
-    setOpenDialog(false)
-  }
 
   useEffect(() => {
     if(isMobile){
@@ -233,72 +237,113 @@ export default function Pianoroll() {
     }
   },[])
 
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleClickNo = () => {
+    setOpenDialog(false);
+  };
+
+  function handleClickOK(){
+    clearAll()
+    setOpenDialog(false)
+  }
+
   return (
     <div id="container">
-      <BrowserView>
-        <Grid id="controller" container spacing={1}>
-          <Grid container item xs={12}>
-            <Box m={1}>
-              <SelectButton
-                data={AppData.getKeyboardsName()}
-                onClick={dispatch}
-                action="changeKeyboard"
-                disabled={transportState === "started"}
-                />
+      <Grid container className="controller" alignItems="center">
+        <Grid item xs>
+          <Box display="flex">
+            <Box className="quarters">
+              <Button variant="outlined" className={classes.common} onClick={toggle}>
+                {
+                  transportState === "started"
+                    ? <FontAwesomeIcon icon={faStop}/>
+                    : <FontAwesomeIcon icon={faPlay}/>
+                }
+              </Button>
             </Box>
-            <Box m={1}>
-              <SelectButton
-                data={AppData.getBeatsName()}
-                onClick={dispatch}
-                action="changeBeat"
-                disabled={transportState === "started"}
-                size="small"
-                />
+            <Box className="quarters">
+              <Button id="clear" variant="outlined" className={classes.common} onClick={clearNotes} disabled={transportState === "started"}>
+                <FontAwesomeIcon icon={faEraser}/>
+              </Button>
             </Box>
-            <Box m={1}>
-              <ControlButton
-                start={start}
-                stop={stop}
-                clear={clearNotes}
-                allClear={clearAll}
-                isPlaying={transportState === "started"}
-                />
+            <Box className="quarters">
+              <Button id="clear-all"  variant="outlined" className={clsx(classes.common, classes.dangerHover)} onClick={() => setOpenDialog(true)} disabled={transportState === "started"}>
+                <FontAwesomeIcon icon={faTrashAlt}/>
+              </Button>
             </Box>
+            <Box className="quarters">
+              <Button color="primary" variant="outlined" className={classes.common} onClick={() => toggleDrawer(true)} disabled={transportState === "started"}>
+                <FontAwesomeIcon icon={faCog}/>
+              </Button>
+            </Box>
+          </Box>
+        </Grid>
+        
+        
+      </Grid>
+{/*       <Grid id="controller" container spacing={1}>
+        <Grid container item xs={12}>
+          <Box m={1}>
+            <SelectButton
+              data={AppData.getKeyboardsName()}
+              onClick={dispatch}
+              action="changeKeyboard"
+              disabled={transportState === "started"}
+              />
+          </Box>
+          <Box m={1}>
+            <SelectButton
+              data={AppData.getBeatsName()}
+              onClick={dispatch}
+              action="changeBeat"
+              disabled={transportState === "started"}
+              size="small"
+              />
+          </Box>
+          <Box m={1}>
+            <ControlButton
+              start={start}
+              stop={stop}
+              clear={clearNotes}
+              allClear={clearAll}
+              isPlaying={transportState === "started"}
+              />
+          </Box>
+        </Grid>
+        <Grid container spacing={2}item xs={12}>
+          <Grid item xs={12} sm={6}>
+            <ControlSlider
+              value={state.numberOfBars}
+              onChange={handleChangeBars}
+              min={2}
+              max={16}
+              onMouseDown={() => setIsChanging(true)}
+              onChangeCommitted={() => setIsChanging(false)}
+              disabled={transportState === "started"}
+              iconRotate={true}
+              IconLeft={DragHandleIcon}
+              IconRight={ReorderIcon}
+              />
           </Grid>
-          <Grid container spacing={2}item xs={12}>
-            <Grid item xs={12} sm={6}>
-              <ControlSlider
-                value={state.numberOfBars}
-                onChange={handleChangeBars}
-                min={2}
-                max={16}
+          <Grid item xs={12} sm={6}>
+            <ControlSlider
+                value={bpm}
+                onChange={handleChange}
+                min={40}
+                max={200}
                 onMouseDown={() => setIsChanging(true)}
                 onChangeCommitted={() => setIsChanging(false)}
-                disabled={transportState === "started"}
-                iconRotate={true}
-                IconLeft={DragHandleIcon}
-                IconRight={ReorderIcon}
+                disabled={false}
+                valueLabelDisplay="auto"
+                iconRotate={false}
+                IconLeft={DirectionsWalkIcon}
+                IconRight={DirectionsRunIcon}
                 />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <ControlSlider
-                  value={bpm}
-                  onChange={handleChange}
-                  min={40}
-                  max={200}
-                  onMouseDown={() => setIsChanging(true)}
-                  onChangeCommitted={() => setIsChanging(false)}
-                  disabled={false}
-                  valueLabelDisplay="auto"
-                  iconRotate={false}
-                  IconLeft={DirectionsWalkIcon}
-                  IconRight={DirectionsRunIcon}
-                  />
-            </Grid>
           </Grid>
         </Grid>
-      </BrowserView>
-      <MobileView>
+      </Grid> */}
+      {/* <MobileView>
         <AlertDialog
           open={openDialog}
           title={"WELCOME"}
@@ -382,7 +427,7 @@ export default function Pianoroll() {
               />
           </Box>
         </Box>
-      </MobileView>
+      </MobileView> */}
       <div id="piano-roll">
       {
         state.keyboard.data.map((octaveObj, octaveIndex) => {
@@ -453,6 +498,102 @@ export default function Pianoroll() {
         })
       }
       </div>
+      <AlertDialog
+        open={openDialog}
+        title={"ALL CLEAR"}
+        text={"キーボードモード、拍子、小節数、テンポ、入力した音符をすべてクリアします。よろしいですか？"}
+        confirm={true}
+        onClickNo={handleClickNo}
+        onClickOk={handleClickOK}
+      />
+      <Drawer
+        anchor="top"
+        open={openDrawer}
+        onOpen={() => toggleDrawer(false)}
+        onClose={() => toggleDrawer(false)}
+        >
+        <Grid container className="controller" alignItems="center">
+          <Grid item xs={12} sm={6}>
+            <Box display="flex">
+              <Box className="thirds">
+                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeKeyboard", payload: AppData.oneOctave.mode})} disabled={transportState === "started"}>
+                  {AppData.oneOctave.viewName}
+                </Button>
+              </Box>
+              <Box className="thirds">
+                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeKeyboard", payload: AppData.toyPiano.mode})} disabled={transportState === "started"}>
+                  {AppData.toyPiano.viewName}
+                </Button>
+              </Box>
+              <Box className="thirds">
+                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeKeyboard", payload: AppData.keyboard76.mode})} disabled={transportState === "started"}>
+                  {AppData.keyboard76.viewName}
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Box display="flex">
+              <Box className="quarters">
+                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeBeat", payload: AppData.twoFour.mode})} disabled={transportState === "started"}>
+                  {AppData.twoFour.viewName}
+                </Button>
+              </Box>
+              <Box className="quarters">
+                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeBeat", payload: AppData.threeFour.mode})} disabled={transportState === "started"}>
+                  {AppData.threeFour.viewName}
+                </Button>
+              </Box>
+              <Box className="quarters">
+                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeBeat", payload: AppData.fourFour.mode})} disabled={transportState === "started"}>
+                  {AppData.fourFour.viewName}
+                </Button>
+              </Box>
+              <Box className="quarters">
+                <Button variant="outlined" className={classes.common} onClick={() => dispatch({type: "changeBeat", payload: AppData.sixEight.mode})} disabled={transportState === "started"}>
+                  {AppData.sixEight.viewName}
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <ControlSlider
+              value={state.numberOfBars}
+              onChange={handleChangeBars}
+              min={2}
+              max={16}
+              onMouseDown={() => setIsChanging(true)}
+              onChangeCommitted={() => setIsChanging(false)}
+              disabled={transportState === "started"}
+              iconRotate={true}
+              IconLeft={DragHandleIcon}
+              IconRight={ReorderIcon}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <ControlSlider
+              value={bpm}
+              onChange={handleChange}
+              min={40}
+              max={200}
+              onMouseDown={() => setIsChanging(true)}
+              onChangeCommitted={() => setIsChanging(false)}
+              disabled={false}
+              valueLabelDisplay="auto"
+              iconRotate={false}
+              IconLeft={DirectionsWalkIcon}
+              IconRight={DirectionsRunIcon}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Box m={1} textAlign="center">
+              <IconButton className={classes.dark} onClick={() => toggleDrawer(false)}>
+                <ExpandLessIcon />
+              </IconButton>
+            </Box>
+          </Grid>
+        </Grid>
+      </Drawer>
     </div>
   );
 }

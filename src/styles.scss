@@ -3,9 +3,9 @@
   text-align: center;
 }
 
-html body {
+html, body, div#root {
   width: 100%;
-  background-color: white;
+  height: 100%;
   margin: 0;
 }
 
@@ -20,7 +20,9 @@ h2 {
 #container {
   /* border: 1px solid silver; */
   background-color: white;
-  height: 95vh;
+  width: 99%;
+  height: 100%;
+  margin: auto;
 }
 
 #container * {
@@ -30,7 +32,6 @@ h2 {
 #piano-roll {
   overflow: auto;
   height: 90%;
-  margin-right: 10px;
 }
 
 .octave {
@@ -96,7 +97,7 @@ h2 {
   border-right: 1px solid #4682b4;
 }
 
-#controller {
+#_controller {
   position: sticky;
   top: 0;
   width:100%;
@@ -107,6 +108,23 @@ h2 {
   padding: 10px;
   
   /* margin: 10px; */
+}
+
+.controller {
+  width: 100%;
+  margin-bottom: 10px;
+
+  .controls {
+    
+  }
+
+  .thirds {
+    width: calc(100% / 3)
+  }
+
+  .quarters {
+    width: 25%;
+  }
 }
 
 .btn-w-80 {
