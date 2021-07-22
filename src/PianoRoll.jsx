@@ -248,6 +248,21 @@ export default function PianoRoll() {
     setOpenDialog(false)
   }
 
+  function getOctaveClassName(length){
+    switch(length){
+      case 1:
+        return "key-1"
+      case 7:
+        return "key-7"
+      case 8:
+        return "key-8"
+      case 12:
+        return "key-12"
+      default:
+        return ""
+    }
+  }
+
   return (
     <div id="container">
       <Grid container className="controller" alignItems="center">
@@ -286,7 +301,7 @@ export default function PianoRoll() {
       {
         state.keyboard.data.map((octaveObj, octaveIndex) => {
           return (
-            <div id={`octave:${octaveObj.octave}`} key={`octave:${octaveObj.octave}`} className="octave">
+            <div id={`octave:${octaveObj.octave}`} key={`octave:${octaveObj.octave}`} className={clsx("octave", getOctaveClassName(octaveObj.tones.length))}>
               <div className={`keyboard ${state.keyboard.mode}`}>
                 {
                   octaveObj.tones.map((tone, toneIndex) => {
@@ -363,7 +378,6 @@ export default function PianoRoll() {
       <Drawer
         anchor="top"
         open={openDrawer}
-        onOpen={() => toggleDrawer(false)}
         onClose={() => toggleDrawer(false)}
         >
         <Grid container className="controller" alignItems="center">

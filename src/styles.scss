@@ -36,6 +36,22 @@ h2 {
 
 .octave {
   display: flex;
+
+  &.key-1 {
+    height: 21px;
+  }
+
+  &.key-7 {
+    height: calc(21px * 7);
+  }
+
+  &.key-8 {
+    height: calc(21px * 8);    
+  }
+
+  &.key-12 {
+    height: calc(21px * 12);    
+  }
 }
 
 .white-key {
@@ -190,7 +206,7 @@ h2 {
 
 .row {
   display: table-row;
-  height: 20px;
+  height: 21px;
   /* border-collapse: collapse; */
 }
 
