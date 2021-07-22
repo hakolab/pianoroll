@@ -43,11 +43,14 @@ h2 {
 
 #piano-roll {
   overflow: auto;
-  height: 90%;
+  max-height: calc(100vh - 50px);
+  padding-bottom: 3px;
 }
 
 .octave {
   display: flex;
+  border-top: 1px solid #b0c4de;
+  border-bottom: 1px solid #b0c4de;
 
   &.key-1 {
     height: #{$base-cell-height};
@@ -123,19 +126,6 @@ h2 {
 
 .eighth-note > .row > div:nth-child(3n) {
   border-right: 1px solid #4682b4;
-}
-
-#_controller {
-  position: sticky;
-  top: 0;
-  width:100%;
-  margin-bottom: 10px;
-  background-color: white;
-  z-index: 100;
-  border-bottom: #4682b4;
-  padding: 10px;
-  
-  /* margin: 10px; */
 }
 
 .controller {
@@ -225,15 +215,18 @@ h2 {
 }
 
 .row {
-  display: table-row;
+  display: flex;
   height: #{$base-cell-height}
   /* border-collapse: collapse; */
 }
 
 .row > div {
-  display: table-cell;
-  border: 1px solid #b0c4de;
+  //display: table-cell;
+  //border-top: 1px solid #b0c4de;
+  border-right: 1px solid #b0c4de;
+  border-bottom: 1px solid #b0c4de;
   min-width: 30px;
+  flex-grow: 1;
   /* border-collapse: collapse; */
 }
 
@@ -268,11 +261,11 @@ h2 {
   display: table;
   width: 100%;
   border-spacing: 0;
-  border-collapse: collapse;
-  border-bottom: 1px solid #4682b4;
+  //border-collapse: collapse;
+  //border-bottom: 1px solid #4682b4;
 
   > .F > div {
-    border-bottom: 1px solid #4682b4;
+    //border-bottom: 1px solid #4682b4;
   }
 }
 

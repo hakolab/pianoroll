@@ -1,6 +1,6 @@
-import React, { useState, useReducer, useRef, useEffect } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import * as Tone from "tone";
-import { Grid, Box, Button, Drawer, IconButton, useTheme, useMediaQuery, Icon } from "@material-ui/core";
+import { Grid, Box, Button, Drawer, IconButton } from "@material-ui/core";
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
@@ -12,15 +12,12 @@ import * as AppData from "./AppData";
 import './styles.css'
 import './styles.scss'
 import { copy, copyArray, deepCopy, clone } from './recursiveCopy'
-import SelectButton from "./components/SelectButton";
-import ControlButton from "./components/ControlButton";
 import ControlSlider from "./components/ControlSlider";
-import { BrowserView, MobileView, isIOS, isMobile } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faPlay, faStop, faEraser, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { useButtonStyles } from "./hooks/useButtonStyles";
 import AlertDialog from "./components/AlertDialog";
-import { useMediaQueryDown } from './hooks/useMediaQuery';
 import clsx from 'clsx'
 
 const initialState = {
@@ -90,10 +87,6 @@ export default function PianoRoll() {
   const [isChanging, setIsChanging] = useState(false);
   
   const [baseOctaveMultiplyTimes, setBaseOctaveMultiplyTimes] = useState(3);
-
-  function handleChangeMultiplyTimes(event, newValue){
-    setBaseOctaveMultiplyTimes(newValue)
-  }
 
   function zoomOut(){
     setBaseOctaveMultiplyTimes(prevValue => {
@@ -219,7 +212,6 @@ export default function PianoRoll() {
 
   useEffect(() => {
     if(isMobile){
-      setOpenDialog(true)
       window.addEventListener('touchstart', handleTouchStart, { passive: false })
 
       function handleTouchStart(event){
@@ -307,27 +299,56 @@ export default function PianoRoll() {
               </Button>
             </Box>
             <Box className="six-pieces">
-              <Button id="clear" variant="outlined" className={classes.common} onClick={clearNotes} disabled={transportState === "started"}>
+              <Button
+                id="clear"
+                variant="outlined"
+                className={classes.common}
+                onClick={clearNotes}
+                disabled={transportState === "started"}
+              >
                 <FontAwesomeIcon icon={faEraser}/>
               </Button>
             </Box>
             <Box className="six-pieces">
-              <Button id="clear-all"  variant="outlined" className={clsx(classes.common, classes.dangerHover)} onClick={() => setOpenDialog(true)} disabled={transportState === "started"}>
+              <Button
+                id="clear-all"
+                variant="outlined"
+                className={clsx(classes.common, classes.dangerHover)}
+                onClick={() => setOpenDialog(true)}
+                disabled={transportState === "started"}
+              >
                 <FontAwesomeIcon icon={faTrashAlt}/>
               </Button>
             </Box>
             <Box className="six-pieces">
-              <Button color="primary" variant="outlined" className={classes.common} onClick={zoomOut}>
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.common}
+                onClick={zoomOut}
+                disabled={baseOctaveMultiplyTimes === 2}
+              >
                 <ZoomOutIcon />
               </Button>
             </Box>
             <Box className="six-pieces">
-              <Button color="primary" variant="outlined" className={classes.common} onClick={zoomIn}>
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.common}
+                onClick={zoomIn}
+                disabled={baseOctaveMultiplyTimes === 10}
+              >
                 <ZoomInIcon />
               </Button>
             </Box>
             <Box className="six-pieces">
-              <Button color="primary" variant="outlined" className={classes.common} onClick={() => toggleDrawer(true)}>
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.common}
+                onClick={() => toggleDrawer(true)}
+              >
                 <FontAwesomeIcon icon={faCog}/>
               </Button>
             </Box>
@@ -358,8 +379,8 @@ export default function PianoRoll() {
                         id={`key:${tone.pitchName}${octaveObj.octave}`}
                         key={`key:${tone.pitchName}${octaveObj.octave}`}
                         className={`${rowClassName} ${tone.pitchName}`}
-                        >
-                        </div>
+                      >
+                      </div>
                     )
                   })
                 }
@@ -418,7 +439,7 @@ export default function PianoRoll() {
         anchor="top"
         open={openDrawer}
         onClose={() => toggleDrawer(false)}
-        >
+      >
         <Grid container className="controller" alignItems="center">
           <Grid item xs={12} sm={6}>
             <Box display="flex">
@@ -497,51 +518,34 @@ export default function PianoRoll() {
               </Box>
             </Box>
           </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={4}>
-              <ControlSlider
-                value={state.numberOfBars}
-                onChange={handleChangeBars}
-                min={2}
-                max={16}
-                onMouseDown={() => setIsChanging(true)}
-                onChangeCommitted={() => setIsChanging(false)}
-                disabled={transportState === "started"}
-                iconRotate={true}
-                IconLeft={DragHandleIcon}
-                IconRight={ReorderIcon}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <ControlSlider
-                value={bpm}
-                onChange={handleChange}
-                min={40}
-                max={200}
-                onMouseDown={() => setIsChanging(true)}
-                onChangeCommitted={() => setIsChanging(false)}
-                disabled={false}
-                valueLabelDisplay="auto"
-                iconRotate={false}
-                IconLeft={DirectionsWalkIcon}
-                IconRight={DirectionsRunIcon}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <ControlSlider
-                value={baseOctaveMultiplyTimes}
-                onChange={handleChangeMultiplyTimes}
-                min={2}
-                max={10}
-                onMouseDown={() => setIsChanging(true)}
-                onChangeCommitted={() => setIsChanging(false)}
-                disabled={transportState === "started"}
-                valueLabelDisplay="auto"
-                iconRotate={false}
-                IconLeft={ZoomOutIcon}
-                IconRight={ZoomInIcon}
-              />
-            </Grid>
+          <Grid item xs={12} sm={6}>
+            <ControlSlider
+              value={state.numberOfBars}
+              onChange={handleChangeBars}
+              min={2}
+              max={16}
+              onMouseDown={() => setIsChanging(true)}
+              onChangeCommitted={() => setIsChanging(false)}
+              disabled={transportState === "started"}
+              iconRotate={true}
+              IconLeft={DragHandleIcon}
+              IconRight={ReorderIcon}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <ControlSlider
+              value={bpm}
+              onChange={handleChange}
+              min={40}
+              max={200}
+              onMouseDown={() => setIsChanging(true)}
+              onChangeCommitted={() => setIsChanging(false)}
+              disabled={false}
+              valueLabelDisplay="auto"
+              iconRotate={false}
+              IconLeft={DirectionsWalkIcon}
+              IconRight={DirectionsRunIcon}
+            />
           </Grid>
           <Grid item xs={12}>
             <Box m={1} textAlign="center">
