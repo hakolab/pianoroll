@@ -1,3 +1,15 @@
+:root {
+  --base-octave-multiply-times: 3; 
+}
+
+$base-octave-height: calc(84px * var(--base-octave-multiply-times));
+$base-cell-height: calc(#{$base-octave-height} / 12);
+$white-key-height: calc(#{$base-octave-height} / 7);
+$black-key-height: #{$base-cell-height};
+$octave-height-key-num-7: calc(#{$base-cell-height} * 7);
+$octave-height-key-num-8: calc(#{$base-cell-height} * 8);
+
+
 .App {
   font-family: sans-serif;
   text-align: center;
@@ -38,31 +50,31 @@ h2 {
   display: flex;
 
   &.key-1 {
-    height: 21px;
+    height: #{$base-cell-height};
   }
 
   &.key-7 {
-    height: calc(21px * 7);
+    height: #{$octave-height-key-num-7};
   }
 
   &.key-8 {
-    height: calc(21px * 8);    
+    height: #{$octave-height-key-num-8};
   }
 
   &.key-12 {
-    height: calc(21px * 12);    
+    height: #{$base-octave-height}
   }
 }
 
 .white-key {
   width: 95px;
-  height: 36px;
+  height: #{$white-key-height};
   background-color: white;
 }
 
 .black-key {
   width: 55px;
-  height: 21px;
+  height: #{$black-key-height};
   background-color: #696969;
   z-index: 1;
   position: absolute;
@@ -141,6 +153,10 @@ h2 {
   .quarters {
     width: 25%;
   }
+
+  .six-pieces {
+    width: calc(100% / 6)
+  }
 }
 
 .btn-w-80 {
@@ -167,46 +183,50 @@ h2 {
 
   &.oneOctave {
     > .C.top {
-      height: 21px;
+      height: #{$base-cell-height};
     }
 
   }
 
   &.toyPiano {
-    > .C.top {
-      height: 21px;
-    } 
+    .C.top {
+      height: #{$base-cell-height};
+    }
+
+    .F.bottom {
+      height: calc(#{$octave-height-key-num-7} - calc(#{$white-key-height} * 3));
+    }
   }
 
   &.keyboard76 {
     .G.top {
-      height: 24px;
+      height: calc(#{$octave-height-key-num-8} - calc(#{$white-key-height} * 4));
     }
 
     .Gb.top {
-      top: 21px;
+      top: #{$base-cell-height};
       left: 0px;
     }
 
     .Eb.top {
-      top: 84px;
+      top: calc(#{$base-cell-height} * 4);
       left: 0px;
     }
 
     .Db.top {
-      top: 126px;
+      top: calc(#{$base-cell-height} * 6);
       left: 0px;
     }
 
     .E.bottom {
-      height: 21px !important;
+      height: calc(#{$octave-height-key-num-8} - calc(#{$white-key-height} * 4));
     }
   }
 }
 
 .row {
   display: table-row;
-  height: 21px;
+  height: #{$base-cell-height}
   /* border-collapse: collapse; */
 }
 
@@ -218,27 +238,27 @@ h2 {
 }
 
 .Bb {
-  top: 21px;
+  top: #{$base-cell-height};
   left: 0px;
 }
 
 .Ab {
-  top: 63px;
+  top: calc(#{$base-cell-height} * 3);
   left: 0px;
 }
 
 .Gb {
-  top: 105px;
+  top: calc(#{$base-cell-height} * 5);
   left: 0px;
 }
 
 .Eb {
-  top: 168px;
+  top: calc(#{$base-cell-height} * 8);
   left: 0px;
 }
 
 .Db {
-  top: 210px;
+  top: calc(#{$base-cell-height} * 10);
   left: 0px;
 }
 
