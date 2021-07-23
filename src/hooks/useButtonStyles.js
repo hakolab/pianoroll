@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core';
-import { lightBlue, blue, indigo, deepPurple } from "@material-ui/core/colors";
-import { cyan } from "@material-ui/core/colors";
+import { indigo, deepPurple } from "@material-ui/core/colors";
 
 export const useButtonStyles = makeStyles(theme => ({
   common: {
@@ -15,6 +14,7 @@ export const useButtonStyles = makeStyles(theme => ({
     color: theme.palette.primary.dark,
     borderRadius: "0",
     padding: "0",
+    minWidth: "0"
   },
   keyboardOn: {
     backgroundColor: indigo[500],

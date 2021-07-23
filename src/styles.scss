@@ -1,7 +1,9 @@
+/** オクターブの高さに掛ける数 */
 :root {
   --base-octave-multiply-times: 3; 
 }
 
+/** 高さ */
 $base-octave-height: calc(84px * var(--base-octave-multiply-times));
 $base-cell-height: calc(#{$base-octave-height} / 12);
 $white-key-height: calc(#{$base-octave-height} / 7);
@@ -29,150 +31,102 @@ h2 {
   margin-top: 0;
 }
 
+/** コンテナ */
 #container {
   /* border: 1px solid silver; */
   background-color: white;
   width: 99%;
   height: 100%;
   margin: auto;
+  position: relative;
 }
 
+/** コンテナ以下すべて */
 #container * {
   box-sizing: border-box;
 }
 
-#piano-roll {
-  overflow: auto;
-  max-height: calc(100vh - 50px);
-  padding-bottom: 3px;
+/** ヘッダー */
+#header {
+  position: sticky;
+  top: 0;
 }
 
-.octave {
-  display: flex;
-  border-top: 1px solid #b0c4de;
-  border-bottom: 1px solid #b0c4de;
-
-  &.key-1 {
-    height: #{$base-cell-height};
-  }
-
-  &.key-7 {
-    height: #{$octave-height-key-num-7};
-  }
-
-  &.key-8 {
-    height: #{$octave-height-key-num-8};
-  }
-
-  &.key-12 {
-    height: #{$base-octave-height}
-  }
-}
-
-.white-key {
-  width: 95px;
-  height: #{$white-key-height};
-  background-color: white;
-}
-
-.black-key {
-  width: 55px;
-  height: #{$black-key-height};
-  background-color: #696969;
-  z-index: 1;
-  position: absolute;
-  border: 1px solid gray;
-}
-
-.two-four > .row > div {
-  &:nth-child(even) {
-    border-right: 1px solid #4682b4;
-  }
-
-  &:nth-child(4n) {
-    border-right: 2px solid #4682b4;
-  }
-}
-
-.three-four > .row > div {
-  &:nth-child(even) {
-    border-right: 1px solid #4682b4;
-  }
-
-  &:nth-child(6n) {
-    border-right: 2px solid #4682b4;
-  }
-}
-
-.four-four > .row > div {
-  &:nth-child(even) {
-    border-right: 1px solid #4682b4;
-  }
-
-  &:nth-child(8n) {
-    border-right: 2px solid #4682b4;
-  }
-}
-
-.six-eight > .row > div {
-  &:nth-child(3n) {
-    border-right: 1px solid #4682b4;
-  }
-
-  &:nth-child(6n) {
-    border-right: 2px solid #4682b4;
-  }
-}
-
-.eighth-note > .row > div:nth-child(3n) {
-  border-right: 1px solid #4682b4;
-}
-
+/** コントローラ */
 .controller {
-  width: 100%;
+  width: 99%;
   margin-bottom: 10px;
+  background-color: white;
+  z-index: 100;
 
-  .controls {
-    
-  }
-
+  //３等分
   .thirds {
     width: calc(100% / 3)
   }
 
+  //４等分
   .quarters {
     width: 25%;
   }
 
+  //６等分
   .six-pieces {
     width: calc(100% / 6)
   }
 }
 
-.btn-w-80 {
-  width: 80px;
+/** ピアノロール */
+#piano-roll {
+  display: flex;
+  overflow: scroll;
+  max-height: calc(100vh - 50px);
+  //padding-top: 50px;
+  padding-bottom: 3px;
+
 }
 
-.btn-w-120 {
-  width: 120px;
-}
-
-.btn-w-130 {
-  width: 130px;
-}
-
+/** 鍵盤 */
 .keyboard {
   position: sticky;
   left: 0;
 
-  > div {
-    border: 1px solid black;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+  .octave {
+    position: relative;
+
+    div {
+      border: 1px solid black;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+
+    .Bb {
+      top: #{$base-cell-height};
+      left: 0px;
+    }
+    
+    .Ab {
+      top: calc(#{$base-cell-height} * 3);
+      left: 0px;
+    }
+    
+    .Gb {
+      top: calc(#{$base-cell-height} * 5);
+      left: 0px;
+    }
+    
+    .Eb {
+      top: calc(#{$base-cell-height} * 8);
+      left: 0px;
+    }
+    
+    .Db {
+      top: calc(#{$base-cell-height} * 10);
+      left: 0px;
+    }
   }
 
   &.oneOctave {
-    > .C.top {
+    .C.top {
       height: #{$base-cell-height};
     }
 
@@ -214,91 +168,146 @@ h2 {
   }
 }
 
-.row {
-  display: flex;
-  height: #{$base-cell-height}
-  /* border-collapse: collapse; */
-}
+/** オクターブ（鍵盤、グリッド共通） */
+.octave {
+  &.key-1 {
+    height: #{$base-cell-height};
+  }
 
-.row > div {
-  //display: table-cell;
-  //border-top: 1px solid #b0c4de;
-  border-right: 1px solid #b0c4de;
-  border-bottom: 1px solid #b0c4de;
-  min-width: 30px;
-  flex-grow: 1;
-  /* border-collapse: collapse; */
-}
+  &.key-7 {
+    height: #{$octave-height-key-num-7};
+  }
 
-.Bb {
-  top: #{$base-cell-height};
-  left: 0px;
-}
+  &.key-8 {
+    height: #{$octave-height-key-num-8};
+  }
 
-.Ab {
-  top: calc(#{$base-cell-height} * 3);
-  left: 0px;
-}
-
-.Gb {
-  top: calc(#{$base-cell-height} * 5);
-  left: 0px;
-}
-
-.Eb {
-  top: calc(#{$base-cell-height} * 8);
-  left: 0px;
-}
-
-.Db {
-  top: calc(#{$base-cell-height} * 10);
-  left: 0px;
-}
-
-
-
-.grid {
-  display: table;
-  width: 100%;
-  border-spacing: 0;
-  //border-collapse: collapse;
-  //border-bottom: 1px solid #4682b4;
-
-  > .F > div {
-    //border-bottom: 1px solid #4682b4;
+  &.key-12 {
+    height: #{$base-octave-height}
   }
 }
 
-.w-key {
-  .active {
+/** 白鍵 */
+.white-key {
+  width: 95px;
+  height: #{$white-key-height};
+  background-color: white;
+}
+
+/** 黒鍵 */
+.black-key {
+  width: 55px;
+  height: #{$black-key-height};
+  background-color: #696969;
+  z-index: 1;
+  position: absolute;
+  border: 1px solid gray;
+}
+
+/** 拍子線 */
+.two-four > .octave > .row > div {
+  &:nth-child(even) {
+    border-right: 1px solid #4682b4;
+  }
+
+  &:nth-child(4n) {
+    border-right: 2px solid #4682b4;
+  }
+}
+
+.three-four > .octave > .row > div {
+  &:nth-child(even) {
+    border-right: 1px solid #4682b4;
+  }
+
+  &:nth-child(6n) {
+    border-right: 2px solid #4682b4;
+  }
+}
+
+.four-four > .octave > .row > div {
+  &:nth-child(even) {
+    border-right: 1px solid #4682b4;
+  }
+
+  &:nth-child(8n) {
+    border-right: 2px solid #4682b4;
+  }
+}
+
+.six-eight > .octave > .row > div {
+  &:nth-child(3n) {
+    border-right: 1px solid #4682b4;
+  }
+
+  &:nth-child(6n) {
+    border-right: 2px solid #4682b4;
+  }
+}
+
+/** グリッド */
+.grid {
+  width: 100%;
+  border-spacing: 0;
+
+  .octave {
+    // 最初のオクターブで最初の行の div
+    &:first-child > .row:first-child > div {
+      border-top: 2px solid #4682b4;
+    }
+
+    .row {
+      display: flex;
+      height: #{$base-cell-height};
+
+      div {
+        border-right: 1px solid #b0c4de;
+        min-width: 30px;
+        flex-grow: 1;
+      }
+    
+      // 最後の行の div
+      &:last-child > div {
+        border-bottom: 2px solid #4682b4;
+      }
+
+      // それ以外
+      &:not(:last-child) > div {
+        border-bottom: 1px solid #b0c4de;
+      }
+    }    
+  }
+}
+
+.w-key > div {
+  &.active {
     //background-color: #e7feff;
     background-color: #FCEDAA;
   }
 
-  .now {
+  &.now {
     //background-color: #eff7ff;
     background-color: #eff7ff;
   }
 
-  .active.now {
+  &.active.now {
     //background-color: #f5deb3;
     background-color: #FCF1D3;
   }
 }
 
-.b-key {
-  &.row {
-    background-color: #f5f5f5;
-  }
-  .active {
+.b-key > div {
+  background-color: #f5f5f5;
+
+  &.active {
     background-color: #ECACB5;
   }
 
-  .now {
+  &.now {
     background-color: #D5E0F1;
   }
 
-  .active.now {
+  &.active.now {
     background-color: #F6D4D8;
   }
 }
