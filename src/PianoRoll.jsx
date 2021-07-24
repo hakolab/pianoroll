@@ -72,37 +72,43 @@ function reducer(state, action){
   }
 }
 
-function Key({id, key, className}){
+const keySynth = new Tone.Synth().toDestination();
+
+function Key({id, className, pitchName}){
   const [isPress, setIsPress] = useState(false)
 
   function handleMouseDown(){
+    keySynth.triggerAttack(pitchName)
     setIsPress(true);
   }
 
   function handleMouseUp(){
+    keySynth.triggerRelease()
     setIsPress(false);
   }
 
-  function handleMouseEnter(){
+  function handleMouseEnter(event){
     // 左クリックされていなければ return
     if (event.buttons !== 1) {
       return;
     }
+    keySynth.triggerAttack(pitchName)
     setIsPress(true);
   }
 
-  function handleMouseOut(){
+  function handleMouseOut(event){
     // 左クリックされていなければ return
     if (event.buttons !== 1) {
       return;
     }
+    keySynth.triggerRelease()
     setIsPress(false); 
   }
 
   return (
     <div
       id={id}
-      key={key}
+      //key={id}
       className={clsx(className, isPress && "press")}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
@@ -415,6 +421,7 @@ export default function PianoRoll() {
                           id={`key:${tone.pitchName}${octaveObj.octave}`}
                           key={`key:${tone.pitchName}${octaveObj.octave}`}
                           className={clsx(rowClassName, tone.pitchName)}
+                          pitchName={`${tone.pitchName}${octaveObj.octave}`}
                         >
                         </Key>
                       )
