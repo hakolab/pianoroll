@@ -81,8 +81,7 @@ h2 {
   overflow: scroll;
   max-height: calc(100vh - 50px);
   //padding-top: 50px;
-  padding-bottom: 3px;
-
+  //padding-bottom: 10px;
 }
 
 /** 鍵盤 */
@@ -124,6 +123,41 @@ h2 {
       left: 0px;
     }
   }
+
+  /** 白鍵 */
+.white-key {
+  width: 95px;
+  height: #{$white-key-height};
+  background-color: white;
+
+  &.press {
+    border-top: 2px solid #696969;
+    border-bottom: 2px solid #696969;
+    background: linear-gradient(to top, white 88%, silver);
+  }
+
+}
+
+/** 黒鍵 */
+.black-key {
+  width: 55px;
+  height: #{$black-key-height};
+  background: linear-gradient(to top, #696969 40%, white);
+  border-right: 5px solid #696969;
+
+  z-index: 1;
+  position: absolute;
+  border: 1px solid gray;
+
+  box-shadow: 3px 3px silver;
+
+  &.press {
+    border-top: 2px solid #696969;
+    border-bottom: 2px solid #696969;
+    box-shadow: 0px 0px;
+    background: linear-gradient(to top, #696969 60%, white);
+  }
+}
 
   &.oneOctave {
     .C.top {
@@ -185,23 +219,6 @@ h2 {
   &.key-12 {
     height: #{$base-octave-height}
   }
-}
-
-/** 白鍵 */
-.white-key {
-  width: 95px;
-  height: #{$white-key-height};
-  background-color: white;
-}
-
-/** 黒鍵 */
-.black-key {
-  width: 55px;
-  height: #{$black-key-height};
-  background-color: #696969;
-  z-index: 1;
-  position: absolute;
-  border: 1px solid gray;
 }
 
 /** 拍子線 */

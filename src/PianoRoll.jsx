@@ -72,6 +72,47 @@ function reducer(state, action){
   }
 }
 
+function Key({id, key, className}){
+  const [isPress, setIsPress] = useState(false)
+
+  function handleMouseDown(){
+    setIsPress(true);
+  }
+
+  function handleMouseUp(){
+    setIsPress(false);
+  }
+
+  function handleMouseEnter(){
+    // 左クリックされていなければ return
+    if (event.buttons !== 1) {
+      return;
+    }
+    setIsPress(true);
+  }
+
+  function handleMouseOut(){
+    // 左クリックされていなければ return
+    if (event.buttons !== 1) {
+      return;
+    }
+    setIsPress(false); 
+  }
+
+  return (
+    <div
+      id={id}
+      key={key}
+      className={clsx(className, isPress && "press")}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseEnter={handleMouseEnter}
+      onMouseOut={handleMouseOut}
+    >
+    </div>
+  )
+}
+
 export default function PianoRoll() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -351,8 +392,6 @@ export default function PianoRoll() {
             </Box>
           </Box>
         </Grid>
-        
-        
       </Grid>
       <div id="piano-roll">
         <div className={`keyboard ${state.keyboard.mode}`}>
@@ -372,12 +411,12 @@ export default function PianoRoll() {
                         rowClassName += ' bottom'
                       }
                       return (
-                        <div
+                        <Key
                           id={`key:${tone.pitchName}${octaveObj.octave}`}
                           key={`key:${tone.pitchName}${octaveObj.octave}`}
-                          className={`${rowClassName} ${tone.pitchName}`}
+                          className={clsx(rowClassName, tone.pitchName)}
                         >
-                        </div>
+                        </Key>
                       )
                     })
                   }
