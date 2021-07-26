@@ -1,74 +1,53 @@
-function Back(){
-  return (
-    <div id="piano-roll">
-    {
-      state.keyboard.data.map((octaveObj, octaveIndex) => {
-        return (
-          <div id={`octave:${octaveObj.octave}`} key={`octave:${octaveObj.octave}`} className={clsx("octave", getOctaveClassName(octaveObj.tones.length))}>
-            <div className={`keyboard ${state.keyboard.mode}`}>
-              {
-                octaveObj.tones.map((tone, toneIndex) => {
-                  let rowClassName = octaveObj.bKeyIndex.indexOf(toneIndex) >= 0 ? "black-key" : "white-key";
-                  // 最高音域の場合は .top を設定
-                  if(octaveIndex === 0){
-                    rowClassName += ' top'
-                  }
-                  // 最低音域の場合は、 .bottom を設定
-                  if((state.keyboard.data.length - 1) === octaveIndex){
-                    rowClassName += ' bottom'
-                  }
-                  return (
-                    <div
-                      id={`key:${tone.pitchName}${octaveObj.octave}`}
-                      key={`key:${tone.pitchName}${octaveObj.octave}`}
-                      className={`${rowClassName} ${tone.pitchName}`}
-                    >
-                    </div>
-                  )
-                })
-              }
-            </div>
-            <div id="grid-roll" className={`grid ${state.beat.mode}`}>
-              {
-                octaveObj.tones.map((tone, toneIndex) => {
-                  let rowClassName =octaveObj.bKeyIndex.indexOf(toneIndex) >= 0 ? "b-key" : "w-key";
-                  return (
-                    <div id={`tone:${tone.pitchName}`} key={`tone:${tone.pitchName}`} className={`row ${rowClassName} ${tone.pitchName}`}>
-                      {
-                        state.notes[octaveIndex][toneIndex].map((note, noteIndex) => {
-                          // 選択されているか
-                          let cellClassName = note ? "active" : "";
-                          // シーケンサーがいまのステップか
-                          if (currentStep === noteIndex) {
-                            cellClassName = cellClassName + " now";
-                          }
-                          return (
-                            <div
-                              id={`note[${tone.pitchName}${octaveObj.octave}]:${noteIndex}`}
-                              key={`note[${tone.pitchName}${octaveObj.octave}]:${noteIndex}`}
-                              data-octave={octaveIndex}
-                              data-tone={toneIndex}
-                              data-note={noteIndex}
-                              onMouseDown={(event) =>
-                                handleMouseDown(event, octaveIndex, toneIndex, noteIndex)
-                              }
-                              onMouseEnter={(event) =>
-                                handleMouseEnter(event, octaveIndex, toneIndex, noteIndex)
-                              }
-                              className={cellClassName}
-                            ></div>
-                          )
-                        })
-                      }
-                    </div>
-                  )
-                })
-              }
-            </div>
-          </div>
-        )
-      })
+/* useEffect(() => {
+  if(isMobile){
+    window.addEventListener('touchstart', handleTouchStart, { passive: false })
+
+    function handleTouchStart(event){
+      console.log(state)
+      const pageX = event.touches[0].pageX
+      const pageY = event.touches[0].pageY
+      const element = document.elementFromPoint(pageX,pageY)
+
+      // 要素が取得できなかったら何もしない
+      if(element === null){
+        return
+      }
+      // グリッドのセルをタッチしたとき
+      if(element.id.startsWith('note[')){
+        //dispatch({type: "setTouchTargetId", payload: element.id})
+        dispatch({type: "toggleActivationOfNote", payload: {octave: element.dataset.octave, row: element.dataset.tone, col: element.dataset.note}})
+        console.log('start')
+
+        function handleTouchMove(e){
+          console.log('move')
+          const pageX = e.touches[0].pageX
+          const pageY = e.touches[0].pageY
+          // タッチ座標から要素を取得
+          const element = document.elementFromPoint(pageX,pageY)
+          // 要素が取得できなかった、またはセルじゃないとき
+          if(element === null || element.id.startsWith('note[') === false){
+            return
+          }
+          // 対象セルが変わったとき
+          if(state.touchTargetId !== element.id){
+            console.log(state.touchTargetId)
+            console.log(element.id)
+            //dispatch({type: "setTouchTargetId", payload: element.id})
+            dispatch({type: "toggleActivationOfNote", payload: {octave: element.dataset.octave, row: element.dataset.tone, col: element.dataset.note}})
+          }
+        }
+
+        function handleTouchEnd(){
+          console.log('end')
+          window.removeEventListener('touchmove', handleTouchMove, { passive: false })
+          window.removeEventListener('touchend', handleTouchEnd, { passive: false })
+        }
+
+        window.addEventListener('touchmove', handleTouchMove, { passive: false })
+        window.addEventListener('touchend', handleTouchEnd, { passive: false })
+
+        event.preventDefault()
+      }
     }
-    </div>
-  )
-}
+  }
+},[]) */

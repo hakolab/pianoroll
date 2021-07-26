@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack serve --open 'Google Chrome' --mode development",
-    "deploy": "firebase deploy --only hosting:pianoroll"
+    "deploy": "firebase deploy --only hosting:pianoroll",
+    "lint": "eslint src"
   },
   "author": "",
   "license": "",
@@ -18,6 +19,9 @@
     "babel-loader": "^8.2.2",
     "classnames": "^2.2.6",
     "css-loader": "^5.0.1",
+    "eslint": "^7.31.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "style-loader": "^2.0.0",

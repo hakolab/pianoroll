@@ -13,39 +13,41 @@ import './styles.css'
 import './styles.scss'
 import { copy, copyArray, deepCopy, clone } from './recursiveCopy'
 import ControlSlider from "./components/ControlSlider";
-import { isMobile } from "react-device-detect";
+//import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faPlay, faStop, faEraser, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { useButtonStyles } from "./hooks/useButtonStyles";
 import AlertDialog from "./components/AlertDialog";
 import clsx from 'clsx'
+import PropTypes from 'prop-types';
 
 const initialState = {
   numberOfBars: 4,
   beat: clone(AppData.fourFour),
   noteCount: 32,
   keyboard: clone(AppData.oneOctave),
-  notes: AppData.oneOctave.data.map(octaveObj => octaveObj.tones.map(_ =>  new Array(32).fill(false)))
+  notes: AppData.oneOctave.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(32).fill(false))),
+  touchTargetId: null
 }
 
 function reducer(state, action){
   switch(action.type){
     case "changeNumberOfBars": {
       const newNoteCount = state.beat.numberOfNotesInBar * action.payload
-      const newNotes = copyArray(state.notes, state.keyboard.data.map(octaveObj => octaveObj.tones.map(_ =>  new Array(newNoteCount).fill(false))))
+      const newNotes = copyArray(state.notes, state.keyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(newNoteCount).fill(false))))
       return {...state, numberOfBars: action.payload, noteCount: newNoteCount, notes: newNotes}
     }
     case "changeBeat": {
       const newBeat = AppData.getBeat(action.payload)
       const newNoteCount = newBeat.numberOfNotesInBar * state.numberOfBars
-      const newNotes = copyArray(state.notes, state.keyboard.data.map(octaveObj => octaveObj.tones.map(_ =>  new Array(newNoteCount).fill(false))))
+      const newNotes = copyArray(state.notes, state.keyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(newNoteCount).fill(false))))
       return {...state, beat: newBeat, noteCount: newNoteCount, notes: newNotes}
     }
     case "changeKeyboard": {
       const newKeyboard = AppData.getKeyboard(action.payload);
       const toNotes = copy(
         state.notes,
-        newKeyboard.data.map(octaveObj => octaveObj.tones.map(_ =>  new Array(state.noteCount).fill(false))),
+        newKeyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(state.noteCount).fill(false))),
         state.keyboard.data,
         newKeyboard.data)
 
@@ -65,7 +67,11 @@ function reducer(state, action){
       return {...initialState}
     }
     case "clearNotes": {
-      return {...state, notes: state.keyboard.data.map(octaveObj => octaveObj.tones.map(_ =>  new Array(state.noteCount).fill(false)))}
+      return {...state, notes: state.keyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(state.noteCount).fill(false)))}
+    }
+    case "setTouchTargetId": {
+      //console.log(action.payload)
+      return {...state, touchTargetId: action.payload}
     }
     default:
 
@@ -74,7 +80,12 @@ function reducer(state, action){
 
 const keySynth = new Tone.Synth().toDestination();
 
-function Key({id, className, pitchName}){
+Key.propTypes = {
+  className: PropTypes.string,
+  pitchName: PropTypes.string
+};
+
+function Key({className, pitchName}){
   const [isPress, setIsPress] = useState(false)
 
   function handleMouseDown(){
@@ -107,8 +118,7 @@ function Key({id, className, pitchName}){
 
   return (
     <div
-      id={id}
-      //key={id}
+      //id={`key:${pitchName}`}
       className={clsx(className, isPress && "press")}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
@@ -254,57 +264,6 @@ export default function PianoRoll() {
     setOpenDrawer(openDrawer)
   }
 
-  const [targetNoteId, setTargetNoteId] = useState(null)
-
-
-  useEffect(() => {
-    if(isMobile){
-      window.addEventListener('touchstart', handleTouchStart, { passive: false })
-
-      function handleTouchStart(event){
-        const pageX = event.touches[0].pageX
-        const pageY = event.touches[0].pageY
-        const element = document.elementFromPoint(pageX,pageY)
-
-        // 要素が取得できなかったら何もしない
-        if(element === null){
-          return
-        }
-        // セルがクリックされていたら音を更新して終了
-        if(element.id.startsWith('note[')){
-          setTargetNoteId(element.id)
-          dispatch({type: "toggleActivationOfNote", payload: {octave: element.dataset.octave, row: element.dataset.tone, col: element.dataset.note}})
-          console.log('start')
-
-          function handleTouchMove(e){
-            console.log('move')
-            const pageX = e.touches[0].pageX
-            const pageY = e.touches[0].pageY
-            const element = document.elementFromPoint(pageX,pageY)
-            if(element === null || element.id.startsWith('note[') === false){
-              return
-            }
-            if(targetNoteId !== element.id){
-              setTargetNoteId(element.id)
-              dispatch({type: "toggleActivationOfNote", payload: {octave: element.dataset.octave, row: element.dataset.tone, col: element.dataset.note}})
-            }
-          }
-  
-          function handleTouchEnd(){
-            console.log('end')
-            window.removeEventListener('touchmove', handleTouchMove, { passive: false })
-            window.removeEventListener('touchend', handleTouchEnd, { passive: false })
-          }
-
-          window.addEventListener('touchmove', handleTouchMove, { passive: false })
-          window.addEventListener('touchend', handleTouchEnd, { passive: false })
-
-          event.preventDefault()
-        }
-      }
-    }
-  },[])
-
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleClickNo = () => {
@@ -330,6 +289,53 @@ export default function PianoRoll() {
         return ""
     }
   }
+
+const [touchTargetId, setTouchTargetId] = useState(null);
+
+useEffect(() => {
+  window.addEventListener('touchstart', handleTouchStart, { passive: false })
+  window.addEventListener('touchmove', handleTouchMove, { passive: false })
+
+  function handleTouchStart(event){
+    const pageX = event.touches[0].pageX
+    const pageY = event.touches[0].pageY
+    const element = document.elementFromPoint(pageX,pageY)
+
+    // 要素が取得できなかったら何もしない
+    if(element === null){
+      return
+    }
+    // グリッドのセルをタッチしたとき
+    if(element.id.startsWith('note[')){
+      setTouchTargetId(element.id)
+      event.preventDefault()
+    }
+  }
+
+  function handleTouchMove(event){
+    const pageX = event.touches[0].pageX
+    const pageY = event.touches[0].pageY
+    // タッチ座標から要素を取得
+    const element = document.elementFromPoint(pageX,pageY)
+    // 要素が取得できなかった、またはセルじゃないとき
+    if(element === null || element.id.startsWith('note[') === false){
+      return
+    }
+
+    setTouchTargetId(element.id)
+    event.preventDefault()
+  }
+
+},[])
+
+useEffect(() => {
+  const element = document.getElementById(touchTargetId);
+  if (element) {
+    dispatch({type: "toggleActivationOfNote", payload: {octave: element.dataset.octave, row: element.dataset.tone, col: element.dataset.note}})
+  }
+  
+}, [touchTargetId])
+
 
   return (
     <div id="container">
@@ -418,7 +424,6 @@ export default function PianoRoll() {
                       }
                       return (
                         <Key
-                          id={`key:${tone.pitchName}${octaveObj.octave}`}
                           key={`key:${tone.pitchName}${octaveObj.octave}`}
                           className={clsx(rowClassName, tone.pitchName)}
                           pitchName={`${tone.pitchName}${octaveObj.octave}`}
