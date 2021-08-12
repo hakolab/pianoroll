@@ -1,4 +1,4 @@
-import { clone } from './recursiveCopy'
+import { clone } from './utils/recursiveCopy'
 
 const twoFour = {
   mode: 'two-four',

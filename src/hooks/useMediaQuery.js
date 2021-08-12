@@ -7,6 +7,5 @@ export const useMediaQueryUp = (breakpoint) => {
 
 export const useMediaQueryDown = (breakpoint) => {
     const theme = useTheme()
-    console.log(theme.breakpoints)
     return useMediaQuery(theme.breakpoints.down(breakpoint))
 }

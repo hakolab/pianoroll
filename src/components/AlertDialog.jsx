@@ -1,62 +1,31 @@
-import React, { Fragment } from "react";
+import React from "react";
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from './Dialog'
 import PropTypes from 'prop-types';
-import { useButtonStyles } from '../hooks/useButtonStyles';
 
 AlertDialog.propTypes = {
-  open: PropTypes.bool,
-  title: PropTypes.string,
-  text: PropTypes.string,
-  confirm: PropTypes.bool,
-  onClickNo: PropTypes.func,
-  onClickOk: PropTypes.func
+  open: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
-export default function AlertDialog({open, title, text, confirm, onClickNo, onClickOk}){
-  const classes = useButtonStyles();
+export default function AlertDialog({open, title, text, onClose}){
 
-  const handleClose = (answer) => {
-    if(answer){
-      onClickOk()
-      return
-    }
-    onClickNo();
+  const handleClose = () => {
+    onClose();
   };
 
   return (
     <Dialog
       open={open}
-      onClose={() => handleClose(false)}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
+      title={title}
+      text={text}
+      onClose={handleClose}
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {text}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        {
-          confirm
-          ? <Fragment>
-              <Button onClick={() => handleClose(false)} className={classes.dangerColor}>
-                NO
-              </Button>
-              <Button onClick={() => handleClose(true)} className={classes.ok}>
-                OK
-              </Button>
-            </Fragment>
-          : <Button onClick={() => handleClose(true)} color="primary">
-              OK
-            </Button>
-        }
-      </DialogActions>
+      <Button onClick={handleClose} color="primary">
+        OK
+      </Button>
     </Dialog>
   )
 }
