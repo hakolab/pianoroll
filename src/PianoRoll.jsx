@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useRef } from "react";
 import * as Tone from "tone";
 import { Grid, Box, Button, Drawer, IconButton } from "@material-ui/core";
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
@@ -11,15 +11,16 @@ import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import * as AppData from "./AppData";
 import './styles.css'
 import './styles.scss'
-import { copy, copyArray, deepCopy, clone } from './recursiveCopy'
+import { copy, copyArray, clone } from './recursiveCopy'
 import ControlSlider from "./components/ControlSlider";
 //import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faPlay, faStop, faEraser, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faPlay, faStop, faEraser, faTrashAlt, faArrowsAlt } from "@fortawesome/free-solid-svg-icons";
 import { useButtonStyles } from "./hooks/useButtonStyles";
 import AlertDialog from "./components/AlertDialog";
 import clsx from 'clsx'
 import PropTypes from 'prop-types';
+import { isMobile } from 'react-device-detect'
 
 const initialState = {
   numberOfBars: 4,
@@ -27,7 +28,7 @@ const initialState = {
   noteCount: 32,
   keyboard: clone(AppData.oneOctave),
   notes: AppData.oneOctave.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(32).fill(false))),
-  touchTargetId: null
+  keyNotes: AppData.oneOctave.data.map(octaveObj => octaveObj.tones.map(() => false))
 }
 
 function reducer(state, action){
@@ -45,23 +46,23 @@ function reducer(state, action){
     }
     case "changeKeyboard": {
       const newKeyboard = AppData.getKeyboard(action.payload);
-      const toNotes = copy(
+      const newNotes = copy(
         state.notes,
         newKeyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(state.noteCount).fill(false))),
         state.keyboard.data,
         newKeyboard.data)
-
       return {
         ...state,
         keyboard: newKeyboard,
-        notes: toNotes
+        notes: newNotes,
+        keyNotes: newKeyboard.data.map(octaveObj => octaveObj.tones.map(() => false))
       }
     }
     case "toggleActivationOfNote": {
-      const newNotes = deepCopy(state.notes);
+      const newNotes = clone(state.notes);
       const current = newNotes[action.payload.octave][action.payload.row][action.payload.col];
       newNotes[action.payload.octave][action.payload.row][action.payload.col] = !current;
-      return {...state}
+      return {...state, notes: newNotes}
     }
     case "clearConfig": {
       return {...initialState}
@@ -69,33 +70,61 @@ function reducer(state, action){
     case "clearNotes": {
       return {...state, notes: state.keyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(state.noteCount).fill(false)))}
     }
-    case "setTouchTargetId": {
-      //console.log(action.payload)
-      return {...state, touchTargetId: action.payload}
+    case "toggleIsPress": {
+      const newKeyNotes = state.keyboard.data.map(octaveObj => octaveObj.tones.map(() => false));
+      newKeyNotes[action.payload.octave][action.payload.tone] = action.payload.isPress
+      return {...state, keyNotes: newKeyNotes}
+    }
+    case "toggleAllIsPress": {
+      return {...state, keyNotes: state.keyboard.data.map(octaveObj => octaveObj.tones.map(() => false))}
     }
     default:
 
   }
 }
 
-const keySynth = new Tone.Synth().toDestination();
-
 Key.propTypes = {
   className: PropTypes.string,
-  pitchName: PropTypes.string
+  pitchName: PropTypes.string,
+  onPress: PropTypes.func,
+  onRelease: PropTypes.func,
+  isPress: PropTypes.bool,
+  octaveIndex: PropTypes.number,
+  toneIndex: PropTypes.number
 };
 
-function Key({className, pitchName}){
-  const [isPress, setIsPress] = useState(false)
+function Key({className, pitchName, onPress, onRelease, isPress, octaveIndex, toneIndex}){
+
+  const [isPlay, setIsPlay] = useState(false);
+
+  useEffect(() => {
+    let keySynth;
+    if (isPlay){
+      Tone.getContext().resume().then(() => {
+        keySynth = new Tone.Synth().toDestination();
+        keySynth.triggerAttack(pitchName);
+      })
+    }
+
+    return () => {
+      Tone.getContext().resume().then(() => {
+        keySynth.triggerRelease();
+        setTimeout(() => {
+          keySynth.dispose();
+          keySynth = null;
+        }, keySynth.get().envelope.sustain * 1000)
+      })
+    }
+  }, [isPlay, pitchName])
 
   function handleMouseDown(){
-    keySynth.triggerAttack(pitchName)
-    setIsPress(true);
+    setIsPlay(true)
+    onPress()
   }
 
   function handleMouseUp(){
-    keySynth.triggerRelease()
-    setIsPress(false);
+    setIsPlay(false)
+    onRelease()
   }
 
   function handleMouseEnter(event){
@@ -103,8 +132,8 @@ function Key({className, pitchName}){
     if (event.buttons !== 1) {
       return;
     }
-    keySynth.triggerAttack(pitchName)
-    setIsPress(true);
+    setIsPlay(true)
+    onPress()
   }
 
   function handleMouseOut(event){
@@ -112,25 +141,50 @@ function Key({className, pitchName}){
     if (event.buttons !== 1) {
       return;
     }
-    keySynth.triggerRelease()
-    setIsPress(false); 
+    setIsPlay(false)
+    onRelease()
   }
 
   return (
     <div
-      //id={`key:${pitchName}`}
+      id={`key:${pitchName}`}
       className={clsx(className, isPress && "press")}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseEnter={handleMouseEnter}
       onMouseOut={handleMouseOut}
+      data-octave={octaveIndex}
+      data-tone={toneIndex}
     >
     </div>
   )
 }
 
+const initialAudioState = {
+  confirmed: false,
+  openDialog: false,
+  permission: false
+}
+
+function audioReducer(state, action){
+  switch(action.type){
+    case "open": {
+      return {...state, openDialog: true}
+    }
+    case "close": {
+      return {...state, openDialog: false}
+    }
+    case "confirm": {
+      return {...state, confirmed: true, permission: action.payload}
+    }
+  }
+}
+
 export default function PianoRoll() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [audioState, audioDispatch] = useReducer(audioReducer, initialAudioState);
+  //console.log("state")
+  //console.log(state)
 
   /** state トランスポートの状態 started/stopped */
   const [transportState, setTransportState] = useState(Tone.Transport.state);
@@ -144,6 +198,12 @@ export default function PianoRoll() {
   const [isChanging, setIsChanging] = useState(false);
   
   const [baseOctaveMultiplyTimes, setBaseOctaveMultiplyTimes] = useState(3);
+
+  const [scrollMode, setScrollMode] = useState(false);
+
+  function toggleScrollMode(newValue){
+    setScrollMode(newValue);
+  }
 
   function zoomOut(){
     setBaseOctaveMultiplyTimes(prevValue => {
@@ -170,7 +230,7 @@ export default function PianoRoll() {
   const classes = useButtonStyles();
 
   function handleMouseDown(event, octave, row, col) {
-    console.log('mouse')
+    //console.log('mouse')
     // 要素をドラッグしようとするのを防ぐ
     event.preventDefault();
     dispatch({type: "toggleActivationOfNote", payload: {octave, row, col}})
@@ -181,7 +241,7 @@ export default function PianoRoll() {
     if (event.buttons !== 1) {
       return;
     }
-    console.log('enter')
+    //console.log('enter')
     // テンポ変更中のときは return
     if (isChanging) {
       return;
@@ -198,6 +258,11 @@ export default function PianoRoll() {
       start()
     }
   }
+
+  const refNotes = useRef(state.notes);
+  useEffect(() => {
+    refNotes.current = state.notes
+  },[state.notes])
 
   function start() {
     const synth = new Tone.PolySynth().toDestination()
@@ -227,7 +292,7 @@ export default function PianoRoll() {
 
   function getPlayNotes(step) {
     let playNotes = [];
-    state.notes.forEach((octave, octaveIndex) => {
+    refNotes.current.forEach((octave, octaveIndex) => {
       octave.forEach((tone, toneIndex) => {
         if(tone[step]){
           playNotes.push(`${state.keyboard.data[octaveIndex].tones[toneIndex].pitchName}${state.keyboard.data[octaveIndex].octave}`);
@@ -256,6 +321,7 @@ export default function PianoRoll() {
     clearNotes();
     setBpm(120);
     setBaseOctaveMultiplyTimes(3);
+    setScrollMode(false);
     Tone.Transport.bpm.value = 120;
   }
 
@@ -275,6 +341,20 @@ export default function PianoRoll() {
     setOpenDialog(false)
   }
 
+  function handleClickOkResume(){
+    Tone.getContext().resume().then(() => {
+      audioDispatch({type: "confirm", payload: true})
+      audioDispatch({type: "close"})
+    })
+  }
+
+  useEffect(() => {
+    // ユーザーに未確認の場合は確認ダイアログを表示
+    if (!audioState.confirmed && !audioState.openDialog){
+      audioDispatch({ type: "open" })
+    }
+  },[audioState.confirmed, audioState.openDialog])
+
   function getOctaveClassName(length){
     switch(length){
       case 1:
@@ -290,52 +370,109 @@ export default function PianoRoll() {
     }
   }
 
-const [touchTargetId, setTouchTargetId] = useState(null);
+  const [touchTargetId, setTouchTargetId] = useState(null);
 
-useEffect(() => {
-  window.addEventListener('touchstart', handleTouchStart, { passive: false })
-  window.addEventListener('touchmove', handleTouchMove, { passive: false })
-
-  function handleTouchStart(event){
-    const pageX = event.touches[0].pageX
-    const pageY = event.touches[0].pageY
-    const element = document.elementFromPoint(pageX,pageY)
-
-    // 要素が取得できなかったら何もしない
-    if(element === null){
-      return
+  useEffect(() => {
+    window.addEventListener('touchstart', handleTouchStart, { passive: false })
+    if (scrollMode) {
+      window.addEventListener('touchmove', handleTouchScroll, { passive: false })
+    } else {
+      window.addEventListener('touchmove', handleTouchMove, { passive: false })
     }
-    // グリッドのセルをタッチしたとき
-    if(element.id.startsWith('note[')){
+
+    const pianoRoll = document.getElementById('piano-roll')
+    let x = null;
+    let y = null;
+    let scrollTop = null;
+    let scrollLeft = null;
+
+    function handleTouchStart(event){
+      window.addEventListener('touchend', handleTouchEnd, { passive: false })
+
+      // タッチ座標、スクロール基準位置を取得
+      x = event.touches[0].clientX;
+      y = event.touches[0].clientY;
+      scrollTop = document.getElementById('piano-roll').scrollTop
+      scrollLeft = document.getElementById('piano-roll').scrollLeft
+
+      // 鍵盤をタッチしたとき
+      const element = document.elementFromPoint(x,y)
+      if(!scrollMode && element && element.id.startsWith('key:')){
+        setTouchTargetId(element.id)
+        event.preventDefault()
+      }
+    }
+
+    function handleTouchScroll(event){
+      const clientX = event.touches[0].clientX
+      const clientY = event.touches[0].clientY
+
+      pianoRoll.scrollTop = scrollTop + y - clientY
+      pianoRoll.scrollLeft = scrollLeft + x - clientX
+      event.preventDefault()
+    }
+
+    function handleTouchMove(event){
+      const clientX = event.touches[0].clientX
+      const clientY = event.touches[0].clientY
+
+      // タッチ座標から要素を取得
+      const element = document.elementFromPoint(clientX, clientY)
+      // 要素が取得できなかった、またはセルでも鍵盤でもないとき
+      if(element === null || (element.id.startsWith('note[') === false && element.id.startsWith('key:') === false)){
+        setTouchTargetId(null)
+        return
+      }
+
       setTouchTargetId(element.id)
       event.preventDefault()
     }
-  }
 
-  function handleTouchMove(event){
-    const pageX = event.touches[0].pageX
-    const pageY = event.touches[0].pageY
-    // タッチ座標から要素を取得
-    const element = document.elementFromPoint(pageX,pageY)
-    // 要素が取得できなかった、またはセルじゃないとき
-    if(element === null || element.id.startsWith('note[') === false){
-      return
+    function handleTouchEnd(){
+      setTouchTargetId(null)
     }
 
-    setTouchTargetId(element.id)
-    event.preventDefault()
-  }
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart, { passive: false })
+      window.removeEventListener('touchmove', handleTouchMove, { passive: false })
+      window.removeEventListener('touchmove', handleTouchScroll, { passive: false })
+      window.removeEventListener('touchend', handleTouchEnd, { passive: false })
+    }
+  },[scrollMode])
 
-},[])
+  useEffect(() => {
+    const element = document.getElementById(touchTargetId);
+    if (element && element.id.startsWith("note[")) {
+      dispatch({type: "toggleActivationOfNote", payload: {octave: element.dataset.octave, row: element.dataset.tone, col: element.dataset.note}})
+    }
+  }, [touchTargetId])
 
-useEffect(() => {
-  const element = document.getElementById(touchTargetId);
-  if (element) {
-    dispatch({type: "toggleActivationOfNote", payload: {octave: element.dataset.octave, row: element.dataset.tone, col: element.dataset.note}})
-  }
-  
-}, [touchTargetId])
+  useEffect(() => {
+    const element = document.getElementById(touchTargetId);
+    let _synth;
 
+    Tone.getContext().resume().then(() => {
+      _synth = new Tone.Synth().toDestination();
+
+      if (element && element.id.startsWith("key:")) {
+        dispatch({type: "toggleIsPress", payload: {octave: element.dataset.octave, tone: element.dataset.tone, isPress: true}})
+        _synth.triggerAttack(element.id.replace("key:", ""));
+        
+      } else if(!element) {
+        dispatch({type: "toggleAllIsPress"})
+      }
+    })
+    
+    return () => {
+      Tone.getContext().resume().then(() => {
+        _synth.triggerRelease();
+        setTimeout(() => {
+          _synth.dispose();
+          _synth = null;
+        }, _synth.get().envelope.sustain * 1000)
+      })
+    }
+  }, [touchTargetId])
 
   return (
     <div id="container">
@@ -343,7 +480,7 @@ useEffect(() => {
         <Grid item xs>
           <Box display="flex">
             <Box className="six-pieces">
-              <Button variant="outlined" className={classes.common} onClick={toggle}>
+              <Button variant="outlined" className={classes.common} onClick={toggle} disabled={!audioState.permission}>
                 {
                   transportState === "started"
                     ? <FontAwesomeIcon icon={faStop}/>
@@ -363,15 +500,29 @@ useEffect(() => {
               </Button>
             </Box>
             <Box className="six-pieces">
-              <Button
-                id="clear-all"
-                variant="outlined"
-                className={clsx(classes.common, classes.dangerHover)}
-                onClick={() => setOpenDialog(true)}
-                disabled={transportState === "started"}
-              >
-                <FontAwesomeIcon icon={faTrashAlt}/>
-              </Button>
+              {
+                isMobile &&
+                <Button
+                  id="scroll"
+                  variant="outlined"
+                  className={clsx(classes.common, scrollMode === true && classes.scrollOn)}
+                  onClick={() => toggleScrollMode(!scrollMode)}
+                >
+                  <FontAwesomeIcon icon={faArrowsAlt}/>
+                </Button>
+              }
+              {
+                !isMobile &&
+                <Button
+                  id="clear-all"
+                  variant="outlined"
+                  className={clsx(classes.common, classes.dangerHover)}
+                  onClick={() => setOpenDialog(true)}
+                  disabled={transportState === "started"}
+                >
+                  <FontAwesomeIcon icon={faTrashAlt}/>
+                </Button>
+              }
             </Box>
             <Box className="six-pieces">
               <Button
@@ -427,6 +578,11 @@ useEffect(() => {
                           key={`key:${tone.pitchName}${octaveObj.octave}`}
                           className={clsx(rowClassName, tone.pitchName)}
                           pitchName={`${tone.pitchName}${octaveObj.octave}`}
+                          isPress={state.keyNotes[octaveIndex][toneIndex]}
+                          onPress={() => dispatch({ type: "toggleIsPress", payload: { octave: octaveIndex, tone: toneIndex, isPress: true}})}
+                          onRelease={() => dispatch({ type: "toggleIsPress", payload: { octave: octaveIndex, tone: toneIndex, isPress: false}})}
+                          octaveIndex={octaveIndex}
+                          toneIndex={toneIndex}
                         >
                         </Key>
                       )
@@ -604,6 +760,22 @@ useEffect(() => {
               IconRight={DirectionsRunIcon}
             />
           </Grid>
+          {
+            isMobile &&
+            <Grid item xs={12}>
+              <Box m={1} textAlign="center">
+                <Button
+                  id="clear-all"
+                  variant="outlined"
+                  className={clsx(classes.common, classes.dangerButton, classes.dangerHover)}
+                  onClick={() => setOpenDialog(true)}
+                  disabled={transportState === "started"}
+                >
+                  <FontAwesomeIcon icon={faTrashAlt}/>
+                </Button>
+              </Box>
+            </Grid>
+          }
           <Grid item xs={12}>
             <Box m={1} textAlign="center">
               <IconButton className={classes.dark} onClick={() => toggleDrawer(false)}>
@@ -613,6 +785,14 @@ useEffect(() => {
           </Grid>
         </Grid>
       </Drawer>
+      <AlertDialog
+        open={audioState.openDialog}
+        title={"NOTIFICATION"}
+        text={"PianoRoll は音が鳴ります！"}
+        confirm={false}
+        onClickNo={handleClickOkResume}
+        onClickOk={handleClickOkResume}
+      />
     </div>
   );
 }

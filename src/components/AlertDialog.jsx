@@ -5,8 +5,17 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Box, Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import { useButtonStyles } from '../hooks/useButtonStyles';
+
+AlertDialog.propTypes = {
+  open: PropTypes.bool,
+  title: PropTypes.string,
+  text: PropTypes.string,
+  confirm: PropTypes.bool,
+  onClickNo: PropTypes.func,
+  onClickOk: PropTypes.func
+};
 
 export default function AlertDialog({open, title, text, confirm, onClickNo, onClickOk}){
   const classes = useButtonStyles();

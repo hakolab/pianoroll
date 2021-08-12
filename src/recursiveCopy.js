@@ -107,7 +107,7 @@ function copyArray(fromTone, toTone, index = 0) {
   return copyArray(fromTone, newToTone, index + 1);
 }
 
-function deepCopy(from) {
+/* function deepCopy(from) {
   const result = [];
   for (let item in from) {
     if (Array.isArray(from[item])){
@@ -121,7 +121,7 @@ function deepCopy(from) {
     }
   }
   return result;
-}
+} */
 
 function clone(from) {
   if (Array.isArray(from)) {
@@ -166,6 +166,5 @@ export {
   copy,
   find,
   copyArray,
-  deepCopy,
   clone
 }

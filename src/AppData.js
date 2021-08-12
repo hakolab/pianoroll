@@ -261,15 +261,6 @@ function getBeatsName(){
   ]
 }
 
-function getNumberOfNotesInBar(mode){
-  for(let beat of beatOptions){
-    if(beat.mode === mode){
-      return beat.numberOfNotesInBar
-    }
-  }
-  return -1
-}
-
 function getBeat(mode){
   switch(mode){
     case "two-four":
@@ -308,5 +299,4 @@ export {
   getKeyboard,
   getKeyboardsName,
   getBeatsName,
-  getNumberOfNotesInBar
 }
