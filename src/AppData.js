@@ -287,6 +287,24 @@ function getKeyboard(mode){
   }
 }
 
+function getOctaveClassName(length){
+  switch(length){
+    case 1:
+      return "key-1"
+    case 7:
+      return "key-7"
+    case 8:
+      return "key-8"
+    case 12:
+      return "key-12"
+    default:
+      return ""
+  }
+}
+
+const zoomMin = 2;
+const zoomMax = 10;
+
 export {
   twoFour,
   threeFour,
@@ -295,8 +313,11 @@ export {
   oneOctave,
   toyPiano,
   keyboard76,
+  zoomMin,
+  zoomMax,
   getBeat,
   getKeyboard,
   getKeyboardsName,
   getBeatsName,
+  getOctaveClassName
 }

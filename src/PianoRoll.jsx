@@ -1,4 +1,5 @@
-import React, { useState, useReducer, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { usePianoRoll } from "./hooks/usePianoRoll";
 import * as Tone from "tone";
 import { Grid, Box, Button, Drawer, IconButton } from "@material-ui/core";
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
@@ -10,7 +11,6 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import * as AppData from "./AppData";
 import './styles.scss'
-import { copy, copyArray, clone } from './utils/recursiveCopy'
 import ControlSlider from "./components/ControlSlider";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faPlay, faStop, faEraser, faTrashAlt, faArrowsAlt } from "@fortawesome/free-solid-svg-icons";
@@ -19,104 +19,14 @@ import AlertDialog from "./components/AlertDialog";
 import ConfirmDialog from "./components/ConfirmDialog";
 import clsx from 'clsx'
 import Key from './components/Key'
-import { useCssVariable } from "./hooks/useCssVariable";
-
 import { isMobile } from 'react-device-detect'
-import { useToggle } from "./hooks/useToggle";
-//import { useConfirmDialogState } from "./hooks/useConfirmDialogState";
 import { useDialogState } from "./hooks/useDialogState";
 
-const initialState = {
-  numberOfBars: 4,
-  beat: clone(AppData.fourFour),
-  noteCount: 32,
-  keyboard: clone(AppData.oneOctave),
-  notes: AppData.oneOctave.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(32).fill(false))),
-  keyNotes: AppData.oneOctave.data.map(octaveObj => octaveObj.tones.map(() => false)),
-  steps: new Array(32).fill(null).map((_, i) => i),
-  bpm: 120
-}
-
-function reducer(state, action){
-  switch(action.type){
-    case "changeNumberOfBars": {
-      const newNoteCount = state.beat.numberOfNotesInBar * action.payload;
-      const newSteps = new Array(newNoteCount).fill(null).map((_, i) => i);
-      const newNotes = copyArray(state.notes, state.keyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(newNoteCount).fill(false))));
-      return {
-        ...state,
-        numberOfBars: action.payload,
-        noteCount: newNoteCount,
-        notes: newNotes,
-        steps: newSteps
-      }
-    }
-    case "changeBeat": {
-      const newBeat = AppData.getBeat(action.payload);
-      const newNoteCount = newBeat.numberOfNotesInBar * state.numberOfBars;
-      const newSteps = new Array(newNoteCount).fill(null).map((_, i) => i);
-      const newNotes = copyArray(state.notes, state.keyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(newNoteCount).fill(false))));
-      return {
-        ...state,
-        beat: newBeat,
-        noteCount: newNoteCount,
-        notes: newNotes,
-        steps: newSteps
-      }
-    }
-    case "changeKeyboard": {
-      const newKeyboard = AppData.getKeyboard(action.payload);
-      const newNotes = copy(
-        state.notes,
-        newKeyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(state.noteCount).fill(false))),
-        state.keyboard.data,
-        newKeyboard.data)
-      return {
-        ...state,
-        keyboard: newKeyboard,
-        notes: newNotes,
-        keyNotes: newKeyboard.data.map(octaveObj => octaveObj.tones.map(() => false))
-      }
-    }
-    case "toggleActivationOfNote": {
-      const newNotes = clone(state.notes);
-      const current = newNotes[action.payload.octave][action.payload.row][action.payload.col];
-      newNotes[action.payload.octave][action.payload.row][action.payload.col] = !current;
-      return {...state, notes: newNotes}
-    }
-    case "clearConfig": {
-      return {...initialState}
-    }
-    case "clearNotes": {
-      return {...state, notes: state.keyboard.data.map(octaveObj => octaveObj.tones.map(() =>  new Array(state.noteCount).fill(false)))}
-    }
-    case "toggleIsPress": {
-      const newKeyNotes = state.keyboard.data.map(octaveObj => octaveObj.tones.map(() => false));
-      newKeyNotes[action.payload.octave][action.payload.tone] = action.payload.isPress
-      return {...state, keyNotes: newKeyNotes}
-    }
-    case "toggleAllIsPress": {
-      return {...state, keyNotes: state.keyboard.data.map(octaveObj => octaveObj.tones.map(() => false))}
-    }
-    case "changeBpm": {
-      return {...state, bpm: action.payload}
-    }
-    default:
-
-  }
-}
-
 export default function PianoRoll() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch, controller] = usePianoRoll();
   //console.log("state")
   //console.log(state)
 
-  /** state トランスポートの状態 started/stopped */
-  const [transportState, toggleTransportState] = useToggle(Tone.Transport.state === "started");
-  /** state シーケンサーの現在値 */
-  const [currentStep, setCurrentStep] = useState(null);
-  // スクロールモード（スマホ用）
-  const [scrollMode, toggleScrollMode] = useToggle(false);
   // Resume確認
   const [isOpenConfirmResume, confirmResumeDispatcher] = useDialogState(true);
   // clear確認
@@ -126,15 +36,12 @@ export default function PianoRoll() {
   // 設定ドロワー
   const [isOpenDrawer, drawerDispatcher] = useDialogState(false);
 
-  // CSS変数操作（値は使わないので受け取らない）
-  const [, cssVariableDispatcher] = useCssVariable('--base-octave-multiply-times', 3, 2, 10)
-
   const classes = useButtonStyles();
 
   function handleMouseDown(event, octave, row, col) {
     // 要素をドラッグしようとするのを防ぐ
     event.preventDefault();
-    dispatch({type: "toggleActivationOfNote", payload: {octave, row, col}})
+    controller.toggleActivationOfNote(octave, row, col);
   }
 
   function handleMouseEnter(event, octave, row, col) {
@@ -144,75 +51,23 @@ export default function PianoRoll() {
     }
 
     event.preventDefault();
-    dispatch({type: "toggleActivationOfNote", payload: {octave, row, col}})
+    controller.toggleActivationOfNote(octave, row, col);
   }
 
-  const refNotes = useRef(state.notes);
-  useEffect(() => {
-    refNotes.current = state.notes
-  },[state.notes])
-
   function start() {
-    const synth = new Tone.PolySynth().toDestination()
-    const seq = new Tone.Sequence((time, step) => {
-      const playNotes = getPlayNotes(step);
-      synth.triggerAttackRelease(playNotes, "8t", time);
-      setCurrentStep(step);
-    }, state.steps).start(0);
-
-    Tone.Transport.start();
-    toggleTransportState(Tone.Transport.state === "started");
-
-    function dispose() {
-      console.log('dispose')
-      seq.dispose();
-      Tone.Transport.off('stop', dispose)
-    }
-
-    Tone.Transport.on('stop', dispose)
+    controller.start();
   }
 
   function stop() {
-    Tone.Transport.stop();
-    setCurrentStep(null);
-    toggleTransportState(Tone.Transport.state === "started");
-  }
-
-  function getPlayNotes(step) {
-    let playNotes = [];
-    refNotes.current.forEach((octave, octaveIndex) => {
-      octave.forEach((tone, toneIndex) => {
-        if(tone[step]){
-          playNotes.push(`${state.keyboard.data[octaveIndex].tones[toneIndex].pitchName}${state.keyboard.data[octaveIndex].octave}`);
-        }
-      })
-    });
-    return playNotes;
-  }
-
-  useEffect(() => {
-    Tone.Transport.bpm.value = state.bpm;
-  }, [state.bpm])
-
-  function handleChange(event, newValue) {
-    dispatch({type: "changeBpm", payload: newValue})
-  }
-
-  function handleChangeBars(event, newValue) {
-    dispatch({type: "changeNumberOfBars", payload: newValue})
+    controller.stop();
   }
 
   function clearNotes() {
-    stop();
-    dispatch({type: "clearNotes"})
+    controller.clearNotes();
   }
 
   function clearAll() {
-    dispatch({type: "clearConfig"})
-    clearNotes();
-    dispatch({type: "changeBpm", payload: 120})
-    cssVariableDispatcher.set(3);
-    toggleScrollMode(false);
+    controller.clearAll();
   }
 
   function handleClickResumeOk(){
@@ -221,26 +76,11 @@ export default function PianoRoll() {
     })
   }
 
-  function getOctaveClassName(length){
-    switch(length){
-      case 1:
-        return "key-1"
-      case 7:
-        return "key-7"
-      case 8:
-        return "key-8"
-      case 12:
-        return "key-12"
-      default:
-        return ""
-    }
-  }
-
   const [touchTargetId, setTouchTargetId] = useState(null);
 
   useEffect(() => {
     window.addEventListener('touchstart', handleTouchStart, { passive: false })
-    if (scrollMode) {
+    if (state.scrollMode) {
       window.addEventListener('touchmove', handleTouchScroll, { passive: false })
     } else {
       window.addEventListener('touchmove', handleTouchMove, { passive: false })
@@ -263,7 +103,7 @@ export default function PianoRoll() {
 
       // 鍵盤をタッチしたとき
       const element = document.elementFromPoint(x,y)
-      if(!scrollMode && element && element.id.startsWith('key:')){
+      if(!state.scrollMode && element && element.id.startsWith('key:')){
         setTouchTargetId(element.id)
         event.preventDefault()
       }
@@ -306,13 +146,16 @@ export default function PianoRoll() {
       window.removeEventListener('touchmove', handleTouchScroll, { passive: false })
       window.removeEventListener('touchend', handleTouchEnd, { passive: false })
     }
-  },[scrollMode])
+  },[state.scrollMode])
 
   useEffect(() => {
     const element = document.getElementById(touchTargetId);
     if (element && element.id.startsWith("note[")) {
-      dispatch({type: "toggleActivationOfNote", payload: {octave: element.dataset.octave, row: element.dataset.tone, col: element.dataset.note}})
+      controller.toggleActivationOfNote(element.dataset.octave, element.dataset.tone, element.dataset.note);
     }
+  // dispatch に対する missing dependency の警告を抑制
+  // dispatch は同一性が保証されているので、チェックは不要
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [touchTargetId])
 
   useEffect(() => {
@@ -323,11 +166,11 @@ export default function PianoRoll() {
       _synth = new Tone.Synth().toDestination();
 
       if (element && element.id.startsWith("key:")) {
-        dispatch({type: "toggleIsPress", payload: {octave: element.dataset.octave, tone: element.dataset.tone, isPress: true}})
+        controller.toggleIsPress(element.dataset.octave, element.dataset.tone, true)
         _synth.triggerAttack(element.id.replace("key:", ""));
         
       } else if(!element) {
-        dispatch({type: "toggleAllIsPress"})
+        controller.toggleAllIsPress();
       }
     })
     
@@ -340,6 +183,9 @@ export default function PianoRoll() {
         }, _synth.get().envelope.sustain * 1000)
       })
     }
+  // dispatch に対する missing dependency の警告を抑制
+  // dispatch は同一性が保証されているので、チェックは不要
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [touchTargetId])
 
   return (
@@ -351,9 +197,9 @@ export default function PianoRoll() {
               <Button
                 variant="outlined"
                 className={classes.common}
-                onClick={transportState ? stop : start}>
+                onClick={state.isPlaying ? stop : start}>
                 {
-                  transportState
+                  state.isPlaying
                     ? <FontAwesomeIcon icon={faStop}/>
                     : <FontAwesomeIcon icon={faPlay}/>
                 }
@@ -365,7 +211,7 @@ export default function PianoRoll() {
                 variant="outlined"
                 className={classes.common}
                 onClick={confirmClearDispatcher.open}
-                disabled={transportState}
+                disabled={state.isPlaying}
               >
                 <FontAwesomeIcon icon={faEraser}/>
               </Button>
@@ -376,8 +222,8 @@ export default function PianoRoll() {
                 <Button
                   id="scroll"
                   variant="outlined"
-                  className={clsx(classes.common, scrollMode === true && classes.scrollOn)}
-                  onClick={toggleScrollMode}
+                  className={clsx(classes.common, state.scrollMode === true && classes.scrollOn)}
+                  onClick={() => controller.toggleScrollMode()}
                 >
                   <FontAwesomeIcon icon={faArrowsAlt}/>
                 </Button>
@@ -389,7 +235,7 @@ export default function PianoRoll() {
                   variant="outlined"
                   className={clsx(classes.common, classes.dangerHover)}
                   onClick={confirmAllClearDispatcher.open}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   <FontAwesomeIcon icon={faTrashAlt}/>
                 </Button>
@@ -399,8 +245,8 @@ export default function PianoRoll() {
               <Button
                 variant="outlined"
                 className={classes.common}
-                onClick={cssVariableDispatcher.decrement}
-                disabled={cssVariableDispatcher.isMin()}
+                onClick={controller.zoomOut}
+                disabled={state.zoom === AppData.zoomMin}
               >
                 <ZoomOutIcon />
               </Button>
@@ -409,8 +255,8 @@ export default function PianoRoll() {
               <Button
                 variant="outlined"
                 className={classes.common}
-                onClick={cssVariableDispatcher.increment}
-                disabled={cssVariableDispatcher.isMax()}
+                onClick={controller.zoomIn}
+                disabled={state.zoom === AppData.zoomMax}
               >
                 <ZoomInIcon />
               </Button>
@@ -432,7 +278,7 @@ export default function PianoRoll() {
           {
             state.keyboard.data.map((octaveObj, octaveIndex) => {
               return (
-                <div id={`octave:${octaveObj.octave}`} key={`octave:${octaveObj.octave}`} className={clsx("octave", getOctaveClassName(octaveObj.tones.length))}>
+                <div id={`octave:${octaveObj.octave}`} key={`octave:${octaveObj.octave}`} className={clsx("octave", AppData.getOctaveClassName(octaveObj.tones.length))}>
                   {
                     octaveObj.tones.map((tone, toneIndex) => {
                       let rowClassName = octaveObj.bKeyIndex.indexOf(toneIndex) >= 0 ? "black-key" : "white-key";
@@ -450,8 +296,8 @@ export default function PianoRoll() {
                           className={clsx(rowClassName, tone.pitchName)}
                           pitchName={`${tone.pitchName}${octaveObj.octave}`}
                           isPress={state.keyNotes[octaveIndex][toneIndex]}
-                          onPress={() => dispatch({ type: "toggleIsPress", payload: { octave: octaveIndex, tone: toneIndex, isPress: true}})}
-                          onRelease={() => dispatch({ type: "toggleIsPress", payload: { octave: octaveIndex, tone: toneIndex, isPress: false}})}
+                          onPress={() => controller.toggleIsPress(octaveIndex, toneIndex, true)}
+                          onRelease={() => controller.toggleIsPress(octaveIndex, toneIndex, false)}
                           octaveIndex={octaveIndex}
                           toneIndex={toneIndex}
                         >
@@ -469,7 +315,7 @@ export default function PianoRoll() {
           {
             state.keyboard.data.map((octaveObj, octaveIndex) => {
               return (
-                <div id={`octave:${octaveObj.octave}`} key={`octave:${octaveObj.octave}`} className={clsx("octave", getOctaveClassName(octaveObj.tones.length))}>
+                <div id={`octave:${octaveObj.octave}`} key={`octave:${octaveObj.octave}`} className={clsx("octave", AppData.getOctaveClassName(octaveObj.tones.length))}>
                   {
                     octaveObj.tones.map((tone, toneIndex) => {
                       let rowClassName =octaveObj.bKeyIndex.indexOf(toneIndex) >= 0 ? "b-key" : "w-key";
@@ -480,7 +326,7 @@ export default function PianoRoll() {
                               // 選択されているか
                               let cellClassName = note ? "active" : "";
                               // シーケンサーがいまのステップか
-                              if (currentStep === noteIndex) {
+                              if (state.currentStep === noteIndex) {
                                 cellClassName = cellClassName + " now";
                               }
                               return (
@@ -538,7 +384,7 @@ export default function PianoRoll() {
                   variant="outlined"
                   className={clsx(classes.common, state.keyboard.mode === AppData.oneOctave.mode ? classes.keyboardOn : classes.keyboardOff)}
                   onClick={() => dispatch({type: "changeKeyboard", payload: AppData.oneOctave.mode})}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   {AppData.oneOctave.viewName}
                 </Button>
@@ -548,7 +394,7 @@ export default function PianoRoll() {
                   variant="outlined"
                   className={clsx(classes.common, state.keyboard.mode === AppData.toyPiano.mode ? classes.keyboardOn : classes.keyboardOff)}
                   onClick={() => dispatch({type: "changeKeyboard", payload: AppData.toyPiano.mode})}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   {AppData.toyPiano.viewName}
                 </Button>
@@ -557,7 +403,7 @@ export default function PianoRoll() {
                 <Button variant="outlined"
                   className={clsx(classes.common, state.keyboard.mode === AppData.keyboard76.mode ? classes.keyboardOn : classes.keyboardOff)}
                   onClick={() => dispatch({type: "changeKeyboard", payload: AppData.keyboard76.mode})}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   {AppData.keyboard76.viewName}
                 </Button>
@@ -571,7 +417,7 @@ export default function PianoRoll() {
                   variant="outlined"
                   className={clsx(classes.common, state.beat.mode === AppData.twoFour.mode ? classes.beatOn : classes.beatOff)}
                   onClick={() => dispatch({type: "changeBeat", payload: AppData.twoFour.mode})}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   {AppData.twoFour.viewName}
                 </Button>
@@ -581,7 +427,7 @@ export default function PianoRoll() {
                   variant="outlined"
                   className={clsx(classes.common, state.beat.mode === AppData.threeFour.mode ? classes.beatOn : classes.beatOff)}
                   onClick={() => dispatch({type: "changeBeat", payload: AppData.threeFour.mode})}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   {AppData.threeFour.viewName}
                 </Button>
@@ -591,7 +437,7 @@ export default function PianoRoll() {
                   variant="outlined"
                   className={clsx(classes.common, state.beat.mode === AppData.fourFour.mode ? classes.beatOn : classes.beatOff)}
                   onClick={() => dispatch({type: "changeBeat", payload: AppData.fourFour.mode})}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   {AppData.fourFour.viewName}
                 </Button>
@@ -601,7 +447,7 @@ export default function PianoRoll() {
                   variant="outlined"
                   className={clsx(classes.common, state.beat.mode === AppData.sixEight.mode ? classes.beatOn : classes.beatOff)}
                   onClick={() => dispatch({type: "changeBeat", payload: AppData.sixEight.mode})}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   {AppData.sixEight.viewName}
                 </Button>
@@ -611,10 +457,10 @@ export default function PianoRoll() {
           <Grid item xs={12} sm={6}>
             <ControlSlider
               value={state.numberOfBars}
-              onChange={handleChangeBars}
+              onChange={(event, newValue) => controller.changeNumberOfBars(newValue)}
               min={2}
               max={16}
-              disabled={transportState}
+              disabled={state.isPlaying}
               iconRotate={true}
               IconLeft={DragHandleIcon}
               IconRight={ReorderIcon}
@@ -623,7 +469,7 @@ export default function PianoRoll() {
           <Grid item xs={12} sm={6}>
             <ControlSlider
               value={state.bpm}
-              onChange={handleChange}
+              onChange={(event, newValue) => controller.changeBpm(newValue)}
               min={40}
               max={200}
               disabled={false}
@@ -642,7 +488,7 @@ export default function PianoRoll() {
                   variant="outlined"
                   className={clsx(classes.common, classes.dangerButton, classes.dangerHover)}
                   onClick={confirmAllClearDispatcher.open}
-                  disabled={transportState}
+                  disabled={state.isPlaying}
                 >
                   <FontAwesomeIcon icon={faTrashAlt}/>
                 </Button>
