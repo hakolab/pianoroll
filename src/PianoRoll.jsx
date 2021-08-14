@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { usePianoRoll } from "./hooks/usePianoRoll";
 import * as Tone from "tone";
 import { Grid, Box, Button, Drawer, IconButton } from "@material-ui/core";
@@ -23,8 +23,8 @@ import { isMobile } from 'react-device-detect'
 import { useDialogState } from "./hooks/useDialogState";
 
 export default function PianoRoll() {
-  const [state, dispatch, controller] = usePianoRoll();
-  //console.log("state")
+  const [state, controller] = usePianoRoll();
+  //console.log("state in PianoRoll")
   //console.log(state)
 
   // Resume確認
@@ -41,7 +41,7 @@ export default function PianoRoll() {
   function handleMouseDown(event, octave, row, col) {
     // 要素をドラッグしようとするのを防ぐ
     event.preventDefault();
-    controller.toggleActivationOfNote(octave, row, col);
+    controller().toggleActivationOfNote(octave, row, col);
   }
 
   function handleMouseEnter(event, octave, row, col) {
@@ -51,23 +51,23 @@ export default function PianoRoll() {
     }
 
     event.preventDefault();
-    controller.toggleActivationOfNote(octave, row, col);
+    controller().toggleActivationOfNote(octave, row, col);
   }
 
   function start() {
-    controller.start();
+    controller().start();
   }
 
   function stop() {
-    controller.stop();
+    controller().stop();
   }
 
   function clearNotes() {
-    controller.clearNotes();
+    controller().clearNotes();
   }
 
   function clearAll() {
-    controller.clearAll();
+    controller().clearAll();
   }
 
   function handleClickResumeOk(){
@@ -75,118 +75,6 @@ export default function PianoRoll() {
       confirmResumeDispatcher.close();
     })
   }
-
-  const [touchTargetId, setTouchTargetId] = useState(null);
-
-  useEffect(() => {
-    window.addEventListener('touchstart', handleTouchStart, { passive: false })
-    if (state.scrollMode) {
-      window.addEventListener('touchmove', handleTouchScroll, { passive: false })
-    } else {
-      window.addEventListener('touchmove', handleTouchMove, { passive: false })
-    }
-
-    const pianoRoll = document.getElementById('piano-roll')
-    let x = null;
-    let y = null;
-    let scrollTop = null;
-    let scrollLeft = null;
-
-    function handleTouchStart(event){
-      window.addEventListener('touchend', handleTouchEnd, { passive: false })
-
-      // タッチ座標、スクロール基準位置を取得
-      x = event.touches[0].clientX;
-      y = event.touches[0].clientY;
-      scrollTop = document.getElementById('piano-roll').scrollTop
-      scrollLeft = document.getElementById('piano-roll').scrollLeft
-
-      // 鍵盤をタッチしたとき
-      const element = document.elementFromPoint(x,y)
-      if(!state.scrollMode && element && element.id.startsWith('key:')){
-        setTouchTargetId(element.id)
-        event.preventDefault()
-      }
-    }
-
-    function handleTouchScroll(event){
-      const clientX = event.touches[0].clientX
-      const clientY = event.touches[0].clientY
-      event.preventDefault()
-      // タッチ座標から要素を取得
-      const element = document.elementFromPoint(clientX, clientY);
-      // セルまたは鍵盤だったらスクロール
-      if(element && (element.id.startsWith('note[') === true || element.id.startsWith('key:') === true)){
-        pianoRoll.scrollTop = scrollTop + y - clientY
-        pianoRoll.scrollLeft = scrollLeft + x - clientX
-      }
-    }
-
-    function handleTouchMove(event){
-      const clientX = event.touches[0].clientX;
-      const clientY = event.touches[0].clientY;
-      event.preventDefault();
-      // タッチ座標から要素を取得
-      const element = document.elementFromPoint(clientX, clientY);
-      // 要素が取得できなかった、またはセルでも鍵盤でもないとき
-      if(element === null || (element.id.startsWith('note[') === false && element.id.startsWith('key:') === false)){
-        setTouchTargetId(null);
-        return
-      }
-      setTouchTargetId(element.id);
-    }
-
-    function handleTouchEnd(){
-      setTouchTargetId(null)
-    }
-
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart, { passive: false })
-      window.removeEventListener('touchmove', handleTouchMove, { passive: false })
-      window.removeEventListener('touchmove', handleTouchScroll, { passive: false })
-      window.removeEventListener('touchend', handleTouchEnd, { passive: false })
-    }
-  },[state.scrollMode])
-
-  useEffect(() => {
-    const element = document.getElementById(touchTargetId);
-    if (element && element.id.startsWith("note[")) {
-      controller.toggleActivationOfNote(element.dataset.octave, element.dataset.tone, element.dataset.note);
-    }
-  // dispatch に対する missing dependency の警告を抑制
-  // dispatch は同一性が保証されているので、チェックは不要
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [touchTargetId])
-
-  useEffect(() => {
-    const element = document.getElementById(touchTargetId);
-    let _synth;
-
-    Tone.context.resume().then(() => {
-      _synth = new Tone.Synth().toDestination();
-
-      if (element && element.id.startsWith("key:")) {
-        controller.toggleIsPress(element.dataset.octave, element.dataset.tone, true)
-        _synth.triggerAttack(element.id.replace("key:", ""));
-        
-      } else if(!element) {
-        controller.toggleAllIsPress();
-      }
-    })
-    
-    return () => {
-      Tone.context.resume().then(() => {
-        _synth.triggerRelease();
-        setTimeout(() => {
-          _synth.dispose();
-          _synth = null;
-        }, _synth.get().envelope.sustain * 1000)
-      })
-    }
-  // dispatch に対する missing dependency の警告を抑制
-  // dispatch は同一性が保証されているので、チェックは不要
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [touchTargetId])
 
   return (
     <div id="container">
@@ -223,7 +111,7 @@ export default function PianoRoll() {
                   id="scroll"
                   variant="outlined"
                   className={clsx(classes.common, state.scrollMode === true && classes.scrollOn)}
-                  onClick={() => controller.toggleScrollMode()}
+                  onClick={() => controller().toggleScrollMode()}
                 >
                   <FontAwesomeIcon icon={faArrowsAlt}/>
                 </Button>
@@ -245,7 +133,7 @@ export default function PianoRoll() {
               <Button
                 variant="outlined"
                 className={classes.common}
-                onClick={controller.zoomOut}
+                onClick={controller().zoomOut}
                 disabled={state.zoom === AppData.zoomMin}
               >
                 <ZoomOutIcon />
@@ -255,7 +143,7 @@ export default function PianoRoll() {
               <Button
                 variant="outlined"
                 className={classes.common}
-                onClick={controller.zoomIn}
+                onClick={controller().zoomIn}
                 disabled={state.zoom === AppData.zoomMax}
               >
                 <ZoomInIcon />
@@ -296,8 +184,8 @@ export default function PianoRoll() {
                           className={clsx(rowClassName, tone.pitchName)}
                           pitchName={`${tone.pitchName}${octaveObj.octave}`}
                           isPress={state.keyNotes[octaveIndex][toneIndex]}
-                          onPress={() => controller.toggleIsPress(octaveIndex, toneIndex, true)}
-                          onRelease={() => controller.toggleIsPress(octaveIndex, toneIndex, false)}
+                          onPress={() => controller().toggleIsPress(octaveIndex, toneIndex, true)}
+                          onRelease={() => controller().toggleIsPress(octaveIndex, toneIndex, false)}
                           octaveIndex={octaveIndex}
                           toneIndex={toneIndex}
                         >
@@ -383,7 +271,7 @@ export default function PianoRoll() {
                 <Button
                   variant="outlined"
                   className={clsx(classes.common, state.keyboard.mode === AppData.oneOctave.mode ? classes.keyboardOn : classes.keyboardOff)}
-                  onClick={() => dispatch({type: "changeKeyboard", payload: AppData.oneOctave.mode})}
+                  onClick={() => controller().changeKeyboard(AppData.oneOctave.mode)}
                   disabled={state.isPlaying}
                 >
                   {AppData.oneOctave.viewName}
@@ -393,7 +281,7 @@ export default function PianoRoll() {
                 <Button
                   variant="outlined"
                   className={clsx(classes.common, state.keyboard.mode === AppData.toyPiano.mode ? classes.keyboardOn : classes.keyboardOff)}
-                  onClick={() => dispatch({type: "changeKeyboard", payload: AppData.toyPiano.mode})}
+                  onClick={() => controller().changeKeyboard(AppData.toyPiano.mode)}
                   disabled={state.isPlaying}
                 >
                   {AppData.toyPiano.viewName}
@@ -402,7 +290,7 @@ export default function PianoRoll() {
               <Box className="thirds">
                 <Button variant="outlined"
                   className={clsx(classes.common, state.keyboard.mode === AppData.keyboard76.mode ? classes.keyboardOn : classes.keyboardOff)}
-                  onClick={() => dispatch({type: "changeKeyboard", payload: AppData.keyboard76.mode})}
+                  onClick={() => controller().changeKeyboard(AppData.keyboard76.mode)}
                   disabled={state.isPlaying}
                 >
                   {AppData.keyboard76.viewName}
@@ -416,7 +304,7 @@ export default function PianoRoll() {
                 <Button
                   variant="outlined"
                   className={clsx(classes.common, state.beat.mode === AppData.twoFour.mode ? classes.beatOn : classes.beatOff)}
-                  onClick={() => dispatch({type: "changeBeat", payload: AppData.twoFour.mode})}
+                  onClick={() => controller().changeBeat(AppData.twoFour.mode)}
                   disabled={state.isPlaying}
                 >
                   {AppData.twoFour.viewName}
@@ -426,7 +314,7 @@ export default function PianoRoll() {
                 <Button
                   variant="outlined"
                   className={clsx(classes.common, state.beat.mode === AppData.threeFour.mode ? classes.beatOn : classes.beatOff)}
-                  onClick={() => dispatch({type: "changeBeat", payload: AppData.threeFour.mode})}
+                  onClick={() => controller().changeBeat(AppData.threeFour.mode)}
                   disabled={state.isPlaying}
                 >
                   {AppData.threeFour.viewName}
@@ -436,7 +324,7 @@ export default function PianoRoll() {
                 <Button
                   variant="outlined"
                   className={clsx(classes.common, state.beat.mode === AppData.fourFour.mode ? classes.beatOn : classes.beatOff)}
-                  onClick={() => dispatch({type: "changeBeat", payload: AppData.fourFour.mode})}
+                  onClick={() => controller().changeBeat(AppData.fourFour.mode)}
                   disabled={state.isPlaying}
                 >
                   {AppData.fourFour.viewName}
@@ -446,7 +334,7 @@ export default function PianoRoll() {
                 <Button
                   variant="outlined"
                   className={clsx(classes.common, state.beat.mode === AppData.sixEight.mode ? classes.beatOn : classes.beatOff)}
-                  onClick={() => dispatch({type: "changeBeat", payload: AppData.sixEight.mode})}
+                  onClick={() => controller().changeBeat(AppData.sixEight.mode)}
                   disabled={state.isPlaying}
                 >
                   {AppData.sixEight.viewName}
@@ -457,7 +345,7 @@ export default function PianoRoll() {
           <Grid item xs={12} sm={6}>
             <ControlSlider
               value={state.numberOfBars}
-              onChange={(event, newValue) => controller.changeNumberOfBars(newValue)}
+              onChange={(event, newValue) => controller().changeNumberOfBars(newValue)}
               min={2}
               max={16}
               disabled={state.isPlaying}
@@ -469,7 +357,7 @@ export default function PianoRoll() {
           <Grid item xs={12} sm={6}>
             <ControlSlider
               value={state.bpm}
-              onChange={(event, newValue) => controller.changeBpm(newValue)}
+              onChange={(event, newValue) => controller().changeBpm(newValue)}
               min={40}
               max={200}
               disabled={false}
