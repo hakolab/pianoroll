@@ -1,10 +1,8 @@
-import React, { Fragment, useState, useContext } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import PianoRollApp from './PianoRollApp'
 
 ReactDOM.render(
-    //<Provider store={store}>
-            <App />
-    ,//</Provider>,
+    <PianoRollApp />,
     document.getElementById('root')
 )

@@ -23,11 +23,17 @@ export function useSequence(){
     setIsPlaying(Tone.Transport.state === "started");
   }
 
-  const sequenceDispatcher = () => ({
+  /* const sequenceDispatcher = () => ({
     start,
     stop
-  })
+  }) */
 
-  return [isPlaying, sequenceDispatcher];
+  return [
+    isPlaying,
+    {
+      start,
+      stop
+    }
+  ];
 
 }

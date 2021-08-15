@@ -5,7 +5,7 @@ import { clone, copyArray, copy } from '../utils/recursiveCopy';
 import { useSequence } from './useSequence';
 import { useCssVariable } from './useCssVariable';
 import { useToggle } from './useToggle'
-import { useBpm } from './useBpm';
+import { useBpm } from './useBpm'
 import { useRefWithCapturingCurrent } from './useRefWithCapturingCurrent';
 import { usePianoRollTouch } from './usePianoRollTouch';
 
@@ -105,67 +105,67 @@ export function usePianoRoll(){
   const [state, dispatch] = useReducer(reducer, initialState);
   // Sequencer
   const [isPlaying, sequenceDispatcher] = useSequence();
-  // CSS変数操作
-  const [zoom, cssVariableDispatcher] = useCssVariable('--base-octave-multiply-times', 3, AppData.zoomMin, AppData.zoomMax)
+  // CSS変数操作（値は使わないので受け取らない）
+  const [, cssVariableDispatcher] = useCssVariable('--base-octave-multiply-times', 3, AppData.zoomMin, AppData.zoomMax)
   // スクロールモード（スマホ用）
   const [scrollMode, toggleScrollMode] = useToggle(false);
   // テンポ
-  const [bpm, setBpm] = useBpm();
+  const [bpm, setBpm] =useBpm();
   // notes の現在値を捕捉
   const refNotes = useRefWithCapturingCurrent(state.notes);
 
-  const start = useCallback(() => {
+  const start = () => {
     const synth = new Tone.PolySynth().toDestination()
-    sequenceDispatcher().start((time, step) => {
+    sequenceDispatcher.start((time, step) => {
       const playNotes = getPlayNotes(step);
       synth.triggerAttackRelease(playNotes, "8t", time);
       dispatch(action.setCurrentStep(step));
     }, state.steps);
-  }, [getPlayNotes, sequenceDispatcher, state.steps])
+  }
 
-  const stop = useCallback(() => {
-    sequenceDispatcher().stop();
+  const stop = () => {
+    sequenceDispatcher.stop();
     dispatch(action.setCurrentStep(null));
-  }, [sequenceDispatcher])
+  }
 
   const clearNotes = () => {
     dispatch(action.clearNotes())
   }
 
-  const clearAll = useCallback(() => {
+  const clearAll = () => {
     dispatch(action.clearAll());
-    cssVariableDispatcher().set(3);
+    cssVariableDispatcher.set(3)
     toggleScrollMode(false);
     setBpm(120);
-  }, [cssVariableDispatcher, toggleScrollMode, setBpm])
+  }
 
-  const zoomIn = useCallback(() => {
-    cssVariableDispatcher().increment();
-  }, [cssVariableDispatcher])
+  const zoomIn = () => {
+    cssVariableDispatcher.increment();
+  }
 
-  const zoomOut = useCallback(() => {
-    cssVariableDispatcher().decrement();
-  }, [cssVariableDispatcher])
+  const zoomOut = () => {
+    cssVariableDispatcher.decrement();
+  }
 
-  const toggleActivationOfNote = (octave, row, col) => {
+  const toggleActivationOfNote = useCallback((octave, row, col) => {
     dispatch(action.toggleActivationOfNote(octave, row, col))
-  }
+  }, [])
 
-  const toggleIsPress = (octave, tone, isPress) => {
+  const toggleIsPress = useCallback((octave, tone, isPress) => {
     dispatch(action.toggleIsPress(octave, tone, isPress))
-  }
+  }, [])
 
-  const toggleAllIsPress = () => {
+  const toggleAllIsPress = useCallback(() => {
     dispatch(action.toggleAllIsPress())
-  }
+  }, [])
 
   const changeNumberOfBars = (newNumberOfBars) => {
     dispatch(action.changeNumberOfBars(newNumberOfBars))
   }
 
-  const changeBpm = useCallback((newBpm) => {
+  const changeBpm = (newBpm) => {
     setBpm(newBpm)
-  }, [setBpm])
+  }
 
   const changeKeyboard = (newKeyboard) => {
     dispatch(action.changeKeyboard(newKeyboard))
@@ -175,33 +175,10 @@ export function usePianoRoll(){
     dispatch(action.changeBeat(newBeat))
   }
 
-  const controller = useCallback(() => ({
-    start,
-    stop,
-    clearNotes,
-    clearAll,
-    zoomIn,
-    zoomOut,
-    toggleScrollMode,
-    toggleActivationOfNote,
-    toggleIsPress,
-    toggleAllIsPress,
-    changeNumberOfBars,
-    changeBpm,
-    changeKeyboard,
-    changeBeat,
-  }), [start, stop, changeBpm, clearAll, toggleScrollMode, zoomIn, zoomOut])
-
-  const touchController = useCallback(() => ({
-    toggleActivationOfNote,
-    toggleIsPress,
-    toggleAllIsPress
-  }), [])
-
   // スマホ用タッチイベント
-  usePianoRollTouch(touchController, scrollMode);
+  usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggleAllIsPress}, scrollMode);
 
-  const getPlayNotes = useCallback((step) => {
+  const getPlayNotes = (step) => {
     let playNotes = [];
     refNotes.current.forEach((octave, octaveIndex) => {
       octave.forEach((tone, toneIndex) => {
@@ -211,16 +188,30 @@ export function usePianoRoll(){
       })
     });
     return playNotes;
-  }, [refNotes, state.keyboard.data])
+  }
   
   return [
     {
       ...state,
       isPlaying,
-      zoom,
       scrollMode,
       bpm
     },
-    controller
+    {
+      start,
+      stop,
+      clearNotes,
+      clearAll,
+      zoomIn,
+      zoomOut,
+      toggleScrollMode,
+      toggleActivationOfNote,
+      toggleIsPress,
+      toggleAllIsPress,
+      changeNumberOfBars,
+      changeBpm,
+      changeKeyboard,
+      changeBeat,
+    }
   ]
 }

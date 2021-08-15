@@ -37,13 +37,22 @@ export function useCssVariable(propertyName, defaultValue, min = 2, max = 10){
     document.documentElement.style.setProperty(propertyName, cssVariable);
   },[propertyName, cssVariable])
 
-  const cssVariableDispatcher = () => ({
+  /* const cssVariableDispatcher = () => ({
     increment,
     decrement,
     set,
     isMin,
     isMax
-  })
+  }) */
 
-  return [cssVariable, cssVariableDispatcher]
+  return [
+    cssVariable, 
+    {
+      increment,
+      decrement,
+      set,
+      isMin,
+      isMax
+    }
+  ]
 }
