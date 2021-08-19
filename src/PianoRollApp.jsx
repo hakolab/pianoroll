@@ -7,11 +7,10 @@ import { usePianoRoll } from "./hooks/usePianoRoll";
 import AlertDialog from "./components/AlertDialog";
 import { useDialogState } from "./hooks/useDialogState";
 import { ControllerContainer } from "./components/controller/ControllerContainer";
-import { createContext } from "react";
+import { KeyboardContextProvider } from './components/keyboard-context-provider/KeyboardContextProvider'
+import { GridContextProvider } from "./components/grid-context-provider/GridContextProvider";
 
-export const CurrentStepContext = createContext();
-export const KeyboardControllerContext = createContext();
-export const GridControllerContext = createContext();
+//export const KeyboardControllerContext = createContext();
 
 export default function PianoRollApp() {
   const [state, controller] = usePianoRoll();
@@ -34,21 +33,23 @@ export default function PianoRollApp() {
         controller={controller}
       />
       <div id="piano-roll">
-        <KeyboardControllerContext.Provider value={{toggleIsPress: controller.toggleIsPress}}>
+        <KeyboardContextProvider controller={{toggleIsPress: controller.toggleIsPress}}>
           <KeyboardContainer
             mode={state.keyboard.mode}
             data={state.keyboard.data}
             keyNotes={state.keyNotes}
           />
-        </KeyboardControllerContext.Provider>
-        <GridControllerContext.Provider value={{toggleActivationOfNote: controller.toggleActivationOfNote}}>
+        </KeyboardContextProvider>
+        <GridContextProvider
+          controller={{toggleActivationOfNote: controller.toggleActivationOfNote}}
+          currentStep={state.currentStep}
+          notes={state.notes}
+        >
           <GridContainer
             beat={state.beat}
             keyboard={state.keyboard}
-            notes={state.notes}
-            currentStep={state.currentStep}
           />
-        </GridControllerContext.Provider>
+        </GridContextProvider>
       </div>
       <AlertDialog
         open={isOpenConfirmResume}

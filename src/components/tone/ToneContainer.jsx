@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx'
 import { TonePresenter } from './TonePresenter';
 import { NoteContainer } from '../note/NoteContainer';
+import { useContext } from 'react';
+import { CurrentStepContext, NotesContext } from '../../contexts/contexts';
 
-export const ToneContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, notes, currentStep}) => {
+export const ToneContainer = ({octaveObj, toneObj, octaveIndex, toneIndex}) => {
+
+  const notes = useContext(NotesContext);
+  const currentStep = useContext(CurrentStepContext);
 
   const noteList = notes[octaveIndex][toneIndex].map((note, noteIndex) => {
     return (
@@ -42,7 +47,4 @@ ToneContainer.propTypes = {
   toneObj: PropTypes.object,
   octaveIndex: PropTypes.number,
   toneIndex: PropTypes.number,
-  notes: PropTypes.array,
-  currentStep: PropTypes.number,
-  controller: PropTypes.object,
 }

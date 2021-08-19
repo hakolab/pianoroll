@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx'
 import { NotePresenter } from './NotePresenter';
 import { useContext } from 'react';
-import { GridControllerContext } from '../../PianoRollApp';
+import { GridControllerContext } from '../../contexts/contexts';
 
 export const NoteContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, noteIndex, note, currentStep}) => {
 

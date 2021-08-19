@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx'
 import { KeyPresenter } from './KeyPresenter';
 import { useKeySynth } from '../../hooks/useKeySynth'
-import { KeyboardControllerContext } from '../../PianoRollApp';
+import { KeyboardControllerContext } from '../../contexts/contexts';
 
 export function KeyContainer({className, pitchName, isPress, octaveIndex, toneIndex}){
 

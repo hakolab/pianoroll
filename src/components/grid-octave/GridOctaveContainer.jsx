@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { GridOctavePresenter } from './GridOctavePresenter';
 import { ToneContainer } from '../tone/ToneContainer';
 
-export const GridOctaveContainer = ({octaveObj, octaveIndex, notes, currentStep}) => {
+export const GridOctaveContainer = ({octaveObj, octaveIndex}) => {
 
   var toneList = octaveObj.tones.map((toneObj, toneIndex) => {
     return (
@@ -16,8 +16,6 @@ export const GridOctaveContainer = ({octaveObj, octaveIndex, notes, currentStep}
         toneObj={toneObj}
         octaveIndex={octaveIndex}
         toneIndex={toneIndex}
-        notes={notes}
-        currentStep={currentStep}
       >
       </ToneContainer>
     )
@@ -35,8 +33,5 @@ export const GridOctaveContainer = ({octaveObj, octaveIndex, notes, currentStep}
 
 GridOctaveContainer.propTypes = {
   octaveObj: PropTypes.object,
-  octaveIndex: PropTypes.number,
-  notes: PropTypes.array,
-  currentStep: PropTypes.number,
-  controller: PropTypes.object
+  octaveIndex: PropTypes.number
 }
