@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { GridPresenter } from './GridPresenter';
 import { GridOctaveContainer } from '../grid-octave/GridOctaveContainer';
 
-export const GridContainer = ({beat, keyboard, notes, currentStep, controller}) => {
+export const GridContainer = ({beat, keyboard, notes, currentStep}) => {
 
   var octaveList = keyboard.data.map((octaveObj, octaveIndex) => {
     return (
@@ -13,7 +13,6 @@ export const GridContainer = ({beat, keyboard, notes, currentStep, controller}) 
         octaveIndex={octaveIndex}
         notes={notes}
         currentStep={currentStep}
-        controller={controller}
       />
     )
   })

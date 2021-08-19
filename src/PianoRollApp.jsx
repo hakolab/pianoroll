@@ -41,13 +41,14 @@ export default function PianoRollApp() {
             keyNotes={state.keyNotes}
           />
         </KeyboardControllerContext.Provider>
-        <GridContainer
-          beat={state.beat}
-          keyboard={state.keyboard}
-          notes={state.notes}
-          currentStep={state.currentStep}
-          controller={{toggleActivationOfNote: controller.toggleActivationOfNote}}
-        />
+        <GridControllerContext.Provider value={{toggleActivationOfNote: controller.toggleActivationOfNote}}>
+          <GridContainer
+            beat={state.beat}
+            keyboard={state.keyboard}
+            notes={state.notes}
+            currentStep={state.currentStep}
+          />
+        </GridControllerContext.Provider>
       </div>
       <AlertDialog
         open={isOpenConfirmResume}

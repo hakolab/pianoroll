@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { TonePresenter } from './TonePresenter';
 import { NoteContainer } from '../note/NoteContainer';
 
-export const ToneContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, notes, currentStep, controller}) => {
+export const ToneContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, notes, currentStep}) => {
 
   const noteList = notes[octaveIndex][toneIndex].map((note, noteIndex) => {
     return (
@@ -18,7 +18,6 @@ export const ToneContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, notes
         noteIndex={noteIndex}
         note={note}
         currentStep={currentStep}
-        controller={controller}
       ></NoteContainer>
     )
   })

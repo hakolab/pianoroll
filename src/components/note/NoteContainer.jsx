@@ -2,13 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import clsx from 'clsx'
 import { NotePresenter } from './NotePresenter';
+import { useContext } from 'react';
+import { GridControllerContext } from '../../PianoRollApp';
 
-export const NoteContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, noteIndex, note, currentStep, controller}) => {
+export const NoteContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, noteIndex, note, currentStep}) => {
+
+  const { toggleActivationOfNote } = useContext(GridControllerContext);
 
   function handleMouseDown(event, octave, row, col) {
     // 要素をドラッグしようとするのを防ぐ
     event.preventDefault();
-    controller.toggleActivationOfNote(octave, row, col);
+    //controller.toggleActivationOfNote(octave, row, col);
+    toggleActivationOfNote(octave, row, col);
   }
 
   function handleMouseEnter(event, octave, row, col) {
@@ -18,7 +23,8 @@ export const NoteContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, noteI
     }
 
     event.preventDefault();
-    controller.toggleActivationOfNote(octave, row, col);
+    //controller.toggleActivationOfNote(octave, row, col);
+    toggleActivationOfNote(octave, row, col);
   }
 
   return (
