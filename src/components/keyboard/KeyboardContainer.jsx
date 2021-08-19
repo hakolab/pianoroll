@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { KeyboardPresenter } from './KeyboardPresenter';
 import { KeyOctaveContainer } from '../key-octave/KeyOctaveContainer';
 
-export const KeyboardContainer = ({mode, data, keyNotes, controller}) => {
+export const KeyboardContainer = ({mode, data, keyNotes}) => {
 
   const octaveList = data.map((octaveObj, octaveIndex) => {
     return (
@@ -12,7 +12,6 @@ export const KeyboardContainer = ({mode, data, keyNotes, controller}) => {
         object={octaveObj}
         index={octaveIndex}
         keyNotes={keyNotes}
-        controller={controller}
         dataLength={data.length}
       />
     )

@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { KeyOctavePresenter } from './KeyOctavePresenter'
 import { KeyContainer } from '../key/KeyContainer';
 
-export const KeyOctaveContainer = ({object, index, keyNotes, controller, dataLength}) => {
+export const KeyOctaveContainer = ({object, index, keyNotes, dataLength}) => {
 
   const keyList = object.tones.map((tone, toneIndex) => {
     return (
@@ -21,7 +21,6 @@ export const KeyOctaveContainer = ({object, index, keyNotes, controller, dataLen
         }
         pitchName={`${tone.pitchName}${object.octave}`}
         isPress={keyNotes[index][toneIndex]}
-        controller={controller}
         octaveIndex={index}
         toneIndex={toneIndex}
       >

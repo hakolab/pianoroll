@@ -1,11 +1,17 @@
 import React from "react";
 import * as Tone from "tone";
 import './styles.scss'
-import PianoRoll from './PianoRoll'
+import { KeyboardContainer } from './components/keyboard/KeyboardContainer'
+import { GridContainer } from "./components/grid/GridContainer";
 import { usePianoRoll } from "./hooks/usePianoRoll";
 import AlertDialog from "./components/AlertDialog";
 import { useDialogState } from "./hooks/useDialogState";
 import { ControllerContainer } from "./components/controller/ControllerContainer";
+import { createContext } from "react";
+
+export const CurrentStepContext = createContext();
+export const KeyboardControllerContext = createContext();
+export const GridControllerContext = createContext();
 
 export default function PianoRollApp() {
   const [state, controller] = usePianoRoll();
@@ -27,10 +33,22 @@ export default function PianoRollApp() {
         state={state}
         controller={controller}
       />
-      <PianoRoll
-        state={state}
-        controller={controller}
-      />
+      <div id="piano-roll">
+        <KeyboardControllerContext.Provider value={{toggleIsPress: controller.toggleIsPress}}>
+          <KeyboardContainer
+            mode={state.keyboard.mode}
+            data={state.keyboard.data}
+            keyNotes={state.keyNotes}
+          />
+        </KeyboardControllerContext.Provider>
+        <GridContainer
+          beat={state.beat}
+          keyboard={state.keyboard}
+          notes={state.notes}
+          currentStep={state.currentStep}
+          controller={{toggleActivationOfNote: controller.toggleActivationOfNote}}
+        />
+      </div>
       <AlertDialog
         open={isOpenConfirmResume}
         title={"NOTIFICATION"}

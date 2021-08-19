@@ -2,6 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import { KeyboardContainer } from './components/keyboard/KeyboardContainer';
 import { GridContainer } from './components/grid/GridContainer'
+import { createContext } from 'react';
+
+
+export const CurrentStepContext = createContext();
 
 const PianoRoll = ({state, controller}) => {
 

@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import clsx from 'clsx'
 import { KeyPresenter } from './KeyPresenter';
 import { useKeySynth } from '../../hooks/useKeySynth'
+import { KeyboardControllerContext } from '../../PianoRollApp';
 
-export function KeyContainer({className, pitchName, isPress, controller, octaveIndex, toneIndex}){
+export function KeyContainer({className, pitchName, isPress, octaveIndex, toneIndex}){
+
+  const { toggleIsPress } = useContext(KeyboardControllerContext);
 
   // マウス用キーボードシンセ（値は使わないので受け取らない）
   const [, setIsPlay] = useKeySynth(pitchName)
@@ -13,12 +16,12 @@ export function KeyContainer({className, pitchName, isPress, controller, octaveI
     // 要素をドラッグしようとするのを防ぐ
     event.preventDefault()
     setIsPlay(true)
-    controller.toggleIsPress(octaveIndex, toneIndex, true)
+    toggleIsPress(octaveIndex, toneIndex, true)
   }
 
   function handleMouseUp(){
     setIsPlay(false)
-    controller.toggleIsPress(octaveIndex, toneIndex, false)
+    toggleIsPress(octaveIndex, toneIndex, false)
   }
 
   function handleMouseEnter(event){
@@ -27,7 +30,7 @@ export function KeyContainer({className, pitchName, isPress, controller, octaveI
       return;
     }
     setIsPlay(true)
-    controller.toggleIsPress(octaveIndex, toneIndex, true)
+    toggleIsPress(octaveIndex, toneIndex, true)
   }
 
   function handleMouseOut(event){
@@ -36,7 +39,7 @@ export function KeyContainer({className, pitchName, isPress, controller, octaveI
       return;
     }
     setIsPlay(false)
-    controller.toggleIsPress(octaveIndex, toneIndex, false)
+    toggleIsPress(octaveIndex, toneIndex, false)
   }
 
   return (
