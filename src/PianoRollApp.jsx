@@ -1,18 +1,16 @@
-import React from "react";
-import * as Tone from "tone";
+import React from 'react'
 import './styles.scss'
-import { KeyboardContainer } from './components/keyboard/KeyboardContainer'
-import { GridContainer } from "./components/grid/GridContainer";
-import { usePianoRoll } from "./hooks/usePianoRoll";
-import AlertDialog from "./components/AlertDialog";
-import { useDialogState } from "./hooks/useDialogState";
-import { ControllerContainer } from "./components/controller/ControllerContainer";
-import { KeyboardContextProvider } from './components/keyboard-context-provider/KeyboardContextProvider'
-import { GridContextProvider } from "./components/grid-context-provider/GridContextProvider";
+import { usePianoRoll } from './hooks/usePianoRoll';
+import { useDialogState } from './hooks/useDialogState';
+import * as Tone from "tone";
+import { ControllerContainer } from './components/controller/ControllerContainer';
+import { KeyboardContextProvider } from './components/keyboard-context-provider/KeyboardContextProvider';
+import { KeyboardContainer } from './components/keyboard/KeyboardContainer';
+import { GridContextProvider } from './components/grid-context-provider/GridContextProvider';
+import { GridContainer } from './components/grid/GridContainer';
+import AlertDialog from './components/AlertDialog';
 
-//export const KeyboardControllerContext = createContext();
-
-export default function PianoRollApp() {
+export const PianoRollApp = () => {
   const [state, controller] = usePianoRoll();
   //console.log("state in PianoRoll")
   //console.log(state)

@@ -12,7 +12,7 @@ export const KeyOctaveContainer = ({object, index, keyNotes, dataLength}) => {
       <KeyContainer
         key={`key:${tone.pitchName}${object.octave}`}
         className={clsx(
-          object.bKeyIndex.indexOf(toneIndex) >= 0 ? "black-key" : "white-key",
+          tone.keyType,
           tone.pitchName,
           // 最高音域の場合は .top を設定
           index === 0 &&'top',

@@ -125,39 +125,38 @@ h2 {
   }
 
   /** 白鍵 */
-.white-key {
-  width: 95px;
-  height: #{$white-key-height};
-  background-color: white;
+  .white {
+    width: 95px;
+    height: #{$white-key-height};
+    background-color: white;
 
-  &.press {
-    border-top: 2px solid #696969;
-    border-bottom: 2px solid #696969;
-    background: linear-gradient(to top, white 88%, silver);
+    &.press {
+      border-top: 2px solid #696969;
+      border-bottom: 2px solid #696969;
+      background: linear-gradient(to top, white 88%, silver);
+    }
   }
 
-}
+  /** 黒鍵 */
+  .black {
+    width: 55px;
+    height: #{$black-key-height};
+    background: linear-gradient(to top, #696969 40%, white);
+    border-right: 5px solid #696969;
 
-/** 黒鍵 */
-.black-key {
-  width: 55px;
-  height: #{$black-key-height};
-  background: linear-gradient(to top, #696969 40%, white);
-  border-right: 5px solid #696969;
+    z-index: 1;
+    position: absolute;
+    border: 1px solid gray;
 
-  z-index: 1;
-  position: absolute;
-  border: 1px solid gray;
+    box-shadow: 2px 2px silver;
 
-  box-shadow: 2px 2px silver;
-
-  &.press {
-    border-top: 2px solid #696969;
-    border-bottom: 2px solid #696969;
-    box-shadow: 0px 0px;
-    background: linear-gradient(to top, #696969 60%, white);
+    &.press {
+      border-top: 2px solid #696969;
+      border-bottom: 2px solid #696969;
+      box-shadow: 0px 0px;
+      background: linear-gradient(to top, #696969 60%, white);
+    }
   }
-}
 
   &.oneOctave {
     .C.top {
@@ -294,37 +293,37 @@ h2 {
       }
     }    
   }
-}
 
-.w-key > div {
-  &.active {
-    //background-color: #e7feff;
-    background-color: #FCEDAA;
+  .white > div {
+    &.active {
+      //background-color: #e7feff;
+      background-color: #FCEDAA;
+    }
+  
+    &.now {
+      //background-color: #eff7ff;
+      background-color: #eff7ff;
+    }
+  
+    &.active.now {
+      //background-color: #f5deb3;
+      background-color: #FCF1D3;
+    }
   }
-
-  &.now {
-    //background-color: #eff7ff;
-    background-color: #eff7ff;
-  }
-
-  &.active.now {
-    //background-color: #f5deb3;
-    background-color: #FCF1D3;
-  }
-}
-
-.b-key > div {
-  background-color: #f5f5f5;
-
-  &.active {
-    background-color: #ECACB5;
-  }
-
-  &.now {
-    background-color: #D5E0F1;
-  }
-
-  &.active.now {
-    background-color: #F6D4D8;
+  
+  .black > div {
+    background-color: #f5f5f5;
+  
+    &.active {
+      background-color: #ECACB5;
+    }
+  
+    &.now {
+      background-color: #D5E0F1;
+    }
+  
+    &.active.now {
+      background-color: #F6D4D8;
+    }
   }
 }

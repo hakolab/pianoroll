@@ -10,7 +10,7 @@ export const GridContextProvider = ({controller, currentStep, notes, children}) 
           {children}
         </NotesContext.Provider>
       </CurrentStepContext.Provider>
-    /</GridControllerContext.Provider>
+    </GridControllerContext.Provider>
   )
 }
 

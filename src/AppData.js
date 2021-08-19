@@ -30,27 +30,25 @@ const oneOctave = {
   data: [
     {
       octave: 5,
-      bKeyIndex: [],
       tones: [
-        { pitchName: "C" }
+        { pitchName: "C", keyType: "white" }
       ]
     },
     {
       octave: 4,
-      bKeyIndex: [1, 3, 5, 8, 10],
       tones: [
-        { pitchName: "B" },
-        { pitchName: "Bb" },
-        { pitchName: "A" },
-        { pitchName: "Ab" },
-        { pitchName: "G" },
-        { pitchName: "Gb" },
-        { pitchName: "F" },
-        { pitchName: "E" },
-        { pitchName: "Eb" },
-        { pitchName: "D" },
-        { pitchName: "Db" },
-        { pitchName: "C" }
+        { pitchName: "B", keyType: "white" },
+        { pitchName: "Bb", keyType: "black" },
+        { pitchName: "A", keyType: "white" },
+        { pitchName: "Ab", keyType: "black" },
+        { pitchName: "G", keyType: "white" },
+        { pitchName: "Gb", keyType: "black" },
+        { pitchName: "F", keyType: "white" },
+        { pitchName: "E", keyType: "white" },
+        { pitchName: "Eb", keyType: "black" },
+        { pitchName: "D", keyType: "white" },
+        { pitchName: "Db", keyType: "black" },
+        { pitchName: "C", keyType: "white" }
       ]
     }
   ]
@@ -62,58 +60,54 @@ const toyPiano = {
   data: [
   {
     octave: 8,
-    bKeyIndex: [],
     tones: [
-      { pitchName: "C" }
+      { pitchName: "C", keyType: "white" }
     ]
   },
   {
     octave: 7,
-    bKeyIndex: [1, 3, 5, 8, 10],
     tones: [
-      { pitchName: "B" },
-      { pitchName: "Bb" },
-      { pitchName: "A" },
-      { pitchName: "Ab" },
-      { pitchName: "G" },
-      { pitchName: "Gb" },
-      { pitchName: "F" },
-      { pitchName: "E" },
-      { pitchName: "Eb" },
-      { pitchName: "D" },
-      { pitchName: "Db" },
-      { pitchName: "C" }
+      { pitchName: "B", keyType: "white" },
+      { pitchName: "Bb", keyType: "black" },
+      { pitchName: "A", keyType: "white" },
+      { pitchName: "Ab", keyType: "black" },
+      { pitchName: "G", keyType: "white" },
+      { pitchName: "Gb", keyType: "black" },
+      { pitchName: "F", keyType: "white" },
+      { pitchName: "E", keyType: "white" },
+      { pitchName: "Eb", keyType: "black" },
+      { pitchName: "D", keyType: "white" },
+      { pitchName: "Db", keyType: "black" },
+      { pitchName: "C", keyType: "white" }
     ]
   },
   {
     octave: 6,
-    bKeyIndex: [1, 3, 5, 8, 10],
     tones: [
-      { pitchName: "B" },
-      { pitchName: "Bb" },
-      { pitchName: "A" },
-      { pitchName: "Ab" },
-      { pitchName: "G" },
-      { pitchName: "Gb" },
-      { pitchName: "F" },
-      { pitchName: "E" },
-      { pitchName: "Eb" },
-      { pitchName: "D" },
-      { pitchName: "Db" },
-      { pitchName: "C" }
+      { pitchName: "B", keyType: "white" },
+      { pitchName: "Bb", keyType: "black" },
+      { pitchName: "A", keyType: "white" },
+      { pitchName: "Ab", keyType: "black" },
+      { pitchName: "G", keyType: "white" },
+      { pitchName: "Gb", keyType: "black" },
+      { pitchName: "F", keyType: "white" },
+      { pitchName: "E", keyType: "white" },
+      { pitchName: "Eb", keyType: "black" },
+      { pitchName: "D", keyType: "white" },
+      { pitchName: "Db", keyType: "black" },
+      { pitchName: "C", keyType: "white" }
     ]
   },
   {
     octave: 5,
-    bKeyIndex: [1, 3, 5],
     tones: [
-      { pitchName: "B" },
-      { pitchName: "Bb" },
-      { pitchName: "A" },
-      { pitchName: "Ab" },
-      { pitchName: "G" },
-      { pitchName: "Gb" },
-      { pitchName: "F" }
+      { pitchName: "B", keyType: "white" },
+      { pitchName: "Bb", keyType: "black" },
+      { pitchName: "A", keyType: "white" },
+      { pitchName: "Ab", keyType: "black" },
+      { pitchName: "G", keyType: "white" },
+      { pitchName: "Gb", keyType: "black" },
+      { pitchName: "F", keyType: "white" }
     ]
   },
 ]
@@ -125,120 +119,113 @@ const keyboard76 = {
   data: [
     {
       octave: 7,
-      bKeyIndex: [1, 4, 6],
       tones: [
-        { pitchName: "G" },
-        { pitchName: "Gb" },
-        { pitchName: "F" },
-        { pitchName: "E" },
-        { pitchName: "Eb" },
-        { pitchName: "D" },
-        { pitchName: "Db" },
-        { pitchName: "C" }
+        { pitchName: "G", keyType: "white" },
+        { pitchName: "Gb", keyType: "black" },
+        { pitchName: "F", keyType: "white" },
+        { pitchName: "E", keyType: "white" },
+        { pitchName: "Eb", keyType: "black" },
+        { pitchName: "D", keyType: "white" },
+        { pitchName: "Db", keyType: "black" },
+        { pitchName: "C", keyType: "white" }
       ]
     },
     {
       octave: 6,
-      bKeyIndex: [1, 3, 5, 8, 10],
       tones: [
-        { pitchName: "B" },
-        { pitchName: "Bb" },
-        { pitchName: "A" },
-        { pitchName: "Ab" },
-        { pitchName: "G" },
-        { pitchName: "Gb" },
-        { pitchName: "F" },
-        { pitchName: "E" },
-        { pitchName: "Eb" },
-        { pitchName: "D" },
-        { pitchName: "Db" },
-        { pitchName: "C" }
+        { pitchName: "B", keyType: "white" },
+        { pitchName: "Bb", keyType: "black" },
+        { pitchName: "A", keyType: "white" },
+        { pitchName: "Ab", keyType: "black" },
+        { pitchName: "G", keyType: "white" },
+        { pitchName: "Gb", keyType: "black" },
+        { pitchName: "F", keyType: "white" },
+        { pitchName: "E", keyType: "white" },
+        { pitchName: "Eb", keyType: "black" },
+        { pitchName: "D", keyType: "white" },
+        { pitchName: "Db", keyType: "black" },
+        { pitchName: "C", keyType: "white" }
       ]
     },
     {
       octave: 5,
-      bKeyIndex: [1, 3, 5, 8, 10],
       tones: [
-        { pitchName: "B" },
-        { pitchName: "Bb" },
-        { pitchName: "A" },
-        { pitchName: "Ab" },
-        { pitchName: "G" },
-        { pitchName: "Gb" },
-        { pitchName: "F" },
-        { pitchName: "E" },
-        { pitchName: "Eb" },
-        { pitchName: "D" },
-        { pitchName: "Db" },
-        { pitchName: "C" }
+        { pitchName: "B", keyType: "white" },
+        { pitchName: "Bb", keyType: "black" },
+        { pitchName: "A", keyType: "white" },
+        { pitchName: "Ab", keyType: "black" },
+        { pitchName: "G", keyType: "white" },
+        { pitchName: "Gb", keyType: "black" },
+        { pitchName: "F", keyType: "white" },
+        { pitchName: "E", keyType: "white" },
+        { pitchName: "Eb", keyType: "black" },
+        { pitchName: "D", keyType: "white" },
+        { pitchName: "Db", keyType: "black" },
+        { pitchName: "C", keyType: "white" }
       ]
     },
     {
       octave: 4,
-      bKeyIndex: [1, 3, 5, 8, 10],
       tones: [
-        { pitchName: "B" },
-        { pitchName: "Bb" },
-        { pitchName: "A" },
-        { pitchName: "Ab" },
-        { pitchName: "G" },
-        { pitchName: "Gb" },
-        { pitchName: "F" },
-        { pitchName: "E" },
-        { pitchName: "Eb" },
-        { pitchName: "D" },
-        { pitchName: "Db" },
-        { pitchName: "C" }
+        { pitchName: "B", keyType: "white" },
+        { pitchName: "Bb", keyType: "black" },
+        { pitchName: "A", keyType: "white" },
+        { pitchName: "Ab", keyType: "black" },
+        { pitchName: "G", keyType: "white" },
+        { pitchName: "Gb", keyType: "black" },
+        { pitchName: "F", keyType: "white" },
+        { pitchName: "E", keyType: "white" },
+        { pitchName: "Eb", keyType: "black" },
+        { pitchName: "D", keyType: "white" },
+        { pitchName: "Db", keyType: "black" },
+        { pitchName: "C", keyType: "white" }
       ]
     },
     {
       octave: 3,
-      bKeyIndex: [1, 3, 5, 8, 10],
       tones: [
-        { pitchName: "B" },
-        { pitchName: "Bb" },
-        { pitchName: "A" },
-        { pitchName: "Ab" },
-        { pitchName: "G" },
-        { pitchName: "Gb" },
-        { pitchName: "F" },
-        { pitchName: "E" },
-        { pitchName: "Eb" },
-        { pitchName: "D" },
-        { pitchName: "Db" },
-        { pitchName: "C" }
+        { pitchName: "B", keyType: "white" },
+        { pitchName: "Bb", keyType: "black" },
+        { pitchName: "A", keyType: "white" },
+        { pitchName: "Ab", keyType: "black" },
+        { pitchName: "G", keyType: "white" },
+        { pitchName: "Gb", keyType: "black" },
+        { pitchName: "F", keyType: "white" },
+        { pitchName: "E", keyType: "white" },
+        { pitchName: "Eb", keyType: "black" },
+        { pitchName: "D", keyType: "white" },
+        { pitchName: "Db", keyType: "black" },
+        { pitchName: "C", keyType: "white" }
       ]
     },
     {
       octave: 2,
-      bKeyIndex: [1, 3, 5, 8, 10],
       tones: [
-        { pitchName: "B" },
-        { pitchName: "Bb" },
-        { pitchName: "A" },
-        { pitchName: "Ab" },
-        { pitchName: "G" },
-        { pitchName: "Gb" },
-        { pitchName: "F" },
-        { pitchName: "E" },
-        { pitchName: "Eb" },
-        { pitchName: "D" },
-        { pitchName: "Db" },
-        { pitchName: "C" }
+        { pitchName: "B", keyType: "white" },
+        { pitchName: "Bb", keyType: "black" },
+        { pitchName: "A", keyType: "white" },
+        { pitchName: "Ab", keyType: "black" },
+        { pitchName: "G", keyType: "white" },
+        { pitchName: "Gb", keyType: "black" },
+        { pitchName: "F", keyType: "white" },
+        { pitchName: "E", keyType: "white" },
+        { pitchName: "Eb", keyType: "black" },
+        { pitchName: "D", keyType: "white" },
+        { pitchName: "Db", keyType: "black" },
+        { pitchName: "C", keyType: "white" }
       ]
     },
     {
       octave: 1,
-      bKeyIndex: [1, 3, 5],
       tones: [
-        { pitchName: "B" },
-        { pitchName: "Bb" },
-        { pitchName: "A" },
-        { pitchName: "Ab" },
-        { pitchName: "G" },
-        { pitchName: "Gb" },
-        { pitchName: "F" },
-        { pitchName: "E" }
+        { pitchName: "B", keyType: "white" },
+        { pitchName: "Bb", keyType: "black" },
+        { pitchName: "A", keyType: "white" },
+        { pitchName: "Ab", keyType: "black" },
+        { pitchName: "G", keyType: "white" },
+        { pitchName: "Gb", keyType: "black" },
+        { pitchName: "F", keyType: "white" },
+        { pitchName: "E", keyType: "white" }
       ]
     },
   ]

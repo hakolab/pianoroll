@@ -16,8 +16,7 @@ export const ToneContainer = ({octaveObj, toneObj, octaveIndex, toneIndex}) => {
       <NoteContainer
         //id={`note[${toneObj.pitchName}${octaveObj.octave}]:${noteIndex}`}
         key={`note[${toneObj.pitchName}${octaveObj.octave}]:${noteIndex}`}
-        octaveObj={octaveObj}
-        toneObj={toneObj}
+        toneName={`${toneObj.pitchName}${octaveObj.octave}`}
         octaveIndex={octaveIndex}
         toneIndex={toneIndex}
         noteIndex={noteIndex}
@@ -30,10 +29,9 @@ export const ToneContainer = ({octaveObj, toneObj, octaveIndex, toneIndex}) => {
   return (
     <TonePresenter
       id={`tone:${toneObj.pitchName}`}
-      key={`tone:${toneObj.pitchName}`}
       className={clsx(
         'row',
-        octaveObj.bKeyIndex.indexOf(toneIndex) >= 0 ? "b-key" : "w-key",
+        toneObj.keyType,
         toneObj.pitchName
       )}
     >

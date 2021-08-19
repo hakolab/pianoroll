@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import PianoRollApp from './PianoRollApp'
+import { PianoRollApp } from './PianoRollApp'
 
 ReactDOM.render(
     <PianoRollApp />,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export const GridPresenter = ({className, children}) => {
   return (
-    <div id="grid-roll" className={className}>
+    <div className={className}>
       {children}
     </div>
   )

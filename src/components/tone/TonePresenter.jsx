@@ -5,7 +5,8 @@ export const TonePresenter = ({id, className, children}) => {
   return (
     <div
       id={id}
-      className={className}>
+      className={className}
+    >
       {children}
     </div>
   )

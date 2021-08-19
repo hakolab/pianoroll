@@ -5,7 +5,7 @@ import { NotePresenter } from './NotePresenter';
 import { useContext } from 'react';
 import { GridControllerContext } from '../../contexts/contexts';
 
-export const NoteContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, noteIndex, note, currentStep}) => {
+export const NoteContainer = ({toneName, octaveIndex, toneIndex, noteIndex, note, currentStep}) => {
 
   const { toggleActivationOfNote } = useContext(GridControllerContext);
 
@@ -29,8 +29,8 @@ export const NoteContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, noteI
 
   return (
     <NotePresenter
-        id={`note[${toneObj.pitchName}${octaveObj.octave}]:${noteIndex}`}
-        key={`note[${toneObj.pitchName}${octaveObj.octave}]:${noteIndex}`}
+        id={`note[${toneName}]:${noteIndex}`}
+        key={`note[${toneName}]:${noteIndex}`}
         className={clsx(
           note && "active",
           currentStep === noteIndex && 'now'
@@ -49,8 +49,7 @@ export const NoteContainer = ({octaveObj, toneObj, octaveIndex, toneIndex, noteI
 }
 
 NoteContainer.propTypes = {
-  octaveObj: PropTypes.object,
-  toneObj: PropTypes.object,
+  toneName: PropTypes.string,
   octaveIndex: PropTypes.number,
   toneIndex: PropTypes.number,
   noteIndex: PropTypes.number,
