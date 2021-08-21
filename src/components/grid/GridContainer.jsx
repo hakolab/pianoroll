@@ -5,12 +5,13 @@ import { GridOctaveContainer } from '../grid-octave/GridOctaveContainer';
 
 export const GridContainer = ({beat, keyboard}) => {
 
-  var octaveList = keyboard.data.map((octaveObj, octaveIndex) => {
+  var octaveList = keyboard.data.map((octaveObject, octaveIndex) => {
     return (
       <GridOctaveContainer
-        key={`octave:${octaveObj.octave}`}
-        octaveObj ={octaveObj}
+        key={`octave:${octaveObject.octave}`}
+        octave ={octaveObject.octave}
         octaveIndex={octaveIndex}
+        tones={octaveObject.tones}
       />
     )
   })

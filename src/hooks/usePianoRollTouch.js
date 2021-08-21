@@ -73,11 +73,11 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
   }, [state, scrollMode])
 
   const handleTouchMove = useCallback((event) => {
+    // touchmove はプログラムで制御するので初めにイベント抑制
+    event.preventDefault();
     if (scrollMode) {
       return
     }
-    // touchmove はプログラムで制御するので初めにイベント抑制
-    event.preventDefault();
 
     // タッチ座標から要素を取得
     const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)

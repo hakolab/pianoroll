@@ -1,18 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import clsx from 'clsx'
-import { NotePresenter } from './NotePresenter';
 import { useContext } from 'react';
 import { GridControllerContext } from '../../contexts/contexts';
+import { ActiveCurrentNotePresenter } from './ActiveCurrentNotePresenter';
+import { ActiveNotePresenter } from './ActiveNotePresenter';
+import { CurrentNotePresenter } from './CurrentNotePresenter';
+import { NotePresenter } from './NotePresenter';
 
-export const NoteContainer = ({toneName, octaveIndex, toneIndex, noteIndex, note, currentStep}) => {
+export const NoteContainer = ({octave, octaveIndex, toneIndex, pitchName, noteIndex, note, currentStep}) => {
 
   const { toggleActivationOfNote } = useContext(GridControllerContext);
 
   function handleMouseDown(event, octave, row, col) {
     // 要素をドラッグしようとするのを防ぐ
     event.preventDefault();
-    //controller.toggleActivationOfNote(octave, row, col);
     toggleActivationOfNote(octave, row, col);
   }
 
@@ -23,14 +25,17 @@ export const NoteContainer = ({toneName, octaveIndex, toneIndex, noteIndex, note
     }
 
     event.preventDefault();
-    //controller.toggleActivationOfNote(octave, row, col);
     toggleActivationOfNote(octave, row, col);
   }
 
+  const Note = note ? currentStep === noteIndex ? ActiveCurrentNotePresenter
+                                                         : ActiveNotePresenter
+                             : currentStep === noteIndex ? CurrentNotePresenter
+                                                         : NotePresenter
+
   return (
-    <NotePresenter
-        id={`note[${toneName}]:${noteIndex}`}
-        key={`note[${toneName}]:${noteIndex}`}
+    <Note
+        id={`note[${pitchName}${octave}]:${noteIndex}`}
         className={clsx(
           note && "active",
           currentStep === noteIndex && 'now'
@@ -44,14 +49,15 @@ export const NoteContainer = ({toneName, octaveIndex, toneIndex, noteIndex, note
         onMouseEnter={(event) =>
           handleMouseEnter(event, octaveIndex, toneIndex, noteIndex)
         }
-    ></NotePresenter>
+    ></Note>
   )
 }
 
 NoteContainer.propTypes = {
-  toneName: PropTypes.string,
+  octave: PropTypes.number,
   octaveIndex: PropTypes.number,
   toneIndex: PropTypes.number,
+  pitchName: PropTypes.string,
   noteIndex: PropTypes.number,
   note: PropTypes.bool,
   currentStep: PropTypes.number,

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-export const NotePresenter = ({id, className, octaveIndex, toneIndex, noteIndex, onMouseDown, onMouseEnter}) => {
+export const NotePresenter = ({id, className = '', octaveIndex, toneIndex, noteIndex, onMouseDown, onMouseEnter}) => {
   return (
     <div
         id={id}

@@ -5,17 +5,17 @@ import clsx from 'clsx'
 import { GridOctavePresenter } from './GridOctavePresenter';
 import { ToneContainer } from '../tone/ToneContainer';
 
-export const GridOctaveContainer = ({octaveObj, octaveIndex}) => {
+export const GridOctaveContainer = ({octave, tones, octaveIndex}) => {
 
-  var toneList = octaveObj.tones.map((toneObj, toneIndex) => {
+  var toneList = tones.map((toneObject, toneIndex) => {
     return (
       <ToneContainer
-        id={`tone:${toneObj.pitchName}`}
-        key={`tone:${toneObj.pitchName}`}
-        octaveObj={octaveObj}
-        toneObj={toneObj}
+        key={`tone:${toneObject.pitchName}`}
+        octave={octave}
         octaveIndex={octaveIndex}
         toneIndex={toneIndex}
+        pitchName={toneObject.pitchName}
+        keyType={toneObject.keyType}
       >
       </ToneContainer>
     )
@@ -23,8 +23,8 @@ export const GridOctaveContainer = ({octaveObj, octaveIndex}) => {
 
   return (
     <GridOctavePresenter
-      id={`octave:${octaveObj.octave}`}
-      className={clsx("octave", AppData.getOctaveClassName(octaveObj.tones.length))}
+      id={`octave:${octave}`}
+      className={clsx("octave", AppData.getOctaveClassName(tones.length))}
     >
       {toneList}
     </GridOctavePresenter>
@@ -32,6 +32,7 @@ export const GridOctaveContainer = ({octaveObj, octaveIndex}) => {
 }
 
 GridOctaveContainer.propTypes = {
-  octaveObj: PropTypes.object,
-  octaveIndex: PropTypes.number
+  octave: PropTypes.number,
+  octaveIndex: PropTypes.number,
+  tones: PropTypes.array
 }
