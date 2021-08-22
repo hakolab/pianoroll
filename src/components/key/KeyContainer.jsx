@@ -10,7 +10,7 @@ export function KeyContainer({isPress, octave, octaveIndex, toneIndex, keyType, 
   const { toggleIsPress } = useContext(KeyboardControllerContext);
 
   // マウス用キーボードシンセ（値は使わないので受け取らない）
-  const [, setIsPlay] = useKeySynth(pitchName)
+  const [, setIsPlay] = useKeySynth(pitchName, octave)
 
   function handleMouseDown(event){
     // 要素をドラッグしようとするのを防ぐ

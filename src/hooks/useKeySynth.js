@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import * as Tone from 'tone'
 
-export function useKeySynth(pitchName){
+export function useKeySynth(pitchName, octave){
   const [isPlay, setIsPlay] = useState(false);
 
   useEffect(() => {
@@ -9,7 +9,7 @@ export function useKeySynth(pitchName){
     if (isPlay){
       Tone.context.resume().then(() => {
         keySynth = new Tone.Synth().toDestination();
-        keySynth.triggerAttack(pitchName);
+        keySynth.triggerAttack(pitchName + octave);
       })
     }
 
