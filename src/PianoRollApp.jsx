@@ -39,7 +39,7 @@ export const PianoRollApp = () => {
           />
         </KeyboardContextProvider>
         <GridContextProvider
-          controller={{toggleActivationOfNote: controller.toggleActivationOfNote}}
+          controller={controller.toggleActivationOfNote}
           currentStep={state.currentStep}
           notes={state.notes}
         >

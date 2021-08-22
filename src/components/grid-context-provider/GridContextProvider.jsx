@@ -15,7 +15,7 @@ export const GridContextProvider = ({controller, currentStep, notes, children}) 
 }
 
 GridContextProvider.propTypes = {
-  controller: PropTypes.object,
+  controller: PropTypes.func,
   currentStep: PropTypes.number,
   notes: PropTypes.array,
   children: PropTypes.node

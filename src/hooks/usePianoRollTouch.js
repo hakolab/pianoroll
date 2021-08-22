@@ -28,9 +28,7 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
   const [touchTargetId, setTouchTargetId] = useState(null);
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  //const {toggleActivationOfNote, toggleIsPress, toggleAllIsPress} = controller
   const handleTouchStart = useCallback((event) => {
-    //console.log(controller)
     // タッチ座標、スクロール基準位置を取得
     const pianoRoll = document.getElementById('piano-roll')
     dispatch({type: "capture", payload: {
@@ -43,7 +41,7 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
     // タッチ座標の要素を取得
     const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
     // 鍵盤をタッチしたとき
-    if(!scrollMode && element && element.id.startsWith('key:')){
+    if(!scrollMode && element && element.dataset.elementType === 'key'){
       setTouchTargetId(element.id)
       event.preventDefault()
     }
@@ -64,7 +62,7 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
     const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
     // セルまたは鍵盤だったらスクロール
     const pianoRoll = document.getElementById('piano-roll')
-    if(element && (element.id.startsWith('note[') === true || element.id.startsWith('key:') === true)){
+    if(element && (element.dataset.elementType === 'note' || element.dataset.elementType === 'key')){
       const newScrollTop = state.scrollTop + state.y - event.touches[0].clientY;
       const newScrollLeft = state.scrollLeft + state.x - event.touches[0].clientX;
       pianoRoll.scrollTop = newScrollTop < 0 ? 0 : newScrollTop;
@@ -83,7 +81,7 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
     const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
     // セルまたは鍵盤をタッチしたとき、touchTargetId を設定
     // それ以外は null
-    if(element && (element.id.startsWith('note[') || element.id.startsWith('key:'))){
+    if(element && (element.dataset.elementType === 'note' || element.dataset.elementType === 'key')){
       setTouchTargetId(element.id);
     } else {
       setTouchTargetId(null);
@@ -97,8 +95,8 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
 
   useEffect(() => {
     const element = document.getElementById(touchTargetId);
-    if (element && element.id.startsWith("note[")) {
-      toggleActivationOfNote(element.dataset.octave, element.dataset.tone, element.dataset.note);
+    if (element && element.dataset.elementType === 'note') {
+      toggleActivationOfNote(element.dataset.octaveIndex, element.dataset.toneIndex, element.dataset.noteIndex);
     }
   }, [touchTargetId, toggleActivationOfNote])
 
@@ -109,10 +107,9 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
     Tone.context.resume().then(() => {
       _synth = new Tone.Synth().toDestination();
 
-      if (element && element.id.startsWith("key:")) {
-        toggleIsPress(element.dataset.octave, element.dataset.tone, true)
-        _synth.triggerAttack(element.id.replace("key:", ""));
-        
+      if (element && element.dataset.elementType === 'key') {
+        toggleIsPress(element.dataset.octaveIndex, element.dataset.toneIndex, true)
+        _synth.triggerAttack(element.dataset.pitchName);
       } else if(!element) {
         toggleAllIsPress();
       }

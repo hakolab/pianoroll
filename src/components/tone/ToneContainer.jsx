@@ -14,15 +14,15 @@ export const ToneContainer = ({octave, octaveIndex, toneIndex, pitchName, keyTyp
   const noteList = notes[octaveIndex][toneIndex].map((note, noteIndex) => {
     return (
       <NoteContainer
-        key={`note[${pitchName}${octave}]:${noteIndex}`}
+        key={`${pitchName}${octave}:${noteIndex}`}
         octave={octave}
         octaveIndex={octaveIndex}
         pitchName={pitchName}
         toneIndex={toneIndex}
         noteIndex={noteIndex}
-        note={note}
-        currentStep={currentStep}
-      ></NoteContainer>
+        active={note}
+        current={currentStep === noteIndex}
+      />
     )
   })
 

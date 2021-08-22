@@ -51,7 +51,8 @@ export function KeyContainer({className, pitchName, isPress, octaveIndex, toneIn
       onMouseEnter={handleMouseEnter}
       onMouseOut={handleMouseOut}
       octaveIndex={octaveIndex}
-      oneIndex={toneIndex}
+      toneIndex={toneIndex}
+      pitchName={pitchName}
     >
     </KeyPresenter>
   )

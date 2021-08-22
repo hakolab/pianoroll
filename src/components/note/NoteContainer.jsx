@@ -3,55 +3,45 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx'
 import { useContext } from 'react';
 import { GridControllerContext } from '../../contexts/contexts';
-import { ActiveCurrentNotePresenter } from './ActiveCurrentNotePresenter';
-import { ActiveNotePresenter } from './ActiveNotePresenter';
-import { CurrentNotePresenter } from './CurrentNotePresenter';
 import { NotePresenter } from './NotePresenter';
 
-export const NoteContainer = ({octave, octaveIndex, toneIndex, pitchName, noteIndex, note, currentStep}) => {
+export const NoteContainer = React.memo(({octave, octaveIndex, toneIndex, pitchName, noteIndex, active, current}) => {
 
-  const { toggleActivationOfNote } = useContext(GridControllerContext);
+  const toggleActivationOfNote = useContext(GridControllerContext);
 
-  function handleMouseDown(event, octave, row, col) {
+  function handleMouseDown(event){
     // 要素をドラッグしようとするのを防ぐ
     event.preventDefault();
-    toggleActivationOfNote(octave, row, col);
+    toggleActivationOfNote(octaveIndex, toneIndex, noteIndex);
   }
 
-  function handleMouseEnter(event, octave, row, col) {
+  function handleMouseEnter(event){
     // 左クリックされていなければ return
     if (event.buttons !== 1) {
       return;
     }
 
     event.preventDefault();
-    toggleActivationOfNote(octave, row, col);
+    toggleActivationOfNote(octaveIndex, toneIndex, noteIndex);
   }
 
-  const Note = note ? currentStep === noteIndex ? ActiveCurrentNotePresenter
-                                                         : ActiveNotePresenter
-                             : currentStep === noteIndex ? CurrentNotePresenter
-                                                         : NotePresenter
-
   return (
-    <Note
+    <NotePresenter
         id={`note[${pitchName}${octave}]:${noteIndex}`}
         className={clsx(
-          note && "active",
-          currentStep === noteIndex && 'now'
+          'note',
+          active && "active",
+          current && 'now'
         )}
         octaveIndex={octaveIndex}
         toneIndex={toneIndex}
         noteIndex={noteIndex}
-        onMouseDown={(event) =>
-          handleMouseDown(event, octaveIndex, toneIndex, noteIndex)
-        }
-        onMouseEnter={(event) =>
-          handleMouseEnter(event, octaveIndex, toneIndex, noteIndex)
-        }
-    ></Note>
+        onMouseDown={handleMouseDown}
+        onMouseEnter={handleMouseEnter}
+        pitchName={pitchName}
+    />
   )
-}
+})
 
 NoteContainer.propTypes = {
   octave: PropTypes.number,
@@ -59,7 +49,9 @@ NoteContainer.propTypes = {
   toneIndex: PropTypes.number,
   pitchName: PropTypes.string,
   noteIndex: PropTypes.number,
-  note: PropTypes.bool,
-  currentStep: PropTypes.number,
-  controller: PropTypes.object
+  active: PropTypes.bool,
+  current: PropTypes.bool,
+  controller: PropTypes.func
 }
+
+NoteContainer.displayName = "NoteContainer"

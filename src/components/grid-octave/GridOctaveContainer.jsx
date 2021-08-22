@@ -10,14 +10,13 @@ export const GridOctaveContainer = ({octave, tones, octaveIndex}) => {
   var toneList = tones.map((toneObject, toneIndex) => {
     return (
       <ToneContainer
-        key={`tone:${toneObject.pitchName}`}
+        key={toneObject.pitchName}
         octave={octave}
         octaveIndex={octaveIndex}
         toneIndex={toneIndex}
         pitchName={toneObject.pitchName}
         keyType={toneObject.keyType}
-      >
-      </ToneContainer>
+      />
     )
   })
 

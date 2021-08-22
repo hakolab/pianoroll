@@ -1,17 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-export const NotePresenter = ({id, className = '', octaveIndex, toneIndex, noteIndex, onMouseDown, onMouseEnter}) => {
+export const NotePresenter = ({id, className, octaveIndex, toneIndex, noteIndex, onMouseDown, onMouseEnter, pitchName}) => {
   return (
     <div
         id={id}
         className={className}
-        data-octave={octaveIndex}
-        data-tone={toneIndex}
-        data-note={noteIndex}
+        data-octave-index={octaveIndex}
+        data-tone-index={toneIndex}
+        data-note-index={noteIndex}
         onMouseDown={onMouseDown}
         onMouseEnter={onMouseEnter}
-    ></div>
+        data-element-type="note"
+        data-pitch-name={pitchName}
+    />
   )
 }
 
@@ -22,5 +24,6 @@ NotePresenter.propTypes = {
   toneIndex: PropTypes.number,
   noteIndex: PropTypes.number,
   onMouseDown: PropTypes.func,
-  onMouseEnter: PropTypes.func
+  onMouseEnter: PropTypes.func,
+  pitchName: PropTypes.string
 }

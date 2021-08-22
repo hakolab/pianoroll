@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import * as AppData from "../../AppData";
 import clsx from 'clsx'
 import ControlSlider from "../ControlSlider";
-//import AlertDialog from "./components/AlertDialog";
 import ConfirmDialog from "../ConfirmDialog";
 import { Grid, Box, Button, Drawer, IconButton } from "@material-ui/core";
 import { useButtonStyles } from "../../hooks/useButtonStyles";

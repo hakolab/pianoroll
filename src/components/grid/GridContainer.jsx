@@ -8,7 +8,7 @@ export const GridContainer = ({beat, keyboard}) => {
   var octaveList = keyboard.data.map((octaveObject, octaveIndex) => {
     return (
       <GridOctaveContainer
-        key={`octave:${octaveObject.octave}`}
+        key={octaveObject.octave}
         octave ={octaveObject.octave}
         octaveIndex={octaveIndex}
         tones={octaveObject.tones}
