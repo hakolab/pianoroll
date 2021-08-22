@@ -24,7 +24,7 @@ export function useKeySynth(pitchName, octave){
         })
       }
     }
-  }, [isPlay, pitchName])
+  }, [isPlay, pitchName, octave])
 
   return [isPlay, setIsPlay]
 }
