@@ -1,17 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-export const GridOctavePresenter = ({id, className, children}) => {
+export const ToneOctavePresenter = ({id, className, children}) => {
   return (
     <div
       id={id}
-      className={className}>
+      className={className}
+    >
       {children}
     </div>
   )
 }
 
-GridOctavePresenter.propTypes = {
+ToneOctavePresenter.propTypes = {
   id: PropTypes.string,
   className: PropTypes.string,
   children: PropTypes.array

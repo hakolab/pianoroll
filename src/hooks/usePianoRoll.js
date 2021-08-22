@@ -63,8 +63,8 @@ function reducer(state, action){
     }
     case "toggleActivationOfNote": {
       const newNotes = clone(state.notes);
-      const current = newNotes[action.payload.octave][action.payload.row][action.payload.col];
-      newNotes[action.payload.octave][action.payload.row][action.payload.col] = !current;
+      const current = newNotes[action.payload.octave][action.payload.tone][action.payload.note];
+      newNotes[action.payload.octave][action.payload.tone][action.payload.note] = !current;
       return {...state, notes: newNotes}
     }
     case "clearAll": {
@@ -93,7 +93,7 @@ const action = {
   changeNumberOfBars: (newNumberOfBars) => ({type: "changeNumberOfBars", payload: newNumberOfBars}),
   changeBeat: (newBeat) => ({type: "changeBeat", payload: newBeat}),
   changeKeyboard: (newKeyboard) => ({type: "changeKeyboard", payload: newKeyboard}),
-  toggleActivationOfNote: (octave, row, col) => ({type: "toggleActivationOfNote", payload: {octave, row, col}}),
+  toggleActivationOfNote: (octave, tone, note) => ({type: "toggleActivationOfNote", payload: {octave, tone, note}}),
   clearAll: () => ({type: "clearAll"}),
   clearNotes: () => ({type: "clearNotes"}),
   toggleIsPress: (octave, tone, isPress) => ({type: "toggleIsPress", payload: {octave, tone, isPress}}),
@@ -147,8 +147,8 @@ export function usePianoRoll(){
     cssVariableDispatcher.decrement();
   }
 
-  const toggleActivationOfNote = useCallback((octave, row, col) => {
-    dispatch(action.toggleActivationOfNote(octave, row, col))
+  const toggleActivationOfNote = useCallback((octave, tone, note) => {
+    dispatch(action.toggleActivationOfNote(octave, tone, note))
   }, [])
 
   const toggleIsPress = useCallback((octave, tone, isPress) => {

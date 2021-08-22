@@ -17,9 +17,9 @@ export const ToneContainer = ({octave, octaveIndex, toneIndex, pitchName, keyTyp
         key={`${pitchName}${octave}:${noteIndex}`}
         octave={octave}
         octaveIndex={octaveIndex}
-        pitchName={pitchName}
         toneIndex={toneIndex}
         noteIndex={noteIndex}
+        pitchName={pitchName}
         active={note}
         current={currentStep === noteIndex}
       />
@@ -28,8 +28,8 @@ export const ToneContainer = ({octave, octaveIndex, toneIndex, pitchName, keyTyp
 
   return (
     <TonePresenter
-      id={`tone:${pitchName}`}
-      className={clsx('row', keyType, pitchName)}
+      id={`tone:${pitchName}${octave}`}
+      className={clsx('tone', keyType, pitchName)}
     >
       {noteList}
     </TonePresenter>

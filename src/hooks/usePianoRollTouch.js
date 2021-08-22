@@ -109,7 +109,7 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
 
       if (element && element.dataset.elementType === 'key') {
         toggleIsPress(element.dataset.octaveIndex, element.dataset.toneIndex, true)
-        _synth.triggerAttack(element.dataset.pitchName);
+        _synth.triggerAttack(element.dataset.toneName);
       } else if(!element) {
         toggleAllIsPress();
       }

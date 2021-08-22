@@ -10,7 +10,7 @@ export function KeyPresenter({
   onMouseOut,
   octaveIndex,
   toneIndex,
-  pitchName
+  toneName
 }){
   return (
     <div
@@ -20,10 +20,10 @@ export function KeyPresenter({
       onMouseUp={onMouseUp}
       onMouseEnter={onMouseEnter}
       onMouseOut={onMouseOut}
+      data-element-type="key"
       data-octave-index={octaveIndex}
       data-tone-index={toneIndex}
-      data-element-type="key"
-      data-pitch-name={pitchName}
+      data-tone-name={toneName}
     >
     </div>
   )
@@ -38,5 +38,5 @@ KeyPresenter.propTypes = {
   onMouseOut: PropTypes.func,
   octaveIndex: PropTypes.number,
   toneIndex: PropTypes.number,
-  pitchName: PropTypes.string
+  toneName: PropTypes.string
 };

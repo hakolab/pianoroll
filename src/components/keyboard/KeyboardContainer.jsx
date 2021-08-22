@@ -5,21 +5,20 @@ import { KeyOctaveContainer } from '../key-octave/KeyOctaveContainer';
 
 export const KeyboardContainer = ({mode, data, keyNotes}) => {
 
-  const octaveList = data.map((octaveObj, octaveIndex) => {
+  const keyOctaveList = data.map((octaveObj, octaveIndex) => {
     return (
       <KeyOctaveContainer
-        key={`octave:${octaveObj.octave}`}
-        object={octaveObj}
-        index={octaveIndex}
+        key={octaveObj.octave}
+        octaveObject={octaveObj}
+        octaveIndex={octaveIndex}
         keyNotes={keyNotes}
-        dataLength={data.length}
       />
     )
   })
 
   return (
     <KeyboardPresenter className={`keyboard ${mode}`}>
-      {octaveList}
+      {keyOctaveList}
     </KeyboardPresenter>
   )
 }

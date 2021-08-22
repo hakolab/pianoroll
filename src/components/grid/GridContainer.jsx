@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { GridPresenter } from './GridPresenter';
-import { GridOctaveContainer } from '../grid-octave/GridOctaveContainer';
+import { ToneOctaveContainer } from '../tone-octave/ToneOctaveContainer';
 
 export const GridContainer = ({beat, keyboard}) => {
 
-  var octaveList = keyboard.data.map((octaveObject, octaveIndex) => {
+  var toneOctaveList = keyboard.data.map((octaveObject, octaveIndex) => {
     return (
-      <GridOctaveContainer
+      <ToneOctaveContainer
         key={octaveObject.octave}
         octave ={octaveObject.octave}
         octaveIndex={octaveIndex}
@@ -18,7 +18,7 @@ export const GridContainer = ({beat, keyboard}) => {
 
   return (
     <GridPresenter className={`grid ${beat.mode}`}>
-      {octaveList}
+      {toneOctaveList}
     </GridPresenter>
   )
 }

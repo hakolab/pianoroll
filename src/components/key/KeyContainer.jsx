@@ -5,7 +5,7 @@ import { KeyPresenter } from './KeyPresenter';
 import { useKeySynth } from '../../hooks/useKeySynth'
 import { KeyboardControllerContext } from '../../contexts/contexts';
 
-export function KeyContainer({className, pitchName, isPress, octaveIndex, toneIndex}){
+export function KeyContainer({isPress, octave, octaveIndex, toneIndex, keyType, pitchName}){
 
   const { toggleIsPress } = useContext(KeyboardControllerContext);
 
@@ -44,25 +44,30 @@ export function KeyContainer({className, pitchName, isPress, octaveIndex, toneIn
 
   return (
     <KeyPresenter
-      id={`key:${pitchName}`}
-      className={clsx(className, isPress && "press")}
+      id={`key:${pitchName}${octave}`}
+      className={clsx(
+        'key',
+        keyType,
+        pitchName,
+        isPress && "press")
+      }
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseEnter={handleMouseEnter}
       onMouseOut={handleMouseOut}
       octaveIndex={octaveIndex}
       toneIndex={toneIndex}
-      pitchName={pitchName}
+      toneName={`${pitchName}${octave}`}
     >
     </KeyPresenter>
   )
 }
 
 KeyContainer.propTypes = {
-  className: PropTypes.string,
-  pitchName: PropTypes.string,
-  controller: PropTypes.object,
   isPress: PropTypes.bool,
+  octave: PropTypes.number,
   octaveIndex: PropTypes.number,
-  toneIndex: PropTypes.number
+  toneIndex: PropTypes.number,
+  keyType: PropTypes.string,
+  pitchName: PropTypes.string
 };

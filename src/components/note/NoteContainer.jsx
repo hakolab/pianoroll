@@ -5,8 +5,15 @@ import { useContext } from 'react';
 import { GridControllerContext } from '../../contexts/contexts';
 import { NotePresenter } from './NotePresenter';
 
-export const NoteContainer = React.memo(({octave, octaveIndex, toneIndex, pitchName, noteIndex, active, current}) => {
-
+export const NoteContainer = React.memo(({
+  octave,
+  octaveIndex,
+  toneIndex,
+  noteIndex,
+  pitchName,
+  active,
+  current
+}) => {
   const toggleActivationOfNote = useContext(GridControllerContext);
 
   function handleMouseDown(event){
@@ -30,14 +37,14 @@ export const NoteContainer = React.memo(({octave, octaveIndex, toneIndex, pitchN
         id={`note[${pitchName}${octave}]:${noteIndex}`}
         className={clsx(
           'note',
-          active && "active",
+          active && 'active',
           current && 'now'
         )}
+        onMouseDown={handleMouseDown}
+        onMouseEnter={handleMouseEnter}
         octaveIndex={octaveIndex}
         toneIndex={toneIndex}
         noteIndex={noteIndex}
-        onMouseDown={handleMouseDown}
-        onMouseEnter={handleMouseEnter}
         pitchName={pitchName}
     />
   )
@@ -47,11 +54,10 @@ NoteContainer.propTypes = {
   octave: PropTypes.number,
   octaveIndex: PropTypes.number,
   toneIndex: PropTypes.number,
-  pitchName: PropTypes.string,
   noteIndex: PropTypes.number,
+  pitchName: PropTypes.string,
   active: PropTypes.bool,
-  current: PropTypes.bool,
-  controller: PropTypes.func
+  current: PropTypes.bool
 }
 
 NoteContainer.displayName = "NoteContainer"

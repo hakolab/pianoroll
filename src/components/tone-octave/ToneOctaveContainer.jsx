@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import * as AppData from '../../AppData'
 import clsx from 'clsx'
-import { GridOctavePresenter } from './GridOctavePresenter';
+import { ToneOctavePresenter } from './ToneOctavePresenter';
 import { ToneContainer } from '../tone/ToneContainer';
 
-export const GridOctaveContainer = ({octave, tones, octaveIndex}) => {
+export const ToneOctaveContainer = ({octave, octaveIndex, tones}) => {
 
   var toneList = tones.map((toneObject, toneIndex) => {
     return (
@@ -21,16 +21,16 @@ export const GridOctaveContainer = ({octave, tones, octaveIndex}) => {
   })
 
   return (
-    <GridOctavePresenter
-      id={`octave:${octave}`}
+    <ToneOctavePresenter
+      id={`tone-octave:${octave}`}
       className={clsx("octave", AppData.getOctaveClassName(tones.length))}
     >
       {toneList}
-    </GridOctavePresenter>
+    </ToneOctavePresenter>
   )
 }
 
-GridOctaveContainer.propTypes = {
+ToneOctaveContainer.propTypes = {
   octave: PropTypes.number,
   octaveIndex: PropTypes.number,
   tones: PropTypes.array

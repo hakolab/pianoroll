@@ -15,5 +15,5 @@ export const KeyOctavePresenter = ({id, className, children}) => {
 KeyOctavePresenter.propTypes = {
   id: PropTypes.string,
   className: PropTypes.string,
-  children: PropTypes.array,
+  children: PropTypes.array
 };
