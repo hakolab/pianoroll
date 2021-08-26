@@ -8,7 +8,9 @@ import { KeyboardContextProvider } from './components/keyboard-context-provider/
 import { KeyboardContainer } from './components/keyboard/KeyboardContainer';
 import { GridContextProvider } from './components/grid-context-provider/GridContextProvider';
 import { GridContainer } from './components/grid/GridContainer';
-import AlertDialog from './components/AlertDialog';
+import { AlertDialogContainer } from './components/dialogs/AlertDialogContainer';
+import { ThemeProvider } from './components/theme-provider/ThemeProvider';
+
 
 export const PianoRollApp = () => {
   const [state, controller] = usePianoRoll();
@@ -26,6 +28,7 @@ export const PianoRollApp = () => {
 
   return (
     <div id="container">
+      <ThemeProvider>
       <ControllerContainer
         state={state}
         controller={controller}
@@ -49,12 +52,13 @@ export const PianoRollApp = () => {
           />
         </GridContextProvider>
       </div>
-      <AlertDialog
+      <AlertDialogContainer
         open={isOpenConfirmResume}
         title={"NOTIFICATION"}
         text={"PianoRoll は音が鳴ります！"}
         onClose={handleClickResumeOk}
       />
+      </ThemeProvider>
     </div>
   );
 }

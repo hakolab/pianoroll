@@ -49,7 +49,7 @@ export function KeyContainer({isPress, octave, octaveIndex, toneIndex, keyType, 
         'key',
         keyType,
         pitchName,
-        isPress && "press")
+        isPress && 'press')
       }
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}

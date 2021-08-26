@@ -59,19 +59,13 @@ h2 {
   background-color: white;
   z-index: 100;
 
-  /* ３等分 */
-  .thirds {
-    width: calc(100% / 3)
-  }
+  .buttons {
+    display: flex;
+    justify-content: space-between;
 
-  /* ４等分 */
-  .quarters {
-    width: 25%;
-  }
-
-  /* ６等分 */
-  .six-pieces {
-    width: calc(100% / 6)
+    > .button {
+      width: 100%;
+    }
   }
 }
 

@@ -1,14 +1,14 @@
 import { useToggle } from "./useToggle";
 
 export function useDialogState(defaultIsOpen){
-  const [isOpen, toggleIsOpen] = useToggle(defaultIsOpen);
+  const [isOpen, toggleDispatcher] = useToggle(defaultIsOpen);
 
   const open = () => {
-    toggleIsOpen(true);
+    toggleDispatcher.set(true);
   }
 
   const close = () => {
-    toggleIsOpen(false);
+    toggleDispatcher.set(false);
   }
 
   return [isOpen, {open, close}]

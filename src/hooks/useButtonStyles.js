@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import { indigo, deepPurple, red } from "@material-ui/core/colors";
 
 export const useButtonStyles = makeStyles(theme => ({
+  // https://material-ui.com/customization/globals/#globals
   common: {
     [theme.breakpoints.down('xs')]: {
       fontSize: "12px",
@@ -9,12 +10,7 @@ export const useButtonStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       fontSize: "14px",
     },
-    width: "100%",
-    height: "40px",
     color: theme.palette.primary.dark,
-    borderRadius: "0",
-    padding: "0",
-    minWidth: "0"
   },
   scrollOn: {
     backgroundColor: indigo[500] +  " !important",

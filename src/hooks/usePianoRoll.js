@@ -108,7 +108,7 @@ export function usePianoRoll(){
   // CSS変数操作（値は使わないので受け取らない）
   const [, cssVariableDispatcher] = useCssVariable('--base-octave-multiply-times', 3, AppData.zoomMin, AppData.zoomMax)
   // スクロールモード（スマホ用）
-  const [scrollMode, toggleScrollMode] = useToggle(false);
+  const [scrollMode, toggleDispatcher] = useToggle(false);
   // テンポ
   const [bpm, setBpm] =useBpm();
   // notes の現在値を捕捉
@@ -135,7 +135,7 @@ export function usePianoRoll(){
   const clearAll = () => {
     dispatch(action.clearAll());
     cssVariableDispatcher.set(3)
-    toggleScrollMode(false);
+    toggleDispatcher.set(false);
     setBpm(120);
   }
 
@@ -204,7 +204,7 @@ export function usePianoRoll(){
       clearAll,
       zoomIn,
       zoomOut,
-      toggleScrollMode,
+      toggleDispatcher,
       toggleActivationOfNote,
       toggleIsPress,
       toggleAllIsPress,
