@@ -11,7 +11,6 @@ import { GridContainer } from './components/grid/GridContainer';
 import { AlertDialogContainer } from './components/dialogs/AlertDialogContainer';
 import { ThemeProvider } from './components/theme-provider/ThemeProvider';
 
-
 export const PianoRollApp = () => {
   const [state, controller] = usePianoRoll();
   //console.log("state in PianoRoll")

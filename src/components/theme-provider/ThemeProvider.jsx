@@ -8,14 +8,40 @@ const theme = createMuiTheme({
       root: {
         color: null,
         fontSize: null,
-        width: "100%",
-        height: "40px",
         borderRadius: "0",
         padding: "0",
-        minWidth: "0"
+        minWidth: "0",
+        '&:hover': {
+          backgroundColor: null,
+          '@media (hover: none)': {
+            backgroundColor: null
+          },
+        }
       }
     }
-  }
+  },
+  breakpoints: {
+    keys: [
+      "xs",
+      "spPortrait",
+      "spLandscape",
+      "sm",
+      "md",
+      "pc",
+      "lg",
+      "xl",
+    ],
+    values: {
+      xs: 0,
+      spPortrait: 320,
+      spLandscape: 520,
+      sm: 600,
+      md: 960,
+      pc: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
 })
 
 export const ThemeProvider = ({children}) => {

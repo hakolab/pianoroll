@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
+import PropTypes from 'prop-types';
+import clsx from 'clsx'
 import Button from '@material-ui/core/Button';
 import { DialogPresenter } from './DialogPresenter'
-import PropTypes from 'prop-types';
 import { useButtonStyles } from "../../hooks/useButtonStyles";
 
 export const ConfirmDialogContainer = ({open, title, text, onClose, onClickOk}) => {
@@ -24,10 +25,10 @@ export const ConfirmDialogContainer = ({open, title, text, onClose, onClickOk}) 
       onClose={handleClickNo}
     >
       <Fragment>
-        <Button onClick={handleClickNo} className={classes.dangerColor}>
+        <Button onClick={handleClickNo} className={clsx(classes.confirmButton, classes.dangerColor)}>
           NO
         </Button>
-        <Button onClick={handleClickOk} className={classes.ok}>
+        <Button onClick={handleClickOk} className={clsx(classes.confirmButton, classes.safeColor)}>
           OK
         </Button>
       </Fragment>

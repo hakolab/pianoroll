@@ -1,6 +1,9 @@
-/** オクターブの高さに掛ける数 */
+/* CSS 変数 */
 :root {
-  --base-octave-multiply-times: 3; 
+  /** オクターブの高さに掛ける数 */
+  --base-octave-multiply-times: 3;
+  --margin-value: 8px;
+  --header-height: 40px;
 }
 
 /** 高さ */
@@ -19,26 +22,21 @@ $octave-height-key-num-8: calc(#{$base-cell-height} * 8);
 
 html, body, div#root {
   width: 100%;
-  height: 100%;
+  height: 100% - calc(var(--margin-value) * 2);
   margin: 0;
-}
-
-h1 {
-  margin-bottom: 2px;
-}
-
-h2 {
-  margin-top: 0;
 }
 
 /** コンテナ */
 #container {
-  /* border: 1px solid silver; */
   background-color: white;
   width: 99%;
-  height: 100%;
-  margin: auto;
+  height: 100% - calc(var(--margin-value) * 2);
+  margin: var(--margin-value);
   position: relative;
+}
+
+.drawer {
+  margin: var(--margin-value);
 }
 
 /** コンテナ以下すべて */
@@ -49,23 +47,18 @@ h2 {
 /** ヘッダー */
 #header {
   position: sticky;
-  top: 0;
+  top: var(--margin-value);
 }
 
 /** コントローラ */
 .controller {
-  width: 99%;
-  margin-bottom: 10px;
+  margin-bottom: var(--margin-value);
   background-color: white;
   z-index: 100;
 
   .buttons {
     display: flex;
     justify-content: space-between;
-
-    > .button {
-      width: 100%;
-    }
   }
 }
 
@@ -73,7 +66,7 @@ h2 {
 #piano-roll {
   display: flex;
   overflow: scroll;
-  max-height: calc(100vh - 50px);
+  max-height: calc(100vh - calc(var(--margin-value) * 3) - var(--header-height));
 }
 
 /** 鍵盤 */

@@ -15,7 +15,7 @@ export const ChangeBeatButtonContainer = ({action, beatObject, target, isPlaying
     <ButtonPresenter
       onClick={handleClick}
       disabled={isPlaying}
-      optionalClass={clsx(beatObject.mode === target.mode ? classes.beatOn : classes.beatOff)}
+      optionalClass={clsx(classes.textButton, beatObject.mode === target.mode ? classes.beatOn : classes.beatOff)}
     >
       {target.viewName}
     </ButtonPresenter>

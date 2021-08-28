@@ -1,9 +1,13 @@
 import React from "react";
+import PropTypes from 'prop-types';
+import clsx from 'clsx'
 import Button from '@material-ui/core/Button';
 import { DialogPresenter } from './DialogPresenter'
-import PropTypes from 'prop-types';
+import { useButtonStyles } from "../../hooks/useButtonStyles";
 
 export const AlertDialogContainer = ({open, title, text, onClose}) => {
+  const classes = useButtonStyles();
+
   return (
     <DialogPresenter
       open={open}
@@ -11,7 +15,7 @@ export const AlertDialogContainer = ({open, title, text, onClose}) => {
       text={text}
       onClose={onClose}
     >
-      <Button onClick={onClose} color="primary">
+      <Button onClick={onClose} className={clsx(classes.confirmButton, classes.dark)}>
         OK
       </Button>
     </DialogPresenter>

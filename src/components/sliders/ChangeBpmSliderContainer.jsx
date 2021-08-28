@@ -32,7 +32,7 @@ export const ChangeBpmSliderContainer = ({value, onChange, disabled = false}) =>
       </Grid>
       <Grid item>
         <DirectionsRunIcon
-          className={classes.icon, disabled ? classes.disabled : ''}
+          className={clsx(classes.icon, disabled ? classes.disabled : '')}
         />
       </Grid>
     </Grid>

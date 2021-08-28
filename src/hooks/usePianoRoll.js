@@ -3,7 +3,8 @@ import * as Tone from 'tone'
 import * as AppData from '../AppData'
 import { clone, copyArray, copy } from '../utils/recursiveCopy';
 import { useSequence } from './useSequence';
-import { useCssVariable } from './useCssVariable';
+// cSpell: ignore Creasable
+import { useCreasableCssVariable } from './useCreasableCssVariable';
 import { useToggle } from './useToggle'
 import { useBpm } from './useBpm'
 import { useRefWithCapturingCurrent } from './useRefWithCapturingCurrent';
@@ -106,7 +107,7 @@ export function usePianoRoll(){
   // Sequencer
   const [isPlaying, sequenceDispatcher] = useSequence();
   // CSS変数操作（値は使わないので受け取らない）
-  const [, cssVariableDispatcher] = useCssVariable('--base-octave-multiply-times', 3, AppData.zoomMin, AppData.zoomMax)
+  const [, cssVariableDispatcher] = useCreasableCssVariable('--base-octave-multiply-times', 3, AppData.zoomMin, AppData.zoomMax)
   // スクロールモード（スマホ用）
   const [scrollMode, toggleDispatcher] = useToggle(false);
   // テンポ
