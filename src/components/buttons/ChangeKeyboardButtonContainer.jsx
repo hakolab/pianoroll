@@ -1,24 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
-import { ButtonPresenter } from './ButtonPresenter'
+import { ButtonContainer } from './ButtonContainer'
 import { useButtonStyles } from '../../hooks/useButtonStyles'
 
-export const ChangeKeyboardButtonContainer = ({action, keyboardObject, target, isPlaying = false}) => {
+export const ChangeKeyboardButtonContainer = ({action, keyboardObject, target, isPlaying = false, isInfo = false}) => {
   const classes = useButtonStyles();
 
   const handleClick = () => {
-    action(target.mode)
+    // action が渡されていれば実行
+    action && action(target.mode)
   }
 
   return (
-    <ButtonPresenter
+    <ButtonContainer
       onClick={handleClick}
       disabled={isPlaying}
-      optionalClass={clsx(classes.textButton, keyboardObject.mode === target.mode ? classes.keyboardOn : classes.keyboardOff)}
+      optionalClass={clsx(classes.textButton, keyboardObject.mode === target.mode ? classes.keyboardOn : classes.keyboardOff, isInfo && classes.noSelect)}
     >
       {target.viewName}
-    </ButtonPresenter>
+    </ButtonContainer>
   )
 }
 
@@ -26,5 +27,6 @@ ChangeKeyboardButtonContainer.propTypes = {
   action: PropTypes.func,
   keyboardObject: PropTypes.object,
   target: PropTypes.object,
-  isPlaying: PropTypes.bool
+  isPlaying: PropTypes.bool,
+  isInfo: PropTypes.bool
 }

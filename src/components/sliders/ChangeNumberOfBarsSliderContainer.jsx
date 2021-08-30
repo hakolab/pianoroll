@@ -5,29 +5,27 @@ import { Grid } from '@material-ui/core';
 import { useSliderStyles } from '../../hooks/useSliderStyles';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import ReorderIcon from '@material-ui/icons/Reorder';
-import { SliderPresenter } from './SliderPresenter';
+import { SliderContainer } from './SliderContainer';
 
-export const ChangeNumberOfBarsSliderContainer = ({value, onChange, disabled = false}) => {
+export const ChangeNumberOfBarsSliderContainer = ({value, onChange, showLabel, disabled = false, isInfo = false}) => {
   const classes = useSliderStyles()
 
-  const handleChange = (event, newValue) => {
-    onChange(newValue)
-  } 
   return (
-    <Grid container spacing={1} alignItems="center" className={classes.root}>
+    <Grid container spacing={2} alignItems="center" className={classes.root}>
       <Grid item>
         <DragHandleIcon
           className={clsx(classes.icon, classes.iconRotate, disabled ? classes.disabled : '')}
         />
       </Grid>
       <Grid item xs>
-        <SliderPresenter
+        <SliderContainer
           value={value}
-          onChange={handleChange}
+          onChange={onChange}
           min={2}
           max={16}
           disabled={disabled}
-          valueLabelDisplay="auto"
+          showLabel={showLabel}
+          optionalClass={clsx(isInfo && classes.noSelect)}
         />
       </Grid>
       <Grid item>
@@ -42,5 +40,7 @@ export const ChangeNumberOfBarsSliderContainer = ({value, onChange, disabled = f
 ChangeNumberOfBarsSliderContainer.propTypes = {
   value: PropTypes.number,
   onChange: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  showLabel: PropTypes.bool,
+  isInfo: PropTypes.bool
 }

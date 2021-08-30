@@ -1,24 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
-import { ButtonPresenter } from './ButtonPresenter';
+import { ButtonContainer } from './ButtonContainer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsAlt } from "@fortawesome/free-solid-svg-icons";
 import { useButtonStyles } from '../../hooks/useButtonStyles';
 
-export const ToggleScrollButtonContainer = ({action, isScrollMode = false}) => {
+export const ToggleScrollButtonContainer = ({action, isScrollMode = false, isInfo = false}) => {
   const classes = useButtonStyles();
   return (
-    <ButtonPresenter
+    <ButtonContainer
       onClick={action}
-      optionalClass={clsx(isScrollMode === true && classes.scrollOn)}
+      optionalClass={clsx(classes.iconButton, isScrollMode === true && classes.scrollOn, isInfo && classes.noSelect)}
     >
       <FontAwesomeIcon icon={faArrowsAlt}/>
-    </ButtonPresenter>
+    </ButtonContainer>
   )
 }
 
 ToggleScrollButtonContainer.propTypes = {
   action: PropTypes.func,
-  isScrollMode: PropTypes.bool
+  isScrollMode: PropTypes.bool,
+  isInfo: PropTypes.bool
 }

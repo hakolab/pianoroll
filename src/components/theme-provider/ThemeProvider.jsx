@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { createMuiTheme, ThemeProvider as MuiThemeProvider } from '@material-ui/core'
+import { indigo } from '@material-ui/core/colors'
 
 const theme = createMuiTheme({
   overrides: {
@@ -18,7 +19,26 @@ const theme = createMuiTheme({
           },
         }
       }
-    }
+    },
+    MuiSlider: {
+      valueLabel: {
+        left: -4,
+        top: 6,
+        '& *': {
+          background: "transparent",
+          color: indigo[700],
+        },
+      },
+      thumb: {
+        width: "28px",
+        height:"28px",
+        marginTop: "-14px",
+        marginLeft: "-14px",
+        backgroundColor: "white",
+        border: '2px solid currentColor',
+        fontSize: "8px",
+      }
+    },
   },
   breakpoints: {
     keys: [

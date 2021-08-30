@@ -2,41 +2,62 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import * as AppData from "../../AppData";
 import { Grid } from '../material-ui-wrapper/Grid'
-import { Box, Drawer, IconButton } from "@material-ui/core";
+import { Box, Drawer, IconButton, AppBar, Typography } from "@material-ui/core";
 import { useButtonStyles } from "../../hooks/useButtonStyles";
 import { useDialogState } from "../../hooks/useDialogState";
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { PlayStopButtonContainer } from '../buttons/PlayStopButtonContainer';
 import { PlayButtonContainer } from '../buttons/PlayButtonContainer';
 import { StopButtonContainer } from '../buttons/StopButtonContainer'
-import { ClearNotesButtonContainer } from '../buttons/ClearNotesButtonContainer';
-import { ClearAllButtonContainer } from '../buttons/ClearAllButtonContainer';
+import { ClearNotesButtonWithConfirmContainer } from '../buttons/ClearNotesButtonWithConfirmContainer';
 import { ToggleScrollButtonContainer } from '../buttons/ToggleScrollButtonContainer';
 import { ZoomOutButtonContainer } from '../buttons/ZoomOutButtonContainer';
 import { ZoomInButtonContainer } from '../buttons/ZoomInButtonContainer';
-import { OpenDrawerButtonContainer } from '../buttons/OpenDrawerButtonContainer';
+import { OpenConfigButtonContainer } from '../buttons/OpenConfigButtonContainer';
+import { OpenInfoButtonContainer } from '../buttons/OpenInfoButtonContainer'
 import { ChangeKeyboardButtonContainer } from '../buttons/ChangeKeyboardButtonContainer';
 import { ChangeBeatButtonContainer } from '../buttons/ChangeBeatButtonContainer';
 import { ChangeBpmSliderContainer } from '../sliders/ChangeBpmSliderContainer';
 import { ChangeNumberOfBarsSliderContainer } from '../sliders/ChangeNumberOfBarsSliderContainer';
 import { isMobile } from 'react-device-detect';
 import { useControllerHeight } from '../../hooks/useControllerHeight';
+import { PlayButtonInfoContainer } from '../information/PlayButtonInfoContainer';
+import { StopButtonInfoContainer } from '../information/StopButtonInfoContainer';
+import { ClearNotesButtonInfoContainer } from '../information/ClearNotesButtonInfoContainer';
+import { ClearAllButtonInfoContainer } from '../information/ClearAllButtonInfoContainer';
+import { ToggleScrollButtonInfoContainer } from '../information/ToggleScrollButtonInfoContainer';
+import { ZoomOutButtonInfoContainer } from '../information/ZoomOutButtonInfoContainer';
+import { ZoomInButtonInfoContainer } from '../information/ZoomInButtonInfoContainer';
+import { OpenConfigButtonInfoContainer } from '../information/OpenConfigButtonInfoContainer';
+import { ChangeKeyboardButtonInfoContainer } from '../information/ChangeKeyboardButtonInfoContainer';
+import { ChangeBeatButtonInfoContainer } from '../information/ChangeBeatButtonInfoContainer';
+import { ChangeNumberOfBarsSliderInfoContainer } from '../information/ChangeNumberOfBarsSliderInfoContainer';
+import { ChangeBpmSliderInfoContainer } from '../information/ChangeBpmSliderInfoContainer';
+import { ClearAllButtonWithConfirmContainer } from '../buttons/ClearAllButtonWithConfirmContainer';
 
 export const ControllerContainer = ({state, controller}) => {
   const classes = useButtonStyles();
   useControllerHeight();
 
   // 設定ドロワー
-  const [isOpenDrawer, drawerDispatcher] = useDialogState(false);
+  const [isOpenConfig, configDispatcher] = useDialogState(false);
+  // ヘルプドロワー
+  const [isOpenInfo, infoDispatcher] = useDialogState(false);
 
   return (
     <Fragment>
-      <Grid container id="header" className="controller" alignItems="center">
+      <Grid container className="header controller" alignItems="center">
         <Grid item xs={12} spPortrait={12} spLandscape={6} pc={6}>
           <Box className="buttons">
             {
               isMobile
-              ? <Fragment>
+              ? <PlayStopButtonContainer
+                  start={controller.start}
+                  stop={controller.stop}
+                  isPlaying={state.isPlaying}
+                />
+              : <Fragment>
                   <PlayButtonContainer
                     isPlaying={state.isPlaying}
                     action={controller.start}
@@ -46,31 +67,26 @@ export const ControllerContainer = ({state, controller}) => {
                     action={controller.stop}
                   />
                 </Fragment>
-              : <PlayStopButtonContainer
-                  start={controller.start}
-                  stop={controller.stop}
-                  isPlaying={state.isPlaying}
-                />
             }
-            <ClearNotesButtonContainer
+            <ClearNotesButtonWithConfirmContainer
               isPlaying={state.isPlaying}
               action={controller.clearNotes}
             />
-            <ClearAllButtonContainer
+            <ClearAllButtonWithConfirmContainer
               isPlaying={state.isPlaying}
               action={controller.clearAll}
             />
+            {
+              isMobile &&
+              <ToggleScrollButtonContainer
+                action={controller.scrollModeDispatcher.toggle}
+                isScrollMode={state.scrollMode}
+              />
+            }
           </Box>
         </Grid>
         <Grid item xs={12} spPortrait={12} spLandscape={6} pc={6}>
           <Box className="buttons">
-            {
-              isMobile &&
-              <ToggleScrollButtonContainer
-                action={controller.toggleDispatcher.toggle}
-                isScrollMode={state.scrollMode}
-              />
-            }
             <ZoomOutButtonContainer
               action={controller.zoomOut}
               zoom={state.zoom}
@@ -79,17 +95,85 @@ export const ControllerContainer = ({state, controller}) => {
               action={controller.zoomIn}
               zoom={state.zoom}
             />
-            <OpenDrawerButtonContainer
-              action={drawerDispatcher.open}
+            <OpenConfigButtonContainer
+              action={configDispatcher.open}
+            />
+            <OpenInfoButtonContainer
+              action={infoDispatcher.open}
             />
           </Box>
         </Grid>
       </Grid>
+      <Drawer
+        anchor="bottom"
+        open={isOpenInfo}
+        onClose={infoDispatcher.close}
+      >
+        <div id="info">
+          <AppBar position="sticky" className="header">
+            <div className="title">
+              <Typography variant="h5">
+                PianoRoll
+              </Typography>
+              <Typography variant="caption">
+                Version 1.0
+              </Typography>
+            </div>
+          </AppBar>
+          <div className="container">
+            <Grid container spacing={2}>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <PlayButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <StopButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ClearNotesButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ClearAllButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ZoomOutButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ZoomInButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ToggleScrollButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <OpenConfigButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ChangeKeyboardButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ChangeBeatButtonInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ChangeNumberOfBarsSliderInfoContainer />
+              </Grid>
+              <Grid item xs={12} spPortrait={12} spLandscape={6}>
+                <ChangeBpmSliderInfoContainer />
+              </Grid>
+              <Grid item xs>
+                <Box m={1} textAlign="center">
+                  <IconButton className={classes.dark} onClick={infoDispatcher.close}>
+                    <ExpandMoreIcon />
+                  </IconButton>
+                </Box>
+              </Grid>
+            </Grid>
+          </div>
+        </div>
+      </Drawer>
 
       <Drawer
         anchor="top"
-        open={isOpenDrawer}
-        onClose={drawerDispatcher.close}
+        open={isOpenConfig}
+        onClose={configDispatcher.close}
       >
         <div className="drawer">
           <Grid container className="controller" alignItems="center">
@@ -144,22 +228,28 @@ export const ControllerContainer = ({state, controller}) => {
               </Box>
             </Grid>
             <Grid item xs={12} spPortrait={12} spLandscape={6}>
-              <ChangeNumberOfBarsSliderContainer
-                value={state.numberOfBars}
-                onChange={controller.changeNumberOfBars}
-                disabled={state.isPlaying}
-              />
+              <Box mt={1}>
+                <ChangeNumberOfBarsSliderContainer
+                  value={state.numberOfBars}
+                  onChange={controller.changeNumberOfBars}
+                  disabled={state.isPlaying}
+                  showLabel={true}
+                />
+              </Box>
             </Grid>
             <Grid item xs={12} spPortrait={12} spLandscape={6}>
-              <ChangeBpmSliderContainer
-                value={state.bpm}
-                onChange={controller.changeBpm}
-                disabled={false}
-              />
+              <Box mt={1}>
+                <ChangeBpmSliderContainer
+                  value={state.bpm}
+                  onChange={controller.changeBpm}
+                  disabled={false}
+                  showLabel={true}
+                />
+              </Box>
             </Grid>
             <Grid item xs={12} spPortrait={12} spLandscape={12}>
               <Box m={1} textAlign="center">
-                <IconButton className={classes.dark} onClick={drawerDispatcher.close}>
+                <IconButton className={classes.dark} onClick={configDispatcher.close}>
                   <ExpandLessIcon />
                 </IconButton>
               </Box>

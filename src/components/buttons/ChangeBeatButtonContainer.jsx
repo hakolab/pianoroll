@@ -1,24 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
-import { ButtonPresenter } from './ButtonPresenter'
+import { ButtonContainer } from './ButtonContainer'
 import { useButtonStyles } from '../../hooks/useButtonStyles'
 
-export const ChangeBeatButtonContainer = ({action, beatObject, target, isPlaying = false}) => {
+export const ChangeBeatButtonContainer = ({action, beatObject, target, isPlaying = false, isInfo = false}) => {
   const classes = useButtonStyles();
 
   const handleClick = () => {
-    action(target.mode)
+    action && action(target.mode)
   }
 
   return (
-    <ButtonPresenter
+    <ButtonContainer
       onClick={handleClick}
       disabled={isPlaying}
-      optionalClass={clsx(classes.textButton, beatObject.mode === target.mode ? classes.beatOn : classes.beatOff)}
+      optionalClass={clsx(classes.textButton, beatObject.mode === target.mode ? classes.beatOn : classes.beatOff, isInfo && classes.noSelect)}
     >
       {target.viewName}
-    </ButtonPresenter>
+    </ButtonContainer>
   )
 }
 
@@ -26,5 +26,6 @@ ChangeBeatButtonContainer.propTypes = {
   action: PropTypes.func,
   beatObject: PropTypes.object,
   target: PropTypes.object,
-  isPlaying: PropTypes.bool
+  isPlaying: PropTypes.bool,
+  isInfo: PropTypes.bool
 }

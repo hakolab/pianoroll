@@ -1,38 +1,29 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { ButtonPresenter } from './ButtonPresenter';
+import clsx from 'clsx'
+import { ButtonContainer } from './ButtonContainer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { useDialogState } from '../../hooks/useDialogState';
-import { ConfirmDialogContainer } from '../dialogs/ConfirmDialogContainer';
 import { useButtonStyles } from '../../hooks/useButtonStyles';
 
-export const ClearAllButtonContainer = ({action, isPlaying = false}) => {
+export const ClearAllButtonContainer = ({action, isPlaying = false, isInfo = false}) => {
   const classes = useButtonStyles();
-  // allClear確認
-  const [isOpenConfirmAllClear, confirmAllClearDispatcher] = useDialogState(false);
 
   return (
     <Fragment>
-      <ButtonPresenter
-        onClick={confirmAllClearDispatcher.open}
+      <ButtonContainer
+        onClick={action}
         disabled={isPlaying}
-        optionalClass={classes.dangerHover}
+        optionalClass={clsx(classes.iconButton, classes.dangerHover, isInfo && classes.noSelect)}
       >
         <FontAwesomeIcon icon={faTrashAlt}/>
-      </ButtonPresenter>
-      <ConfirmDialogContainer
-        open={isOpenConfirmAllClear}
-        title={"ALL CLEAR"}
-        text={"キーボードモード、拍子、小節数、入力した音符などをすべてクリアします。よろしいですか？"}
-        onClose={confirmAllClearDispatcher.close}
-        onClickOk={action}
-      />
+      </ButtonContainer>
     </Fragment>
   )
 }
 
 ClearAllButtonContainer.propTypes = {
   action: PropTypes.func,
-  isPlaying: PropTypes.bool
+  isPlaying: PropTypes.bool,
+  isInfo: PropTypes.bool
 }

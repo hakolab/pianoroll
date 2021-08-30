@@ -4,11 +4,12 @@ import * as AppData from '../AppData'
 import { clone, copyArray, copy } from '../utils/recursiveCopy';
 import { useSequence } from './useSequence';
 // cSpell: ignore Creasable
+import { useToggle } from './useToggle';
 import { useCreasableCssVariable } from './useCreasableCssVariable';
-import { useToggle } from './useToggle'
 import { useBpm } from './useBpm'
 import { useRefWithCapturingCurrent } from './useRefWithCapturingCurrent';
 import { usePianoRollTouch } from './usePianoRollTouch';
+import { isMobile } from 'react-device-detect';
 
 const initialState = {
   numberOfBars: 4,
@@ -108,12 +109,14 @@ export function usePianoRoll(){
   const [isPlaying, sequenceDispatcher] = useSequence();
   // CSS変数操作（値は使わないので受け取らない）
   const [, cssVariableDispatcher] = useCreasableCssVariable('--base-octave-multiply-times', 3, AppData.zoomMin, AppData.zoomMax)
-  // スクロールモード（スマホ用）
-  const [scrollMode, toggleDispatcher] = useToggle(false);
   // テンポ
   const [bpm, setBpm] =useBpm();
   // notes の現在値を捕捉
   const refNotes = useRefWithCapturingCurrent(state.notes);
+  // タッチモード（スマホ用）
+  const [touchMode, touchModeDispatcher] = useToggle(isMobile);
+  // スクロールモード（スマホ用）
+  const [scrollMode, scrollModeDispatcher] = useToggle(false);
 
   const start = () => {
     const synth = new Tone.PolySynth().toDestination()
@@ -136,7 +139,7 @@ export function usePianoRoll(){
   const clearAll = () => {
     dispatch(action.clearAll());
     cssVariableDispatcher.set(3)
-    toggleDispatcher.set(false);
+    scrollModeDispatcher.set(false);
     setBpm(120);
   }
 
@@ -177,7 +180,7 @@ export function usePianoRoll(){
   }
 
   // スマホ用タッチイベント
-  usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggleAllIsPress}, scrollMode);
+  usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggleAllIsPress}, touchMode, scrollMode);
 
   const getPlayNotes = (step) => {
     let playNotes = [];
@@ -195,8 +198,9 @@ export function usePianoRoll(){
     {
       ...state,
       isPlaying,
-      scrollMode,
-      bpm
+      bpm,
+      touchMode,
+      scrollMode
     },
     {
       start,
@@ -205,7 +209,6 @@ export function usePianoRoll(){
       clearAll,
       zoomIn,
       zoomOut,
-      toggleDispatcher,
       toggleActivationOfNote,
       toggleIsPress,
       toggleAllIsPress,
@@ -213,6 +216,8 @@ export function usePianoRoll(){
       changeBpm,
       changeKeyboard,
       changeBeat,
+      scrollModeDispatcher,
+      touchModeDispatcher     
     }
   ]
 }

@@ -5,29 +5,27 @@ import { Grid } from '@material-ui/core';
 import { useSliderStyles } from '../../hooks/useSliderStyles';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
-import { SliderPresenter } from './SliderPresenter';
+import { SliderContainer } from './SliderContainer';
 
-export const ChangeBpmSliderContainer = ({value, onChange, disabled = false}) => {
+export const ChangeBpmSliderContainer = ({value, onChange, showLabel, disabled = false, isInfo = false}) => {
   const classes = useSliderStyles()
 
-  const handleChange = (event, newValue) => {
-    onChange(newValue)
-  }
   return (
-    <Grid container spacing={1} alignItems="center" className={classes.root}>
+    <Grid container spacing={2} alignItems="center" className={classes.root}>
       <Grid item>
         <DirectionsWalkIcon
           className={clsx(classes.icon, disabled ? classes.disabled : '')}
         />
       </Grid>
       <Grid item xs>
-        <SliderPresenter
+        <SliderContainer
           value={value}
-          onChange={handleChange}
+          onChange={onChange}
           min={40}
           max={200}
           disabled={disabled}
-          valueLabelDisplay="auto"
+          showLabel={showLabel}
+          optionalClass={clsx(isInfo && classes.noSelect)}
         />
       </Grid>
       <Grid item>
@@ -42,5 +40,7 @@ export const ChangeBpmSliderContainer = ({value, onChange, disabled = false}) =>
 ChangeBpmSliderContainer.propTypes = {
   value: PropTypes.number,
   onChange: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  showLabel: PropTypes.bool,
+  isInfo: PropTypes.bool
 }

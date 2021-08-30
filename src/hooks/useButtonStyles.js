@@ -82,5 +82,8 @@ export const useButtonStyles = makeStyles(theme => ({
       color: theme.palette.error.main,
       backgroundColor: red[100],
     },
-  }
+  },
+  noSelect: {
+    pointerEvents: 'none'
+  },
 }));

@@ -29,7 +29,6 @@ html, body, div#root {
 /** コンテナ */
 #container {
   background-color: white;
-  width: 99%;
   height: 100% - calc(var(--margin-value) * 2);
   margin: var(--margin-value);
   position: relative;
@@ -45,9 +44,23 @@ html, body, div#root {
 }
 
 /** ヘッダー */
-#header {
+.header {
   position: sticky;
   top: var(--margin-value);
+}
+
+/* インフォ drawer */
+#info {
+  height: 100vh;
+  
+  .title {
+    padding: 8px;
+    text-align: center;
+  }
+
+  .container {
+    padding: 8px;
+  }
 }
 
 /** コントローラ */

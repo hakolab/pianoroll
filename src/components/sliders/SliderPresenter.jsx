@@ -1,20 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import { Slider as MuiSlider } from '@material-ui/core'
-import { isIOS } from 'react-device-detect'
-import { IOSSlider } from './IOSSlider';
+import { Slider } from '@material-ui/core'
 
-export const SliderPresenter = ({value, onChange, min, max, disabled = false}) => {
-  const Slider = isIOS ? IOSSlider : MuiSlider
-
+export const SliderPresenter = ({value, onChange, onChangeCommitted, min, max, showLabel, optionalClass, disabled = false}) => {
   return (
     <Slider
       value={value}
       onChange={onChange}
+      onChangeCommitted={onChangeCommitted}
       min={min}
       max={max}
       disabled={disabled}
-      valueLabelDisplay="auto"
+      valueLabelDisplay={showLabel}
+      className={optionalClass}
     />
   )
 }
@@ -22,7 +20,10 @@ export const SliderPresenter = ({value, onChange, min, max, disabled = false}) =
 SliderPresenter.propTypes = {
   value: PropTypes.number,
   onChange: PropTypes.func,
+  onChangeCommitted: PropTypes.func,
   min: PropTypes.number,
   max: PropTypes.number,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  showLabel: PropTypes.string,
+  optionalClass: PropTypes.string,
 }

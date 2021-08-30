@@ -1,16 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import clsx from 'clsx'
 import { Button } from '@material-ui/core'
-import { useButtonStyles } from '../../hooks/useButtonStyles'
 
-export const ButtonPresenter = ({children, onClick, disabled = false, optionalClass = null}) => {
-  const classes = useButtonStyles();
-
+export const ButtonPresenter = ({children, className, onClick, disabled = false}) => {
   return (
     <Button
       variant="outlined"
-      className={clsx(classes.common, optionalClass)}
+      className={className}
       onClick={onClick}
       disabled={disabled}
     >
@@ -21,7 +17,7 @@ export const ButtonPresenter = ({children, onClick, disabled = false, optionalCl
 
 ButtonPresenter.propTypes = {
   children: PropTypes.node,
+  className: PropTypes.string,
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
-  optionalClass: PropTypes.string
 }

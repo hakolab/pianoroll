@@ -24,19 +24,24 @@ function reducer(state, action){
   }
 }
 
-export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggleAllIsPress}, scrollMode){
+export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggleAllIsPress}, touchMode, scrollMode){
   const [touchTargetId, setTouchTargetId] = useState(null);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  //const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleTouchStart = useCallback((event) => {
+    // タッチモードオフのときは return 
+    /* if (!touchMode) {
+      return
+    } */
+
     // タッチ座標、スクロール基準位置を取得
-    const pianoRoll = document.getElementById('piano-roll')
+    /* const pianoRoll = document.getElementById('piano-roll')
     dispatch({type: "capture", payload: {
       x: event.touches[0].clientX,
       y: event.touches[0].clientY,
       scrollTop: pianoRoll.scrollTop,
       scrollLeft: pianoRoll.scrollLeft
-    }})
+    }}) */
 
     // タッチ座標の要素を取得
     const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
@@ -51,7 +56,12 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
     setTouchTargetId(null)
   }, [])
   
-  const handleTouchScroll = useCallback((event) => {
+  /* const handleTouchScroll = useCallback((event) => {
+    // タッチモードオフのときは return 
+    if (!touchMode) {
+      return
+    }
+    // スクロールモードオフのときは return
     if (!scrollMode) {
       return
     }
@@ -68,14 +78,19 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
       pianoRoll.scrollTop = newScrollTop < 0 ? 0 : newScrollTop;
       pianoRoll.scrollLeft = newScrollLeft < 0 ? 0 : newScrollLeft;
     }
-  }, [state, scrollMode])
+  }, [state, touchMode, scrollMode]) */
 
   const handleTouchMove = useCallback((event) => {
-    // touchmove はプログラムで制御するので初めにイベント抑制
-    event.preventDefault();
+    // タッチモードオフのときは return 
+    /* if (!touchMode) {
+      return
+    } */
+    // スクロールモードオンのときは return
     if (scrollMode) {
       return
     }
+    // touchmove はプログラムで制御するので初めにイベント抑制
+    event.preventDefault();
 
     // タッチ座標から要素を取得
     const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
@@ -90,7 +105,7 @@ export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggle
 
   useEventListener("touchstart", handleTouchStart, document, { passive: false });
   useEventListener("touchend", handleTouchEnd, document, { passive: false });
-  useEventListener("touchmove", handleTouchScroll, document, { passive: false });
+  //useEventListener("touchmove", handleTouchScroll, document, { passive: false });
   useEventListener("touchmove", handleTouchMove, document, { passive: false });
 
   useEffect(() => {
