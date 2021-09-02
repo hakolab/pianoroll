@@ -8,8 +8,8 @@ export const InformationItemPresenter = ({children, description, width = 60}) =>
       <Box minWidth={60} maxWidth={120} width={width} height={40}>
         {children}
       </Box>
-      <Box style={{marginLeft: "8px"}} flexGrow={1}>
-        <Typography variant="body2">
+      <Box flexGrow={1} marginLeft={1}>
+        <Typography variant="body2" >
           {description}
         </Typography>
       </Box>

@@ -5,7 +5,7 @@ import { ChangeNumberOfBarsSliderContainer } from '../sliders/ChangeNumberOfBars
 export const ChangeNumberOfBarsSliderInfoContainer = () => {
   return (
     <InformationItemPresenter
-      description={"テンポを変更します。"}
+      description={"小節数を変更します。"}
       width={120}
     >
       <ChangeNumberOfBarsSliderContainer

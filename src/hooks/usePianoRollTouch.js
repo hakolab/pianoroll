@@ -1,143 +1,48 @@
-import { useEffect, useCallback, useState, useReducer } from 'react'
+import { useCallback } from 'react'
 import { useEventListener } from "./useEventListener";
-import * as Tone from 'tone'
 
-const initialState = {
-  x: null,
-  y: null,
-  scrollTop: null,
-  scrollLeft: null
-}
-
-function reducer(state, action){
-  switch(action.type){
-    case "capture": {
-      return {
-        ...state,
-        x: action.payload.x,
-        y: action.payload.y,
-        scrollTop: action.payload.scrollTop,
-        scrollLeft: action.payload.scrollLeft
-      } 
-    }
-    default: 
-  }
-}
-
-export function usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggleAllIsPress}, touchMode, scrollMode){
-  const [touchTargetId, setTouchTargetId] = useState(null);
-  //const [state, dispatch] = useReducer(reducer, initialState);
+export function usePianoRollTouch(touchMode, scrollMode, callbacks){
 
   const handleTouchStart = useCallback((event) => {
-    // タッチモードオフのときは return 
-    /* if (!touchMode) {
-      return
-    } */
-
-    // タッチ座標、スクロール基準位置を取得
-    /* const pianoRoll = document.getElementById('piano-roll')
-    dispatch({type: "capture", payload: {
-      x: event.touches[0].clientX,
-      y: event.touches[0].clientY,
-      scrollTop: pianoRoll.scrollTop,
-      scrollLeft: pianoRoll.scrollLeft
-    }}) */
-
-    // タッチ座標の要素を取得
-    const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
-    // 鍵盤をタッチしたとき
-    if(!scrollMode && element && element.dataset.elementType === 'key'){
-      setTouchTargetId(element.id)
-      event.preventDefault()
-    }
-  }, [scrollMode])
-
-  const handleTouchEnd = useCallback(() => {
-    setTouchTargetId(null)
-  }, [])
-  
-  /* const handleTouchScroll = useCallback((event) => {
-    // タッチモードオフのときは return 
+    // タッチモードオフのときは return
     if (!touchMode) {
       return
     }
-    // スクロールモードオフのときは return
-    if (!scrollMode) {
-      return
-    }
-    // touchmove はプログラムで制御するので初めにイベント抑制
-    event.preventDefault()
-
-    // タッチ座標から要素を取得
-    const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
-    // セルまたは鍵盤だったらスクロール
-    const pianoRoll = document.getElementById('piano-roll')
-    if(element && (element.dataset.elementType === 'note' || element.dataset.elementType === 'key')){
-      const newScrollTop = state.scrollTop + state.y - event.touches[0].clientY;
-      const newScrollLeft = state.scrollLeft + state.x - event.touches[0].clientX;
-      pianoRoll.scrollTop = newScrollTop < 0 ? 0 : newScrollTop;
-      pianoRoll.scrollLeft = newScrollLeft < 0 ? 0 : newScrollLeft;
-    }
-  }, [state, touchMode, scrollMode]) */
-
-  const handleTouchMove = useCallback((event) => {
-    // タッチモードオフのときは return 
-    /* if (!touchMode) {
-      return
-    } */
-    // スクロールモードオンのときは return
+    //スクロールモードオンのときは return
     if (scrollMode) {
       return
     }
-    // touchmove はプログラムで制御するので初めにイベント抑制
-    event.preventDefault();
 
-    // タッチ座標から要素を取得
-    const element = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
-    // セルまたは鍵盤をタッチしたとき、touchTargetId を設定
-    // それ以外は null
-    if(element && (element.dataset.elementType === 'note' || element.dataset.elementType === 'key')){
-      setTouchTargetId(element.id);
-    } else {
-      setTouchTargetId(null);
+    callbacks.start(event);
+  }, [touchMode, scrollMode, callbacks])
+
+  const handleTouchEnd = useCallback(() => {
+    // タッチモードオフのときは return
+    if (!touchMode) {
+      return
     }
-  }, [scrollMode])
+    //スクロールモードオンのときは return
+    if (scrollMode) {
+      return
+    }
+
+    callbacks.end();
+  }, [touchMode, scrollMode, callbacks])
+
+  const handleTouchMove = useCallback((event) => {
+    // タッチモードオフのときは return
+    if (!touchMode) {
+      return
+    }
+    //スクロールモードオンのときは return
+    if (scrollMode) {
+      return
+    }
+
+    callbacks.move(event);
+  }, [touchMode, scrollMode, callbacks])
 
   useEventListener("touchstart", handleTouchStart, document, { passive: false });
   useEventListener("touchend", handleTouchEnd, document, { passive: false });
-  //useEventListener("touchmove", handleTouchScroll, document, { passive: false });
   useEventListener("touchmove", handleTouchMove, document, { passive: false });
-
-  useEffect(() => {
-    const element = document.getElementById(touchTargetId);
-    if (element && element.dataset.elementType === 'note') {
-      toggleActivationOfNote(element.dataset.octaveIndex, element.dataset.toneIndex, element.dataset.noteIndex);
-    }
-  }, [touchTargetId, toggleActivationOfNote])
-
-  useEffect(() => {
-    const element = document.getElementById(touchTargetId);
-    let _synth;
-
-    Tone.context.resume().then(() => {
-      _synth = new Tone.Synth().toDestination();
-
-      if (element && element.dataset.elementType === 'key') {
-        toggleIsPress(element.dataset.octaveIndex, element.dataset.toneIndex, true)
-        _synth.triggerAttack(element.dataset.toneName);
-      } else if(!element) {
-        toggleAllIsPress();
-      }
-    })
-    
-    return () => {
-      Tone.context.resume().then(() => {
-        _synth.triggerRelease();
-        setTimeout(() => {
-          _synth.dispose();
-          _synth = null;
-        }, _synth.get().envelope.sustain * 1000)
-      })
-    }
-  }, [touchTargetId, toggleIsPress, toggleAllIsPress])
 }

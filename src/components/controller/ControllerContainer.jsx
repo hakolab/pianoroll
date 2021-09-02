@@ -45,6 +45,16 @@ export const ControllerContainer = ({state, controller}) => {
   // ヘルプドロワー
   const [isOpenInfo, infoDispatcher] = useDialogState(false);
 
+  function openInfo(){
+    controller.pianoRollEventDispatcher.touch.set(false)
+    infoDispatcher.open();
+  }
+
+  function closeInfo(){
+    controller.pianoRollEventDispatcher.touch.set(true)
+    infoDispatcher.close();
+  }
+
   return (
     <Fragment>
       <Grid container className="header controller" alignItems="center">
@@ -79,7 +89,7 @@ export const ControllerContainer = ({state, controller}) => {
             {
               isMobile &&
               <ToggleScrollButtonContainer
-                action={controller.scrollModeDispatcher.toggle}
+                action={controller.pianoRollEventDispatcher.scroll.toggle}
                 isScrollMode={state.scrollMode}
               />
             }
@@ -99,7 +109,7 @@ export const ControllerContainer = ({state, controller}) => {
               action={configDispatcher.open}
             />
             <OpenInfoButtonContainer
-              action={infoDispatcher.open}
+              action={openInfo}
             />
           </Box>
         </Grid>
@@ -107,7 +117,7 @@ export const ControllerContainer = ({state, controller}) => {
       <Drawer
         anchor="bottom"
         open={isOpenInfo}
-        onClose={infoDispatcher.close}
+        onClose={closeInfo}
       >
         <div id="info">
           <AppBar position="sticky" className="header">
@@ -160,7 +170,7 @@ export const ControllerContainer = ({state, controller}) => {
               </Grid>
               <Grid item xs>
                 <Box m={1} textAlign="center">
-                  <IconButton className={classes.dark} onClick={infoDispatcher.close}>
+                  <IconButton className={classes.dark} onClick={closeInfo}>
                     <ExpandMoreIcon />
                   </IconButton>
                 </Box>

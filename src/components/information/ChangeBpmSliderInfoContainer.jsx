@@ -6,7 +6,7 @@ export const ChangeBpmSliderInfoContainer = () => {
 
   return (
     <InformationItemPresenter
-      description={"小節数を変更します。"}
+      description={"テンポを変更します。"}
       width={120}
     >
       <ChangeBpmSliderContainer

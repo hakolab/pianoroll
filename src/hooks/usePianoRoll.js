@@ -4,12 +4,10 @@ import * as AppData from '../AppData'
 import { clone, copyArray, copy } from '../utils/recursiveCopy';
 import { useSequence } from './useSequence';
 // cSpell: ignore Creasable
-import { useToggle } from './useToggle';
 import { useCreasableCssVariable } from './useCreasableCssVariable';
 import { useBpm } from './useBpm'
 import { useRefWithCapturingCurrent } from './useRefWithCapturingCurrent';
-import { usePianoRollTouch } from './usePianoRollTouch';
-import { isMobile } from 'react-device-detect';
+import { usePianoRollEvent } from './usePianoRollEvent';
 
 const initialState = {
   numberOfBars: 4,
@@ -113,10 +111,6 @@ export function usePianoRoll(){
   const [bpm, setBpm] =useBpm();
   // notes の現在値を捕捉
   const refNotes = useRefWithCapturingCurrent(state.notes);
-  // タッチモード（スマホ用）
-  const [touchMode, touchModeDispatcher] = useToggle(isMobile);
-  // スクロールモード（スマホ用）
-  const [scrollMode, scrollModeDispatcher] = useToggle(false);
 
   const start = () => {
     const synth = new Tone.PolySynth().toDestination()
@@ -132,25 +126,6 @@ export function usePianoRoll(){
     dispatch(action.setCurrentStep(null));
   }
 
-  const clearNotes = () => {
-    dispatch(action.clearNotes())
-  }
-
-  const clearAll = () => {
-    dispatch(action.clearAll());
-    cssVariableDispatcher.set(3)
-    scrollModeDispatcher.set(false);
-    setBpm(120);
-  }
-
-  const zoomIn = () => {
-    cssVariableDispatcher.increment();
-  }
-
-  const zoomOut = () => {
-    cssVariableDispatcher.decrement();
-  }
-
   const toggleActivationOfNote = useCallback((octave, tone, note) => {
     dispatch(action.toggleActivationOfNote(octave, tone, note))
   }, [])
@@ -162,6 +137,18 @@ export function usePianoRoll(){
   const toggleAllIsPress = useCallback(() => {
     dispatch(action.toggleAllIsPress())
   }, [])
+
+  const clearNotes = () => {
+    dispatch(action.clearNotes())
+  }
+
+  const zoomIn = () => {
+    cssVariableDispatcher.increment();
+  }
+
+  const zoomOut = () => {
+    cssVariableDispatcher.decrement();
+  }
 
   const changeNumberOfBars = (newNumberOfBars) => {
     dispatch(action.changeNumberOfBars(newNumberOfBars))
@@ -179,9 +166,6 @@ export function usePianoRoll(){
     dispatch(action.changeBeat(newBeat))
   }
 
-  // スマホ用タッチイベント
-  usePianoRollTouch({toggleActivationOfNote, toggleIsPress, toggleAllIsPress}, touchMode, scrollMode);
-
   const getPlayNotes = (step) => {
     let playNotes = [];
     refNotes.current.forEach((octave, octaveIndex) => {
@@ -193,14 +177,22 @@ export function usePianoRoll(){
     });
     return playNotes;
   }
+
+  const [pianoRollEventState, pianoRollEventDispatcher] = usePianoRollEvent({toggleActivationOfNote, toggleIsPress, toggleAllIsPress});
+  
+  const clearAll = () => {
+    dispatch(action.clearAll());
+    cssVariableDispatcher.set(3)
+    pianoRollEventDispatcher.scroll.set(false);
+    setBpm(120);
+  }
   
   return [
     {
       ...state,
       isPlaying,
       bpm,
-      touchMode,
-      scrollMode
+      ...pianoRollEventState
     },
     {
       start,
@@ -216,8 +208,7 @@ export function usePianoRoll(){
       changeBpm,
       changeKeyboard,
       changeBeat,
-      scrollModeDispatcher,
-      touchModeDispatcher     
+      pianoRollEventDispatcher
     }
   ]
 }

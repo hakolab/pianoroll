@@ -9,7 +9,7 @@ export const NotePresenter = ({
   octaveIndex,
   toneIndex,
   noteIndex,
-  pitchName
+  pitchName,
 }) => {
   return (
     <div
