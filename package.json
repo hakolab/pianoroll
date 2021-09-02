@@ -1,15 +1,16 @@
 {
-  "name": "demo",
+  "name": "piano-roll",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.jsx",
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack serve --open 'Google Chrome' --mode development",
     "deploy": "firebase deploy --only hosting:pianoroll",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "npm version patch"
   },
-  "author": "",
+  "author": "hakodatetaro",
   "license": "",
   "devDependencies": {
     "@babel/core": "^7.12.10",
