@@ -5,9 +5,9 @@
   "main": "index.jsx",
   "scripts": {
     "build": "PIANO_ROLL_VERSION=$npm_package_version webpack --mode production",
-    "build:patch": "npm version patch && PIANO_ROLL_VERSION=$npm_package_version webpack --mode production",
-    "build:minor": "npm version minor && PIANO_ROLL_VERSION=$npm_package_version webpack --mode production",
-    "build:major": "npm version major && PIANO_ROLL_VERSION=$npm_package_version webpack --mode production",
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major",
     "start": "PIANO_ROLL_VERSION=$npm_package_version webpack serve --open 'Google Chrome' --mode development",
     "deploy": "firebase deploy --only hosting:pianoroll",
     "lint": "eslint src"
