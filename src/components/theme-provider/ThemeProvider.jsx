@@ -64,8 +64,10 @@ const theme = createMuiTheme({
   },
 })
 
+console.log(theme.typography.body2)
 // 新しく作成したブレークポイントでフォントサイズを設定
 theme.typography.body2 = {
+  ...theme.typography.body2,
   fontSize: '0.8rem',
   [theme.breakpoints.up('pc')]: {
     fontSize: '0.875rem',
