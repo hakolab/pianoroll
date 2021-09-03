@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'development',
@@ -51,5 +52,10 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public'),
-  }, 
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      PIANO_ROLL_VERSION: JSON.stringify(process.env.PIANO_ROLL_VERSION)
+    })
+  ]
 };

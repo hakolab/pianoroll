@@ -1,14 +1,19 @@
 {
   "name": "piano-roll",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "index.jsx",
   "scripts": {
-    "build": "webpack --mode production",
-    "start": "webpack serve --open 'Google Chrome' --mode development",
+    "build": "PIANO_ROLL_VERSION=$npm_package_version webpack --mode production",
+    "build:patch": "npm version patch && PIANO_ROLL_VERSION=$npm_package_version webpack --mode production",
+    "build:minor": "npm version minor && PIANO_ROLL_VERSION=$npm_package_version webpack --mode production",
+    "build:major": "npm version major && PIANO_ROLL_VERSION=$npm_package_version webpack --mode production",
+    "start": "PIANO_ROLL_VERSION=$npm_package_version webpack serve --open 'Google Chrome' --mode development",
     "deploy": "firebase deploy --only hosting:pianoroll",
-    "lint": "eslint src",
-    "test": "npm version patch"
+    "lint": "eslint src"
+  },
+  "config": {
+    "test": "test"
   },
   "author": "hakodatetaro",
   "license": "",
@@ -36,6 +41,7 @@
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
+    "dotenv-webpack": "^7.0.3",
     "react-device-detect": "^1.17.0",
     "react-router-dom": "^5.2.0",
     "react-swipeable-views": "^0.13.9",

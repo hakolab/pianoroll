@@ -37,6 +37,9 @@ import { ChangeBpmSliderInfoContainer } from '../information/ChangeBpmSliderInfo
 import { ClearAllButtonWithConfirmContainer } from '../buttons/ClearAllButtonWithConfirmContainer';
 
 export const ControllerContainer = ({state, controller}) => {
+  // eslint-disable-next-line no-undef
+  const version = PIANO_ROLL_VERSION;
+  
   const classes = useButtonStyles();
   useControllerHeight();
 
@@ -126,7 +129,7 @@ export const ControllerContainer = ({state, controller}) => {
                 PianoRoll
               </Typography>
               <Typography variant="caption">
-                Version 1.0
+                Version {version}
               </Typography>
             </div>
           </AppBar>
