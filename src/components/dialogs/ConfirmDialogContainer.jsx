@@ -25,11 +25,11 @@ export const ConfirmDialogContainer = ({open, title, text, onClose, onClickOk}) 
       onClose={handleClickNo}
     >
       <Fragment>
+        <Button onClick={handleClickOk} className={clsx(classes.confirmButton, classes.safeColor)}>
+          YES
+        </Button>
         <Button onClick={handleClickNo} className={clsx(classes.confirmButton, classes.dangerColor)}>
           NO
-        </Button>
-        <Button onClick={handleClickOk} className={clsx(classes.confirmButton, classes.safeColor)}>
-          OK
         </Button>
       </Fragment>
     </DialogPresenter>

@@ -64,7 +64,6 @@ const theme = createMuiTheme({
   },
 })
 
-console.log(theme.typography.body2)
 // 新しく作成したブレークポイントでフォントサイズを設定
 theme.typography.body2 = {
   ...theme.typography.body2,

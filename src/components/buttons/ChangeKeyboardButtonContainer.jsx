@@ -16,7 +16,7 @@ export const ChangeKeyboardButtonContainer = ({action, keyboardObject, target, i
     <ButtonContainer
       onClick={handleClick}
       disabled={isPlaying}
-      optionalClass={clsx(classes.textButton, keyboardObject.mode === target.mode ? classes.keyboardOn : classes.keyboardOff, isInfo && classes.noSelect)}
+      optionalClass={clsx(classes.keyboardButton, keyboardObject.mode === target.mode ? classes.keyboardOn : classes.keyboardOff, isInfo && classes.noSelect)}
     >
       {target.viewName}
     </ButtonContainer>

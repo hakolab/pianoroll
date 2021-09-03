@@ -11,9 +11,9 @@ export const useButtonStyles = makeStyles(theme => ({
   iconButton: {
     fontSize: "16px",
   },
-  textButton: {
+  keyboardButton: {
     [theme.breakpoints.up('xs')]: {
-      fontSize: "10px",
+      fontSize: "12px",
     },
     [theme.breakpoints.up('spLandscape')]: {
       fontSize: "12px",
@@ -21,6 +21,26 @@ export const useButtonStyles = makeStyles(theme => ({
     [theme.breakpoints.up('pc')]: {
       fontSize: "14px",
     },
+  },
+  beatButton: {
+    [theme.breakpoints.up('xs')]: {
+      fontSize: "12px",
+    },
+    [theme.breakpoints.up('spLandscape')]: {
+      fontSize: "12px",
+    },
+    [theme.breakpoints.up('pc')]: {
+      fontSize: "14px",
+    },
+  },
+  confirmButton: {
+    fontSize: "14px",
+    width: "70px",
+  },
+  dangerButton: {
+    width: "100px",
+    color: theme.palette.error.main,
+    border: "1px solid " + theme.palette.error.main, 
   },
   scrollOn: {
     backgroundColor: indigo[500],
@@ -62,14 +82,6 @@ export const useButtonStyles = makeStyles(theme => ({
   },
   dangerColor: {
     color: theme.palette.error.main,
-  },
-  confirmButton: {
-    width: "70px",
-  },
-  dangerButton: {
-    width: "100px",
-    color: theme.palette.error.main,
-    border: "1px solid " + theme.palette.error.main, 
   },
   normalHover: {
     '&:hover': {
