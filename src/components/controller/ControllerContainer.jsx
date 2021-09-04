@@ -49,12 +49,12 @@ export const ControllerContainer = ({state, controller}) => {
   const [isOpenInfo, infoDispatcher] = useDialogState(false);
 
   function openInfo(){
-    controller.pianoRollEventDispatcher.touch.set(false)
+    isMobile && controller.pianoRollEventDispatcher.touch.set(false)
     infoDispatcher.open();
   }
 
   function closeInfo(){
-    controller.pianoRollEventDispatcher.touch.set(true)
+    isMobile && controller.pianoRollEventDispatcher.touch.set(true)
     infoDispatcher.close();
   }
 
